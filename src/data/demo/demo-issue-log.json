@@ -1,0 +1,189 @@
+{
+  "logId": "issuelog-demo-v5",
+  "title": "Issue Log",
+  "generatedAt": "2026-05-12T00:00:00.000Z",
+  "sourceReports": ["reviews/demo-review.json", "tables/demo-spreadsheet.json", "dataroom/demo-dataroom.json"],
+  "totalIssues": 8,
+  "openCount": 8,
+  "criticalCount": 1,
+  "highCount": 3,
+  "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.",
+  "issues": [
+    {
+      "id": "iss-demo-001",
+      "title": "Uncapped Liability Exposure",
+      "severity": "Critical",
+      "category": "legal",
+      "status": "open",
+      "sourceFiles": ["sample-saas-agreement.txt"],
+      "evidenceQuotes": ["In no event shall either party's aggregate liability exceed the amounts paid in the twelve (12) months preceding the claim"],
+      "affectedRows": [],
+      "recommendation": "Negotiate a higher liability cap or mutual limitation. Review indemnification scope with counsel.",
+      "createdAt": "2026-05-12T00:00:00.000Z",
+      "updatedAt": "2026-05-12T00:00:00.000Z",
+      "evidenceIds": ["ev-demo-001"]
+    },
+    {
+      "id": "iss-demo-002",
+      "title": "Auto-Renewal Without Notice Obligation",
+      "severity": "High",
+      "category": "renewal",
+      "status": "open",
+      "sourceFiles": ["sample-saas-agreement.txt"],
+      "evidenceQuotes": ["This Agreement shall automatically renew for successive one-year terms unless either party provides written notice of non-renewal at least 30 days prior"],
+      "affectedRows": [],
+      "recommendation": "Add calendar reminder 60 days before renewal. Negotiate mutual 30-day notice requirement or opt-out window.",
+      "createdAt": "2026-05-12T00:00:00.000Z",
+      "updatedAt": "2026-05-12T00:00:00.000Z",
+      "evidenceIds": ["ev-demo-002"]
+    },
+    {
+      "id": "iss-demo-003",
+      "title": "Overdue Payment: Acme Corp ($12,500.00)",
+      "severity": "High",
+      "category": "payment",
+      "status": "open",
+      "sourceFiles": ["sample-payment-schedule.csv"],
+      "evidenceQuotes": [],
+      "affectedRows": ["Vendor: Acme Corp | Amount: $12,500.00 | Due: 2025-01-15"],
+      "recommendation": "Resolve overdue payment of $12,500.00 to Acme Corp. Due: 2025-01-15.",
+      "createdAt": "2026-05-12T00:00:00.000Z",
+      "updatedAt": "2026-05-12T00:00:00.000Z",
+      "evidenceIds": ["ev-demo-003"]
+    },
+    {
+      "id": "iss-demo-004",
+      "title": "Overdue Payment: Global Supplies Ltd ($8,750.00)",
+      "severity": "High",
+      "category": "payment",
+      "status": "open",
+      "sourceFiles": ["sample-payment-schedule.csv"],
+      "evidenceQuotes": [],
+      "affectedRows": ["Vendor: Global Supplies Ltd | Amount: $8,750.00 | Due: 2025-02-01"],
+      "recommendation": "Resolve overdue payment of $8,750.00 to Global Supplies Ltd. Due: 2025-02-01.",
+      "createdAt": "2026-05-12T00:00:00.000Z",
+      "updatedAt": "2026-05-12T00:00:00.000Z",
+      "evidenceIds": ["ev-demo-004"]
+    },
+    {
+      "id": "iss-demo-005",
+      "title": "Preferred Stock in Term Sheet Not Reflected in Cap Table",
+      "severity": "High",
+      "category": "cap-table",
+      "status": "open",
+      "sourceFiles": ["sample-term-sheet.txt", "sample-cap-table.csv"],
+      "evidenceQuotes": ["Preferred stock / liquidation preference terms present vs. Cap table may not reflect post-closing terms"],
+      "affectedRows": [],
+      "recommendation": "Reconcile cap table with term sheet preferred stock terms after closing.",
+      "createdAt": "2026-05-12T00:00:00.000Z",
+      "updatedAt": "2026-05-12T00:00:00.000Z",
+      "evidenceIds": ["ev-demo-005"]
+    },
+    {
+      "id": "iss-demo-006",
+      "title": "Broad IP Assignment Without Carveout",
+      "severity": "Medium",
+      "category": "legal",
+      "status": "open",
+      "sourceFiles": ["sample-contractor-agreement.txt"],
+      "evidenceQuotes": ["Contractor assigns to Company all right, title, and interest in and to all Work Product"],
+      "affectedRows": [],
+      "recommendation": "Negotiate a carveout for pre-existing IP or work performed outside contract scope.",
+      "createdAt": "2026-05-12T00:00:00.000Z",
+      "updatedAt": "2026-05-12T00:00:00.000Z",
+      "evidenceIds": ["ev-demo-006"]
+    },
+    {
+      "id": "iss-demo-007",
+      "title": "Repeated Vendor Names in Payment Schedule",
+      "severity": "Medium",
+      "category": "payment",
+      "status": "open",
+      "sourceFiles": ["sample-payment-schedule.csv"],
+      "evidenceQuotes": ["Acme Corp vs. Multiple rows"],
+      "affectedRows": [],
+      "recommendation": "Verify these are separate invoices and not duplicate billing entries.",
+      "createdAt": "2026-05-12T00:00:00.000Z",
+      "updatedAt": "2026-05-12T00:00:00.000Z",
+      "evidenceIds": ["ev-demo-007"]
+    },
+    {
+      "id": "iss-demo-008",
+      "title": "Data Quality: Blank cells detected in required columns",
+      "severity": "Low",
+      "category": "data-quality",
+      "status": "open",
+      "sourceFiles": ["sample-vendor-invoices.csv"],
+      "evidenceQuotes": [],
+      "affectedRows": ["Blank cells detected in required columns"],
+      "recommendation": "Review spreadsheet data for completeness and accuracy.",
+      "createdAt": "2026-05-12T00:00:00.000Z",
+      "updatedAt": "2026-05-12T00:00:00.000Z",
+      "evidenceIds": ["ev-demo-008"]
+    }
+  ],
+  "evidence": [
+    {
+      "evidenceId": "ev-demo-001",
+      "issueId": "iss-demo-001",
+      "documentQuote": "In no event shall either party's aggregate liability exceed the amounts paid in the twelve (12) months preceding the claim",
+      "sourceFilename": "sample-saas-agreement.txt",
+      "fieldName": "Limitation of Liability",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-demo-002",
+      "issueId": "iss-demo-002",
+      "documentQuote": "This Agreement shall automatically renew for successive one-year terms unless either party provides written notice of non-renewal at least 30 days prior",
+      "sourceFilename": "sample-saas-agreement.txt",
+      "fieldName": "Term and Renewal",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-demo-003",
+      "issueId": "iss-demo-003",
+      "documentQuote": "",
+      "spreadsheetRow": "Vendor: Acme Corp | Amount: $12,500.00 | Due: 2025-01-15",
+      "sourceFilename": "sample-payment-schedule.csv",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-demo-004",
+      "issueId": "iss-demo-004",
+      "documentQuote": "",
+      "spreadsheetRow": "Vendor: Global Supplies Ltd | Amount: $8,750.00 | Due: 2025-02-01",
+      "sourceFilename": "sample-payment-schedule.csv",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-demo-005",
+      "issueId": "iss-demo-005",
+      "documentQuote": "Preferred stock / liquidation preference terms present vs. Cap table may not reflect post-closing terms",
+      "sourceFilename": "sample-term-sheet.txt",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-demo-006",
+      "issueId": "iss-demo-006",
+      "documentQuote": "Contractor assigns to Company all right, title, and interest in and to all Work Product",
+      "sourceFilename": "sample-contractor-agreement.txt",
+      "fieldName": "IP Assignment",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-demo-007",
+      "issueId": "iss-demo-007",
+      "documentQuote": "Acme Corp vs. Multiple rows",
+      "sourceFilename": "sample-payment-schedule.csv",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-demo-008",
+      "issueId": "iss-demo-008",
+      "documentQuote": "",
+      "sourceFilename": "sample-vendor-invoices.csv",
+      "isVerified": false,
+      "verificationNote": "Auto-detected from spreadsheet structure analysis."
+    }
+  ]
+}

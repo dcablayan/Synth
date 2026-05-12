@@ -1,7 +1,7 @@
 {
   "name": "synth",
-  "version": "0.4.0",
-  "description": "AI-powered legal and financial data room review — contracts, spreadsheets, cap tables, payment schedules.",
+  "version": "0.5.0",
+  "description": "AI-powered legal and financial data room review — contracts, spreadsheets, cap tables, payment schedules, issue triage, evidence ledger, exports, and run comparison.",
   "private": true,
   "scripts": {
     "doctor": "tsx src/cli/doctor.ts",
@@ -17,6 +17,9 @@
     "ingest": "tsx src/cli/ingest.ts",
     "spreadsheet": "tsx src/cli/spreadsheet.ts",
     "dataroom": "tsx src/cli/dataroom.ts",
+    "triage": "tsx src/cli/triage.ts",
+    "export": "tsx src/cli/export.ts",
+    "compare": "tsx src/cli/compare.ts",
     "dashboard": "next dev",
     "build": "next build",
     "start": "next start",

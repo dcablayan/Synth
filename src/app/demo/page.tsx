@@ -3,15 +3,18 @@ import demoReview from '@/data/demo/demo-review.json';
 import demoFinancial from '@/data/demo/demo-financial.json';
 import demoMemo from '@/data/demo/demo-memo.json';
 import demoRevision from '@/data/demo/demo-revision.json';
+import demoIssueLog from '@/data/demo/demo-issue-log.json';
 import type { Review } from '@/schemas/review.schema';
 import type { Financial } from '@/schemas/financial.schema';
 import type { Memo } from '@/schemas/memo.schema';
 import type { Revision } from '@/schemas/revision.schema';
+import type { IssueLog } from '@/schemas/issue.schema';
 
 const review = demoReview as Review;
 const financial = demoFinancial as Financial;
 const memo = demoMemo as Memo;
 const revision = demoRevision as Revision;
+const issueLog = demoIssueLog as IssueLog;
 
 function getRiskColor(level: string) {
   switch (level) {
@@ -77,7 +80,7 @@ export default function DemoPage() {
           {[
             { label: 'Risk Score', value: `${review.riskScore}/100` },
             { label: 'Risks Identified', value: review.topRisks.length },
-            { label: 'Clause Revisions', value: revision.clauseRevisions.length },
+            { label: 'Issues Logged', value: issueLog.totalIssues },
             { label: 'Action Items', value: review.actionItems.length },
           ].map((stat) => (
             <div key={stat.label} className="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center">
@@ -85,6 +88,72 @@ export default function DemoPage() {
               <div className="text-slate-500 text-xs mt-1">{stat.label}</div>
             </div>
           ))}
+        </div>
+
+        {/* v5: Issue Log Preview */}
+        <div className="bg-slate-900 border border-purple-900/40 rounded-xl p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold text-purple-400 uppercase tracking-wider">Issue Log — v5</h2>
+            <div className="flex gap-2">
+              <span className="text-xs bg-red-950 border border-red-800 text-red-400 px-2 py-0.5 rounded">{issueLog.criticalCount} Critical</span>
+              <span className="text-xs bg-orange-950 border border-orange-800 text-orange-400 px-2 py-0.5 rounded">{issueLog.highCount} High</span>
+              <span className="text-xs bg-slate-800 border border-slate-700 text-slate-400 px-2 py-0.5 rounded">{issueLog.totalIssues} Total</span>
+            </div>
+          </div>
+          <div className="space-y-3">
+            {issueLog.issues.slice(0, 5).map((issue) => (
+              <div key={issue.id} className="flex items-start gap-3 border-b border-slate-800 pb-3 last:border-0 last:pb-0">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <span className="text-sm text-white font-medium">{issue.title}</span>
+                    <span className={`text-xs px-1.5 py-0.5 rounded border whitespace-nowrap flex-shrink-0 ${getRiskColor(issue.severity)}`}>
+                      {issue.severity}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 mb-1">
+                    <span className="text-xs bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">{issue.category}</span>
+                    <span className="text-xs text-slate-600">{issue.sourceFiles[0]}</span>
+                  </div>
+                  {issue.evidenceQuotes.length > 0 && (
+                    <blockquote className="border-l-2 border-blue-800 pl-2 text-blue-300 text-xs italic mt-1">
+                      &ldquo;{issue.evidenceQuotes[0].slice(0, 90)}&hellip;&rdquo;
+                    </blockquote>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 pt-3 border-t border-slate-800">
+            <p className="text-slate-600 text-xs">
+              Static fixture · Run{' '}
+              <code className="bg-slate-800 text-blue-400 px-1 rounded">npm run triage</code> on real reports to generate live issue log.
+            </p>
+          </div>
+        </div>
+
+        {/* v5: Evidence Ledger Preview */}
+        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-6">
+          <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Evidence Ledger — v5</h2>
+          <div className="space-y-2">
+            {issueLog.evidence.filter((e) => e.isVerified).slice(0, 4).map((e) => (
+              <div key={e.evidenceId} className="flex items-start gap-3 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2">
+                <code className="text-blue-400 text-xs font-mono whitespace-nowrap mt-0.5">{e.evidenceId}</code>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <span className="text-green-400 text-xs">✓ Verified</span>
+                    <code className="text-slate-500 text-xs">{e.sourceFilename}</code>
+                    {e.fieldName && <span className="text-slate-600 text-xs">{e.fieldName}</span>}
+                  </div>
+                  {e.documentQuote && (
+                    <p className="text-blue-200/70 text-xs italic">&ldquo;{e.documentQuote.slice(0, 100)}&hellip;&rdquo;</p>
+                  )}
+                  {e.spreadsheetRow && !e.documentQuote && (
+                    <p className="text-slate-400 text-xs font-mono">{e.spreadsheetRow}</p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Source metadata */}

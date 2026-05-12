@@ -242,9 +242,8 @@ async function main() {
   console.log(`    ${contractFiles.length} contract(s): ${contractFiles.join(', ')}`);
   console.log(`    ${spreadsheetFiles.length} spreadsheet(s): ${spreadsheetFiles.join(', ')}\n`);
 
-  const { parseCsvFile, parseXlsxFile, buildTableProfile, textSummaryOfSheet } = await import('../lib/spreadsheet-parser');
-  const { generateMockDataRoomSummary } = await import('../lib/mock-spreadsheet-provider');
-  const { DataRoomSummarySchema } = await import('../schemas/spreadsheet.schema');
+  const { parseCsvFile, parseXlsxFile, buildTableProfile } = await import('../lib/spreadsheet-parser');
+  const { runDataRoomReview } = await import('../lib/ai-provider');
 
   // Load contract texts
   const contractDocs: Array<{ filename: string; text: string }> = [];
@@ -285,9 +284,7 @@ async function main() {
     }
   }
 
-  const summary = DataRoomSummarySchema.parse(
-    generateMockDataRoomSummary(contractDocs, csvDocs, [])
-  );
+  const summary = await runDataRoomReview(contractDocs, csvDocs, []);
 
   fs.mkdirSync(DATAROOM_DIR, { recursive: true });
   const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);

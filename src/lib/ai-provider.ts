@@ -5,6 +5,9 @@ import { ReviewSchema } from '../schemas/review.schema';
 import { FinancialSchema } from '../schemas/financial.schema';
 import { MemoSchema } from '../schemas/memo.schema';
 import { RevisionSchema } from '../schemas/revision.schema';
+import { SpreadsheetAnalysisSchema, DataRoomSummarySchema } from '../schemas/spreadsheet.schema';
+import type { TableProfile, SpreadsheetAnalysis, DataRoomSummary } from '../schemas/spreadsheet.schema';
+import type { ParsedSheet } from './spreadsheet-parser';
 import {
   buildContractReviewPrompt,
   CONTRACT_REVIEW_SYSTEM,
@@ -16,11 +19,23 @@ import {
 import { buildMemoPrompt, MEMO_SYSTEM } from '../prompts/memo.prompt';
 import { buildRevisionPrompt, REVISION_SYSTEM } from '../prompts/revision.prompt';
 import {
+  buildSpreadsheetAnalysisPrompt,
+  SPREADSHEET_ANALYSIS_SYSTEM,
+} from '../prompts/spreadsheet-analysis.prompt';
+import {
+  buildDataRoomPrompt,
+  DATAROOM_REVIEW_SYSTEM,
+} from '../prompts/dataroom-review.prompt';
+import {
   generateMockReview,
   generateMockFinancial,
   generateMockMemo,
   generateMockRevision,
 } from './mock-provider';
+import {
+  generateMockSpreadsheetAnalysis,
+  generateMockDataRoomSummary,
+} from './mock-spreadsheet-provider';
 
 const DISCLAIMER =
   'Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.';
@@ -327,5 +342,125 @@ export async function runRevisionGeneration(
       revisionDisclaimer:
         'Suggested revisions are not legal advice. They are suggested replacement language for review by a qualified professional. Consult an attorney before using any suggested language.',
     });
+  }
+}
+
+// Partial AI output schema — only the fields the prompt returns
+const SpreadsheetAIOverlaySchema = z.object({
+  documentTitle: z.string().optional(),
+  summary: z.string().optional(),
+  keyFindings: z.array(z.string()).optional(),
+  warnings: z.array(z.string()).optional(),
+});
+
+export async function runSpreadsheetAnalysis(
+  filename: string,
+  sheets: ParsedSheet[],
+  profiles: TableProfile[],
+): Promise<SpreadsheetAnalysis> {
+  const base = generateMockSpreadsheetAnalysis(filename, sheets, profiles);
+
+  if (isMockMode()) {
+    return SpreadsheetAnalysisSchema.parse({ ...base, providerMode: 'mock', fallbackUsed: false });
+  }
+
+  try {
+    const { textSummaryOfSheet } = await import('./spreadsheet-parser');
+    const summaryText = sheets.map((s, i) => `Sheet: ${s.sheetName ?? i}\n${textSummaryOfSheet(s, profiles[i])}`).join('\n\n');
+    const prompt = buildSpreadsheetAnalysisPrompt(summaryText.slice(0, 12000), filename);
+    const raw = await callOpenAI(SPREADSHEET_ANALYSIS_SYSTEM, prompt);
+    const overlay = safeParseAndValidate(SpreadsheetAIOverlaySchema, raw, 'spreadsheet-analysis');
+
+    if (overlay.fallbackUsed) {
+      console.warn(`  [ai-provider] Spreadsheet AI failed, using mock: ${overlay.error}`);
+      return SpreadsheetAnalysisSchema.parse({ ...base, providerMode: 'mock', fallbackUsed: true, warnings: [...base.warnings, `AI analysis failed: ${overlay.error}`] });
+    }
+
+    return SpreadsheetAnalysisSchema.parse({
+      ...base,
+      documentTitle: overlay.data!.documentTitle ?? base.documentTitle,
+      summary: overlay.data!.summary ?? base.summary,
+      keyFindings: overlay.data!.keyFindings ?? base.keyFindings,
+      warnings: overlay.data!.warnings ?? base.warnings,
+      generatedAt: new Date().toISOString(),
+      providerMode: 'ai',
+      fallbackUsed: false,
+    });
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    saveError('spreadsheet-analysis-api', '', e);
+    console.warn(`  [ai-provider] Spreadsheet API failed, using mock: ${msg}`);
+    return SpreadsheetAnalysisSchema.parse({ ...base, providerMode: 'mock', fallbackUsed: true, warnings: [...base.warnings, `AI API failed: ${msg}`] });
+  }
+}
+
+// Partial AI output schema for dataroom
+const DataRoomAIOverlaySchema = z.object({
+  executiveSummary: z.string().optional(),
+  crossDocumentFindings: z.array(z.object({
+    findingType: z.string(),
+    severity: z.string(),
+    title: z.string(),
+    description: z.string(),
+    sourceA: z.string(),
+    sourceB: z.string(),
+    valueA: z.string(),
+    valueB: z.string(),
+    recommendation: z.string(),
+  })).optional(),
+  dataQualityWarnings: z.array(z.string()).optional(),
+});
+
+export async function runDataRoomReview(
+  contractDocs: Array<{ filename: string; text: string }>,
+  csvDocs: Array<{ filename: string; sheets: ParsedSheet[]; profiles: TableProfile[] }>,
+  otherDocs: Array<{ filename: string; ext: string }>,
+): Promise<DataRoomSummary> {
+  const base = generateMockDataRoomSummary(contractDocs, csvDocs, otherDocs);
+
+  if (isMockMode()) {
+    return DataRoomSummarySchema.parse({ ...base, providerMode: 'mock', fallbackUsed: false });
+  }
+
+  try {
+    const { textSummaryOfSheet } = await import('./spreadsheet-parser');
+    const docSummaries = [
+      ...contractDocs.map((d) => `Contract: ${d.filename}\n${d.text.slice(0, 3000)}`),
+      ...csvDocs.map((d) =>
+        `Spreadsheet: ${d.filename}\n` +
+        d.sheets.map((s, i) => textSummaryOfSheet(s, d.profiles[i])).join('\n')
+      ),
+    ].join('\n\n---\n\n').slice(0, 16000);
+
+    const fileList = [...contractDocs.map((d) => d.filename), ...csvDocs.map((d) => d.filename), ...otherDocs.map((d) => d.filename)];
+    const prompt = buildDataRoomPrompt(docSummaries, fileList);
+    const raw = await callOpenAI(DATAROOM_REVIEW_SYSTEM, prompt);
+    const overlay = safeParseAndValidate(DataRoomAIOverlaySchema, raw, 'dataroom-review');
+
+    if (overlay.fallbackUsed) {
+      console.warn(`  [ai-provider] Data room AI failed, using mock: ${overlay.error}`);
+      return DataRoomSummarySchema.parse({ ...base, providerMode: 'mock', fallbackUsed: true });
+    }
+
+    const aiFindings = overlay.data!.crossDocumentFindings ?? [];
+    const validFindings = aiFindings.filter((f): f is typeof base.crossDocumentFindings[0] => {
+      return ['payment-mismatch', 'party-mismatch', 'date-mismatch', 'amount-mismatch', 'missing-party', 'duplicate-vendor', 'renewal-mismatch', 'cap-table-conflict', 'unverifiable'].includes(f.findingType)
+        && ['Low', 'Medium', 'High', 'Critical'].includes(f.severity);
+    });
+
+    return DataRoomSummarySchema.parse({
+      ...base,
+      executiveSummary: overlay.data!.executiveSummary ?? base.executiveSummary,
+      crossDocumentFindings: validFindings.length > 0 ? validFindings : base.crossDocumentFindings,
+      dataQualityWarnings: overlay.data!.dataQualityWarnings ?? base.dataQualityWarnings,
+      generatedAt: new Date().toISOString(),
+      providerMode: 'ai',
+      fallbackUsed: false,
+    });
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    saveError('dataroom-review-api', '', e);
+    console.warn(`  [ai-provider] Data room API failed, using mock: ${msg}`);
+    return DataRoomSummarySchema.parse({ ...base, providerMode: 'mock', fallbackUsed: true });
   }
 }

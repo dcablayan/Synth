@@ -1,12 +1,12 @@
-# Synth v4
+# Synth v5
 
-**AI-powered legal and financial data room review — contracts, spreadsheets, cap tables, payment schedules.**
+**Local AI diligence cockpit — contracts, spreadsheets, cap tables, payment schedules, issue triage, evidence ledger, CSV/XLSX exports, and run comparison.**
 
 [![CI](https://github.com/dylancablayan/synth/actions/workflows/ci.yml/badge.svg)](https://github.com/dylancablayan/synth/actions/workflows/ci.yml)
 
 > ⚠️ Synth is not legal advice or financial advice. It is a document review aid built as a portfolio project. Consult a qualified professional before making any decisions based on this software.
 
-Synth is a local-first, CLI-driven document review system. Drop contracts, spreadsheets, cap tables, or invoices into `/documents/inbox`, run a command, and get structured analysis, cross-document findings, and polished reports saved to your machine.
+Synth is a local-first, CLI-driven document review system. Drop contracts, spreadsheets, cap tables, or invoices into `/documents/inbox`, run a command, and get structured analysis, cross-document findings, a unified issue log with evidence links, CSV/XLSX exports, and polished reports — all saved locally.
 
 **[Live Demo →](https://synth.dylancablayan.com/demo)** · **[Artifact Gallery →](https://synth.dylancablayan.com/artifacts)** · **[Case Study →](https://synth.dylancablayan.com/case-study)**
 
@@ -24,6 +24,9 @@ npm run demo           # contract review pipeline (3 sample docs)
 npm run ingest         # parse all file types in inbox
 npm run spreadsheet    # analyze CSV/XLSX
 npm run dataroom       # full data room analysis
+npm run triage         # convert reports → unified issue log + evidence
+npm run export         # export issue log + data → CSV/XLSX
+npm run compare        # compare two data room runs
 npm run dashboard
 ```
 
@@ -46,8 +49,11 @@ No API key required — runs in mock mode by default.
 | `npm run ingest` | Parse all supported files (contracts + spreadsheets) in inbox |
 | `npm run spreadsheet` | Analyze CSV/XLSX → reports/tables/ (JSON + MD + HTML) |
 | `npm run dataroom` | Full mixed-packet analysis → reports/dataroom/ (JSON + MD + HTML + PDF) |
+| `npm run triage` | Convert reports → unified issue log + evidence ledger → reports/issues/ + reports/evidence/ |
+| `npm run export` | Export issue log + data to CSV/XLSX → reports/exports/ |
+| `npm run compare` | Compare two data room runs → reports/compare/ (JSON + MD + HTML) |
 | `npm run seed-demo` | Refresh static demo data and artifact gallery from pipeline |
-| `npm run eval` | Run deterministic eval harness on sample documents + spreadsheets |
+| `npm run eval` | Run deterministic eval harness on sample documents + spreadsheets + v5 issue engine |
 | `npm run dashboard` | Open local dashboard at http://localhost:3000 |
 | `npm run build` | Build Next.js for deployment |
 | `npm run type-check` | TypeScript type check (no emit) |
@@ -66,6 +72,27 @@ No API key required — runs in mock mode by default.
 | Excel spreadsheet | `.xlsx` | Spreadsheet / data room analysis |
 
 Drop files into `documents/inbox/` and run `npm run ingest` (all types) or `npm run packet` (contracts only).
+
+---
+
+## Diligence Workflow (v5)
+
+Synth v5 adds an analyst-ready loop on top of v4 reports:
+
+```
+npm run dataroom    → reports/dataroom/
+npm run triage      → reports/issues/ + reports/evidence/
+npm run export      → reports/exports/ (CSV + XLSX)
+npm run compare     → reports/compare/ (diff two runs)
+```
+
+**Triage** reads all latest reviews, spreadsheet analyses, and the data room summary, then converts every risk, cross-document finding, overdue payment, and data quality warning into a structured `Issue` with linked `EvidenceItem` records. Each issue has: id, title, severity, category, status (open/investigating/resolved/waived), sourceFiles, evidenceQuotes, affectedRows, recommendation.
+
+**Evidence ledger**: Every issue is backed by at least one evidence item — a direct document quote, spreadsheet row, or verificationNote explaining why evidence is unavailable. No issue without evidence.
+
+**Export**: Writes `issues.csv`, `evidence.csv`, `payments.csv`, `cap-table.csv`, and `dataroom-summary.xlsx` (5-sheet workbook) to `reports/exports/`.
+
+**Compare**: Diffs two data room runs — detects added/removed/changed issues, payment changes, cap table changes, new/resolved warnings.
 
 ---
 
@@ -115,7 +142,7 @@ Analyzes the full `/documents/inbox` as a mixed packet and saves to `reports/dat
 npm run eval
 ```
 
-Runs deterministic checks (89 total in v4):
+Runs deterministic checks (98 total in v5):
 
 **Contract checks (per document):**
 - Sample docs parse (`.txt`, `.md`, `.pdf`, `.docx` supported)
@@ -142,6 +169,17 @@ Runs deterministic checks (89 total in v4):
 - Disclaimer present
 - Executive summary is not generic
 
+**Issue log checks (v5):**
+- Issue engine runs without crash
+- IssueLog schema validates
+- Every issue has at least one evidence ID
+- All evidence items link to a valid issue ID
+- Unverified items have verificationNote
+- Issues sorted by severity (Critical/High first)
+- Disclaimer present in issue log
+- Export engine produces issues.csv and evidence.csv
+- Compare engine runs without crash
+
 ---
 
 ## AI Reliability
@@ -155,7 +193,18 @@ Runs deterministic checks (89 total in v4):
 
 ---
 
-## New Schemas (v4)
+## Schemas
+
+### v5 (New)
+
+| Schema | Description |
+|--------|-------------|
+| `Issue` | Single diligence issue: id, title, severity, category, status, sourceFiles, evidenceQuotes, affectedRows, recommendation |
+| `EvidenceItem` | Evidence backing one issue: documentQuote, spreadsheetRow, sourceFilename, isVerified |
+| `IssueLog` | Unified issue log with all issues + evidence |
+| `CompareReport` | Diff between two runs: added/removed/changed issues, payment/cap-table/warning changes |
+
+### v4
 
 | Schema | Description |
 |--------|-------------|
@@ -179,6 +228,10 @@ reports/
   html/       — HTML reports (contracts + spreadsheets)
   tables/     — Spreadsheet profile JSON + Markdown + HTML (v4)
   dataroom/   — Data room JSON + Markdown + HTML + PDF (v4)
+  issues/     — Issue log JSON + Markdown + HTML (v5)
+  evidence/   — Evidence ledger JSON (v5)
+  exports/    — CSV + XLSX exports (v5)
+  compare/    — Run comparison JSON + Markdown + HTML (v5)
   pdfs/       — PDFs (requires Playwright Chromium)
   evals/      — Eval harness JSON + Markdown reports
   errors/     — Raw AI error logs (when fallback is triggered)
@@ -188,11 +241,11 @@ reports/
 
 ## Recruiter Screenshot Checklist
 
-1. `/demo` — Static demo with full review, financials, memo, revisions
-2. `/artifacts` — Downloadable sample outputs including v4 spreadsheet + dataroom JSON
-3. `/dashboard` (local) — Run `npm run demo && npm run dataroom` first
-4. `/case-study` — Architecture, v1→v4 evolution, safety design, resume bullets
-5. `npm run eval` — 89 pass/fail checks in the terminal
+1. `/demo` — Static demo with full review, financials, memo, revisions, issue log, evidence ledger
+2. `/artifacts` — Downloadable sample outputs including spreadsheet JSON, dataroom JSON, and issue log JSON
+3. `/dashboard` (local) — Run `npm run demo && npm run dataroom && npm run triage && npm run export` first
+4. `/case-study` — Architecture, v1→v5 evolution, safety design, resume bullets
+5. `npm run eval` — 98 pass/fail checks in the terminal
 
 ---
 
@@ -219,15 +272,22 @@ src/
     ingest.ts      — Parse all file types (v4)
     spreadsheet.ts — Analyze CSV/XLSX (v4)
     dataroom.ts    — Full data room analysis (v4)
+    triage.ts      — Convert reports → issue log + evidence ledger (v5)
+    export.ts      — Export issue log + data → CSV/XLSX (v5)
+    compare.ts     — Compare two data room runs (v5)
   data/demo/   — Static fixture data for /demo route
   lib/         — AI provider, document loader, parser, renderers
     spreadsheet-parser.ts       — CSV/XLSX parsing + table profiling (v4)
     mock-spreadsheet-provider.ts — Mock analysis for spreadsheets + dataroom (v4)
+    issue-engine.ts              — Convert reports → IssueLog (v5)
+    export-engine.ts             — Write CSV/XLSX exports (v5)
+    compare-engine.ts            — Diff two data room runs (v5)
   prompts/     — AI prompt modules
     spreadsheet-analysis.prompt.ts — v4
     dataroom-review.prompt.ts      — v4
   schemas/     — Zod schemas for all outputs
     spreadsheet.schema.ts — v4 schemas
+    issue.schema.ts       — v5 schemas (Issue, EvidenceItem, IssueLog, CompareReport)
 documents/
   inbox/       — Drop your contracts and spreadsheets here
     sample-payment-schedule.csv — v4 sample

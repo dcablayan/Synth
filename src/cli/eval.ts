@@ -6,6 +6,8 @@ import { runContractReview, runFinancialAnalysis, runMemoGeneration, runRevision
 import { parseCsvFile, buildTableProfile } from '../lib/spreadsheet-parser';
 import { generateMockSpreadsheetAnalysis, generateMockDataRoomSummary } from '../lib/mock-spreadsheet-provider';
 import { SpreadsheetAnalysisSchema, DataRoomSummarySchema } from '../schemas/spreadsheet.schema';
+import { IssueLogSchema } from '../schemas/issue.schema';
+import { buildIssueLogFromReports } from '../lib/issue-engine';
 
 const CWD = process.cwd();
 const INBOX = path.join(CWD, 'documents', 'inbox');
@@ -365,6 +367,144 @@ async function evalSpreadsheets(): Promise<DocResult[]> {
   return results;
 }
 
+async function evalV5(): Promise<DocResult> {
+  const checks: Check[] = [];
+
+  // Check 1: Issue engine runs and schema validates
+  try {
+    const reviewText = fs.readFileSync(path.join(INBOX, 'sample-saas-agreement.txt'), 'utf-8');
+    const contractDocs = [{ filename: 'sample-saas-agreement.txt', text: reviewText }];
+    const spreadsheetFiles = ['sample-payment-schedule.csv', 'sample-cap-table.csv'];
+    const csvDocs = spreadsheetFiles
+      .filter((f) => fs.existsSync(path.join(INBOX, f)))
+      .map((f) => {
+        const sheets = parseCsvFile(path.join(INBOX, f));
+        const profiles = sheets.map((s) => buildTableProfile(s));
+        return { filename: f, sheets, profiles };
+      });
+
+    const mockDataRoom = DataRoomSummarySchema.parse(generateMockDataRoomSummary(contractDocs, csvDocs, []));
+
+    const text = chunkText(reviewText);
+    const title = extractDocumentTitle(text, 'sample-saas-agreement.txt');
+    const review = await runContractReview(text, title, {
+      sourceFilename: 'sample-saas-agreement.txt',
+      sourceExtension: '.txt',
+      parsedCharacterCount: text.length,
+    });
+
+    const issueLog = buildIssueLogFromReports([review], [], [mockDataRoom], ['test-review', 'test-dataroom']);
+
+    checks.push(check(
+      'Issue log generates without crash',
+      true,
+      `Issue log created: ${issueLog.totalIssues} issue(s)`,
+      '',
+    ));
+
+    // Check 2: Schema validates
+    const validated = IssueLogSchema.safeParse(issueLog);
+    checks.push(check(
+      'Issue log schema validates',
+      validated.success,
+      `Schema valid: ${issueLog.totalIssues} issues, ${issueLog.evidence.length} evidence items`,
+      `Schema error: ${!validated.success ? validated.error?.message?.slice(0, 100) : ''}`,
+    ));
+
+    // Check 3: Every issue has at least one evidence item
+    const issuesWithEvidence = issueLog.issues.filter((i) => i.evidenceIds.length > 0);
+    checks.push(check(
+      'Every issue has at least one evidence ID',
+      issuesWithEvidence.length === issueLog.issues.length,
+      `All ${issueLog.issues.length} issues have evidence`,
+      `${issueLog.issues.length - issuesWithEvidence.length} issue(s) missing evidence`,
+    ));
+
+    // Check 4: Every evidence item's issueId links to a real issue
+    const issueIdSet = new Set(issueLog.issues.map((i) => i.id));
+    const orphanEvidence = issueLog.evidence.filter((e) => !issueIdSet.has(e.issueId));
+    checks.push(check(
+      'All evidence items link to a valid issue ID',
+      orphanEvidence.length === 0,
+      `${issueLog.evidence.length} evidence items all linked`,
+      `${orphanEvidence.length} orphan evidence item(s) with no matching issue`,
+    ));
+
+    // Check 5: Unverified items have verificationNote
+    const unverifiedWithoutNote = issueLog.evidence.filter((e) => !e.isVerified && !e.verificationNote);
+    checks.push(check(
+      'Unverified evidence items have verificationNote',
+      unverifiedWithoutNote.length === 0,
+      'All unverified items have notes',
+      `${unverifiedWithoutNote.length} unverified item(s) missing verificationNote`,
+    ));
+
+    // Check 6: severity ordering (critical/high before low)
+    const firstLow = issueLog.issues.findIndex((i) => i.severity === 'Low');
+    const lastHigh = [...issueLog.issues].reverse().findIndex((i) => i.severity === 'High' || i.severity === 'Critical');
+    const severityOrdered = firstLow === -1 || lastHigh === -1 || firstLow > (issueLog.issues.length - 1 - lastHigh);
+    checks.push(check(
+      'Issues sorted by severity (Critical/High first)',
+      severityOrdered,
+      'Severity order correct',
+      'Issues not sorted by severity',
+    ));
+
+    // Check 7: Disclaimer present
+    checks.push(check(
+      'Issue log disclaimer present',
+      issueLog.disclaimer.includes('not legal advice'),
+      'Disclaimer intact',
+      'Missing "not legal advice" in issue log disclaimer',
+    ));
+
+    // Check 8: Export functions run without crash
+    try {
+      const { writeIssuesCSV, writeEvidenceCSV } = await import('../lib/export-engine');
+      const tmpDir = path.join(process.cwd(), 'reports', 'evals', 'tmp-export-test');
+      fs.mkdirSync(tmpDir, { recursive: true });
+      writeIssuesCSV(issueLog, tmpDir);
+      writeEvidenceCSV(issueLog, tmpDir);
+      const issuesCsvExists = fs.existsSync(path.join(tmpDir, 'issues.csv'));
+      const evidenceCsvExists = fs.existsSync(path.join(tmpDir, 'evidence.csv'));
+      checks.push(check(
+        'Export: issues.csv and evidence.csv created',
+        issuesCsvExists && evidenceCsvExists,
+        'issues.csv and evidence.csv written',
+        `Missing: ${!issuesCsvExists ? 'issues.csv ' : ''}${!evidenceCsvExists ? 'evidence.csv' : ''}`,
+      ));
+      // Cleanup
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    } catch (e) {
+      checks.push({ name: 'Export: issues.csv and evidence.csv created', pass: false, message: `Export threw: ${e instanceof Error ? e.message : e}` });
+    }
+
+    // Check 9: Compare engine runs without crash
+    try {
+      const { buildCompareReport } = await import('../lib/compare-engine');
+      const compareReport = buildCompareReport('run-a', 'run-b', issueLog, issueLog, mockDataRoom, mockDataRoom);
+      checks.push(check(
+        'Compare engine runs without crash',
+        !!compareReport.reportId,
+        `Compare report: ${compareReport.reportId}`,
+        'Compare report missing reportId',
+      ));
+    } catch (e) {
+      checks.push({ name: 'Compare engine runs without crash', pass: false, message: `Compare threw: ${e instanceof Error ? e.message : e}` });
+    }
+
+  } catch (e) {
+    checks.push({ name: 'Issue log generates without crash', pass: false, message: `Error: ${e instanceof Error ? e.message : e}` });
+  }
+
+  return {
+    file: '[v5: Issue Log + Evidence + Exports]',
+    checks,
+    passed: checks.filter((c) => c.pass).length,
+    failed: checks.filter((c) => !c.pass).length,
+  };
+}
+
 async function main() {
   console.log('\n╔══════════════════════════════════════════════════╗');
   console.log('║           Synth · Eval Harness                   ║');
@@ -406,6 +546,18 @@ async function main() {
     console.log(`     ${result.passed} passed, ${result.failed} failed\n`);
   }
   results.push(...spreadsheetResults);
+
+  // v5: issue log + evidence + export + compare checks
+  console.log('  🗂  Evaluating issue log + evidence + exports (v5)...\n');
+  const v5Result = await evalV5();
+  console.log(`  🗂  [Issue Log + Evidence + Exports]`);
+  for (const c of v5Result.checks) {
+    const icon = c.pass ? '  ✅' : '  ❌';
+    console.log(`${icon} ${c.name}`);
+    if (!c.pass) console.log(`       → ${c.message}`);
+  }
+  console.log(`     ${v5Result.passed} passed, ${v5Result.failed} failed\n`);
+  results.push(v5Result);
 
   const totalPassed = results.reduce((s, r) => s + r.passed, 0);
   const totalFailed = results.reduce((s, r) => s + r.failed, 0);

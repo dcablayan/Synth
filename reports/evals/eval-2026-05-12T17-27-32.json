@@ -1,0 +1,555 @@
+{
+  "runAt": "2026-05-12T17:27:32.242Z",
+  "totalChecks": 98,
+  "totalPassed": 98,
+  "totalFailed": 0,
+  "allPass": true,
+  "results": [
+    {
+      "file": "sample-saas-agreement.txt",
+      "checks": [
+        {
+          "name": "File parses",
+          "pass": true,
+          "message": "Parsed 6,491 characters"
+        },
+        {
+          "name": "Document type detected correctly",
+          "pass": true,
+          "message": "Detected: \"SaaS Agreement\""
+        },
+        {
+          "name": "Review generates",
+          "pass": true,
+          "message": "Review completed successfully"
+        },
+        {
+          "name": "paymentTerms is present or honest NOT_FOUND",
+          "pass": true,
+          "message": "Value: \"$4,500 per month (the \"Subscription Fee\"), billed annually i\""
+        },
+        {
+          "name": "renewalTerms is present or honest NOT_FOUND",
+          "pass": true,
+          "message": "Value: \"automatically renew for successive one-year periods (each a \""
+        },
+        {
+          "name": "terminationTerms is present or honest NOT_FOUND",
+          "pass": true,
+          "message": "Value: \"Either party may terminate this Agreement for material breac\""
+        },
+        {
+          "name": "governingLaw is present or honest NOT_FOUND",
+          "pass": true,
+          "message": "Value: \"governed by the laws of the State of Delaware, without regar\""
+        },
+        {
+          "name": "Risk score is in range",
+          "pass": true,
+          "message": "Risk score: 65/100"
+        },
+        {
+          "name": "Risk supporting quotes are specific (not \"See document\")",
+          "pass": true,
+          "message": "All 3 risks have specific quotes"
+        },
+        {
+          "name": "Citations present",
+          "pass": true,
+          "message": "Mock mode — citations check skipped"
+        },
+        {
+          "name": "Provider metadata attached",
+          "pass": true,
+          "message": "providerMode=mock, sourceFilename=sample-saas-agreement.txt"
+        },
+        {
+          "name": "Financial analysis generates",
+          "pass": true,
+          "message": "Financial analysis completed"
+        },
+        {
+          "name": "Financial.discounts is honest NOT_FOUND or has value",
+          "pass": true,
+          "message": "Value: \"Not found in the document.\""
+        },
+        {
+          "name": "Financial.equityTerms is honest NOT_FOUND or has value",
+          "pass": true,
+          "message": "Value: \"Not found in the document.\""
+        },
+        {
+          "name": "Financial.revenueShare is honest NOT_FOUND or has value",
+          "pass": true,
+          "message": "Value: \"Not found in the document.\""
+        },
+        {
+          "name": "Memo generates",
+          "pass": true,
+          "message": "Memo completed"
+        },
+        {
+          "name": "Memo has lawyer questions",
+          "pass": true,
+          "message": "5 question(s) for lawyer"
+        },
+        {
+          "name": "Revision generates",
+          "pass": true,
+          "message": "Revision completed"
+        },
+        {
+          "name": "Revision has clause revisions",
+          "pass": true,
+          "message": "2 clause revision(s)"
+        },
+        {
+          "name": "Revision disclaimer present",
+          "pass": true,
+          "message": "Revision disclaimer intact"
+        }
+      ],
+      "passed": 20,
+      "failed": 0
+    },
+    {
+      "file": "sample-term-sheet.txt",
+      "checks": [
+        {
+          "name": "File parses",
+          "pass": true,
+          "message": "Parsed 6,423 characters"
+        },
+        {
+          "name": "Document type detected correctly",
+          "pass": true,
+          "message": "Detected: \"Term Sheet\""
+        },
+        {
+          "name": "Review generates",
+          "pass": true,
+          "message": "Review completed successfully"
+        },
+        {
+          "name": "paymentTerms is present or honest NOT_FOUND",
+          "pass": true,
+          "message": "Value: \"Not found in the document.\""
+        },
+        {
+          "name": "renewalTerms is present or honest NOT_FOUND",
+          "pass": true,
+          "message": "Value: \"Not found in the document.\""
+        },
+        {
+          "name": "terminationTerms is present or honest NOT_FOUND",
+          "pass": true,
+          "message": "Value: \"termination of negotiations by Lead Investor, the Company ag\""
+        },
+        {
+          "name": "governingLaw is present or honest NOT_FOUND",
+          "pass": true,
+          "message": "Value: \"GOVERNING LAW\""
+        },
+        {
+          "name": "Risk score is in range",
+          "pass": true,
+          "message": "Risk score: 65/100"
+        },
+        {
+          "name": "Risk supporting quotes are specific (not \"See document\")",
+          "pass": true,
+          "message": "All 3 risks have specific quotes"
+        },
+        {
+          "name": "Citations present",
+          "pass": true,
+          "message": "Mock mode — citations check skipped"
+        },
+        {
+          "name": "Provider metadata attached",
+          "pass": true,
+          "message": "providerMode=mock, sourceFilename=sample-term-sheet.txt"
+        },
+        {
+          "name": "Financial analysis generates",
+          "pass": true,
+          "message": "Financial analysis completed"
+        },
+        {
+          "name": "Financial.discounts is honest NOT_FOUND or has value",
+          "pass": true,
+          "message": "Value: \"Not found in the document.\""
+        },
+        {
+          "name": "Financial.equityTerms is honest NOT_FOUND or has value",
+          "pass": true,
+          "message": "Value: \"Not found in the document.\""
+        },
+        {
+          "name": "Financial.revenueShare is honest NOT_FOUND or has value",
+          "pass": true,
+          "message": "Value: \"Not found in the document.\""
+        },
+        {
+          "name": "Memo generates",
+          "pass": true,
+          "message": "Memo completed"
+        },
+        {
+          "name": "Memo has lawyer questions",
+          "pass": true,
+          "message": "5 question(s) for lawyer"
+        },
+        {
+          "name": "Revision generates",
+          "pass": true,
+          "message": "Revision completed"
+        },
+        {
+          "name": "Revision has clause revisions",
+          "pass": true,
+          "message": "2 clause revision(s)"
+        },
+        {
+          "name": "Revision disclaimer present",
+          "pass": true,
+          "message": "Revision disclaimer intact"
+        }
+      ],
+      "passed": 20,
+      "failed": 0
+    },
+    {
+      "file": "sample-contractor-agreement.txt",
+      "checks": [
+        {
+          "name": "File parses",
+          "pass": true,
+          "message": "Parsed 8,089 characters"
+        },
+        {
+          "name": "Document type detected correctly",
+          "pass": true,
+          "message": "Detected: \"Contractor Agreement\""
+        },
+        {
+          "name": "Review generates",
+          "pass": true,
+          "message": "Review completed successfully"
+        },
+        {
+          "name": "paymentTerms is present or honest NOT_FOUND",
+          "pass": true,
+          "message": "Value: \"Not found in the document.\""
+        },
+        {
+          "name": "renewalTerms is present or honest NOT_FOUND",
+          "pass": true,
+          "message": "Value: \"Not found in the document.\""
+        },
+        {
+          "name": "terminationTerms is present or honest NOT_FOUND",
+          "pass": true,
+          "message": "Value: \"Either party may terminate this Agreement for any reason or \""
+        },
+        {
+          "name": "governingLaw is present or honest NOT_FOUND",
+          "pass": true,
+          "message": "Value: \"governed by the laws of the State of Texas, without regard t\""
+        },
+        {
+          "name": "Risk score is in range",
+          "pass": true,
+          "message": "Risk score: 65/100"
+        },
+        {
+          "name": "Risk supporting quotes are specific (not \"See document\")",
+          "pass": true,
+          "message": "All 3 risks have specific quotes"
+        },
+        {
+          "name": "Citations present",
+          "pass": true,
+          "message": "Mock mode — citations check skipped"
+        },
+        {
+          "name": "Provider metadata attached",
+          "pass": true,
+          "message": "providerMode=mock, sourceFilename=sample-contractor-agreement.txt"
+        },
+        {
+          "name": "Financial analysis generates",
+          "pass": true,
+          "message": "Financial analysis completed"
+        },
+        {
+          "name": "Financial.discounts is honest NOT_FOUND or has value",
+          "pass": true,
+          "message": "Value: \"Not found in the document.\""
+        },
+        {
+          "name": "Financial.equityTerms is honest NOT_FOUND or has value",
+          "pass": true,
+          "message": "Value: \"Not found in the document.\""
+        },
+        {
+          "name": "Financial.revenueShare is honest NOT_FOUND or has value",
+          "pass": true,
+          "message": "Value: \"Not found in the document.\""
+        },
+        {
+          "name": "Memo generates",
+          "pass": true,
+          "message": "Memo completed"
+        },
+        {
+          "name": "Memo has lawyer questions",
+          "pass": true,
+          "message": "5 question(s) for lawyer"
+        },
+        {
+          "name": "Revision generates",
+          "pass": true,
+          "message": "Revision completed"
+        },
+        {
+          "name": "Revision has clause revisions",
+          "pass": true,
+          "message": "2 clause revision(s)"
+        },
+        {
+          "name": "Revision disclaimer present",
+          "pass": true,
+          "message": "Revision disclaimer intact"
+        }
+      ],
+      "passed": 20,
+      "failed": 0
+    },
+    {
+      "file": "sample-payment-schedule.csv",
+      "checks": [
+        {
+          "name": "CSV parses",
+          "pass": true,
+          "message": "1 sheet(s) loaded"
+        },
+        {
+          "name": "Headers extracted",
+          "pass": true,
+          "message": "7 headers: Vendor, Invoice Number, Amount, Due Date"
+        },
+        {
+          "name": "Row count > 0",
+          "pass": true,
+          "message": "15 rows"
+        },
+        {
+          "name": "Detected as isPaymentSchedule",
+          "pass": true,
+          "message": "isPaymentSchedule = true"
+        },
+        {
+          "name": "Currency amounts extracted",
+          "pass": true,
+          "message": "8 amount(s): $12500.00, $8750.00, $3200.00"
+        },
+        {
+          "name": "SpreadsheetAnalysis schema validates",
+          "pass": true,
+          "message": "summary: \"This spreadsheet (sample-payment-schedule.csv) con...\""
+        },
+        {
+          "name": "Disclaimer present",
+          "pass": true,
+          "message": "Disclaimer intact"
+        },
+        {
+          "name": "Key findings generated",
+          "pass": true,
+          "message": "3 finding(s)"
+        }
+      ],
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "file": "sample-cap-table.csv",
+      "checks": [
+        {
+          "name": "CSV parses",
+          "pass": true,
+          "message": "1 sheet(s) loaded"
+        },
+        {
+          "name": "Headers extracted",
+          "pass": true,
+          "message": "9 headers: Investor, Share Class, Shares, Price Per Share"
+        },
+        {
+          "name": "Row count > 0",
+          "pass": true,
+          "message": "15 rows"
+        },
+        {
+          "name": "Detected as isCapTable",
+          "pass": true,
+          "message": "isCapTable = true"
+        },
+        {
+          "name": "Currency amounts extracted",
+          "pass": true,
+          "message": "18 amount(s): 4000000, $400.00, 1500000"
+        },
+        {
+          "name": "SpreadsheetAnalysis schema validates",
+          "pass": true,
+          "message": "summary: \"This spreadsheet (sample-cap-table.csv) contains 1...\""
+        },
+        {
+          "name": "Disclaimer present",
+          "pass": true,
+          "message": "Disclaimer intact"
+        },
+        {
+          "name": "Key findings generated",
+          "pass": true,
+          "message": "4 finding(s)"
+        }
+      ],
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "file": "sample-vendor-invoices.csv",
+      "checks": [
+        {
+          "name": "CSV parses",
+          "pass": true,
+          "message": "1 sheet(s) loaded"
+        },
+        {
+          "name": "Headers extracted",
+          "pass": true,
+          "message": "11 headers: Invoice Date, Invoice Number, Vendor Name, Vendor Email"
+        },
+        {
+          "name": "Row count > 0",
+          "pass": true,
+          "message": "12 rows"
+        },
+        {
+          "name": "Detected as isInvoice",
+          "pass": true,
+          "message": "isInvoice = true"
+        },
+        {
+          "name": "Currency amounts extracted",
+          "pass": true,
+          "message": "12 amount(s): $45000.00, $0.00, $1250.00"
+        },
+        {
+          "name": "SpreadsheetAnalysis schema validates",
+          "pass": true,
+          "message": "summary: \"This spreadsheet (sample-vendor-invoices.csv) cont...\""
+        },
+        {
+          "name": "Disclaimer present",
+          "pass": true,
+          "message": "Disclaimer intact"
+        },
+        {
+          "name": "Key findings generated",
+          "pass": true,
+          "message": "2 finding(s)"
+        }
+      ],
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "file": "[DataRoom Summary]",
+      "checks": [
+        {
+          "name": "DataRoom summary generates",
+          "pass": true,
+          "message": "4 files, 2 finding(s)"
+        },
+        {
+          "name": "DataRoom disclaimer present",
+          "pass": true,
+          "message": "Disclaimer intact"
+        },
+        {
+          "name": "Payment findings present",
+          "pass": true,
+          "message": "10 payment finding(s)"
+        },
+        {
+          "name": "Cap table findings present",
+          "pass": true,
+          "message": "8 cap table row(s)"
+        },
+        {
+          "name": "Executive summary not generic",
+          "pass": true,
+          "message": "Summary: \"This data room contains 4 document(s): 1 contract(s) and 3 s...\""
+        }
+      ],
+      "passed": 5,
+      "failed": 0
+    },
+    {
+      "file": "[v5: Issue Log + Evidence + Exports]",
+      "checks": [
+        {
+          "name": "Issue log generates without crash",
+          "pass": true,
+          "message": "Issue log created: 9 issue(s)"
+        },
+        {
+          "name": "Issue log schema validates",
+          "pass": true,
+          "message": "Schema valid: 9 issues, 9 evidence items"
+        },
+        {
+          "name": "Every issue has at least one evidence ID",
+          "pass": true,
+          "message": "All 9 issues have evidence"
+        },
+        {
+          "name": "All evidence items link to a valid issue ID",
+          "pass": true,
+          "message": "9 evidence items all linked"
+        },
+        {
+          "name": "Unverified evidence items have verificationNote",
+          "pass": true,
+          "message": "All unverified items have notes"
+        },
+        {
+          "name": "Issues sorted by severity (Critical/High first)",
+          "pass": true,
+          "message": "Severity order correct"
+        },
+        {
+          "name": "Issue log disclaimer present",
+          "pass": true,
+          "message": "Disclaimer intact"
+        },
+        {
+          "name": "Export: issues.csv and evidence.csv created",
+          "pass": true,
+          "message": "issues.csv and evidence.csv written"
+        },
+        {
+          "name": "Compare engine runs without crash",
+          "pass": true,
+          "message": "Compare report: compare-2026-05-12T17-27-32"
+        }
+      ],
+      "passed": 9,
+      "failed": 0
+    }
+  ]
+}

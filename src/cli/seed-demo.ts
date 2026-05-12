@@ -213,9 +213,46 @@ async function main() {
     console.warn(`  ⚠️ Spreadsheet seeding failed: ${err instanceof Error ? err.message : String(err)}`);
   }
 
+  // Seed v5 issue log
+  console.log('\n  Seeding v5 issue log and evidence...\n');
+  try {
+    const { buildIssueLogFromReports } = await import('../lib/issue-engine');
+    const { SpreadsheetAnalysisSchema, DataRoomSummarySchema } = await import('../schemas/spreadsheet.schema');
+    const { parseCsvFile, buildTableProfile } = await import('../lib/spreadsheet-parser');
+    const { generateMockSpreadsheetAnalysis, generateMockDataRoomSummary } = await import('../lib/mock-spreadsheet-provider');
+
+    const spreadsheetFiles = ['sample-cap-table.csv', 'sample-payment-schedule.csv', 'sample-vendor-invoices.csv'];
+    const csvDocs = spreadsheetFiles
+      .filter((f) => fs.existsSync(path.join(INBOX, f)))
+      .map((f) => {
+        const sheets = parseCsvFile(path.join(INBOX, f));
+        const profiles = sheets.map((s) => buildTableProfile(s));
+        return { filename: f, sheets, profiles };
+      });
+
+    const mockDataRoom = DataRoomSummarySchema.parse(
+      generateMockDataRoomSummary([{ filename: SOURCE_FILE, text: fs.readFileSync(sourceFile, 'utf-8') }], csvDocs, [])
+    );
+
+    const issueLog = buildIssueLogFromReports(
+      [review],
+      csvDocs.map(({ filename, sheets, profiles }) =>
+        SpreadsheetAnalysisSchema.parse(generateMockSpreadsheetAnalysis(filename, sheets, profiles))
+      ),
+      [mockDataRoom],
+      ['reviews/demo-review.json', 'dataroom/demo-dataroom.json'],
+    );
+
+    writeFile(path.join(DEMO_DATA, 'demo-issue-log.json'), JSON.stringify(issueLog, null, 2), 'demo-issue-log.json');
+    writeFile(path.join(DEMO_ARTIFACTS, 'demo-issue-log.json'), JSON.stringify(issueLog, null, 2), 'demo-issue-log.json (public)');
+    console.log(`     Issues: ${issueLog.totalIssues} (Critical: ${issueLog.criticalCount}, High: ${issueLog.highCount})`);
+  } catch (err) {
+    console.warn(`  ⚠️ v5 issue log seeding failed: ${err instanceof Error ? err.message : String(err)}`);
+  }
+
   // Write manifest
   const manifest = {
-    version: '4',
+    version: '5',
     generatedAt: new Date().toISOString(),
     sourceDocument: SOURCE_FILE,
     description: `Demo fixture data for the Synth /demo route. Generated from ${SOURCE_FILE} in ${review.providerMode} mode.`,
@@ -228,6 +265,7 @@ async function main() {
       memo: 'demo-memo.json',
       revision: 'demo-revision.json',
       dataroom: 'demo-dataroom.json',
+      issueLog: 'demo-issue-log.json',
     },
     artifacts: {
       fullPacketHtml: '/demo-artifacts/demo-full-packet.html',
@@ -237,6 +275,7 @@ async function main() {
       reviewMarkdown: '/demo-artifacts/demo-review.md',
       reviewJson: '/demo-artifacts/demo-review.json',
       dataroomJson: '/demo-artifacts/demo-dataroom.json',
+      issueLogJson: '/demo-artifacts/demo-issue-log.json',
     },
   };
   writeFile(path.join(DEMO_DATA, 'demo-manifest.json'), JSON.stringify(manifest, null, 2), 'demo-manifest.json');
@@ -248,6 +287,8 @@ async function main() {
   console.log('  src/data/demo/          — JSON fixtures for /demo route');
   console.log('  public/demo-artifacts/  — Downloadable artifacts for /artifacts\n');
   console.log('Next steps:');
+  console.log('  npm run triage          — Build issue log from reports');
+  console.log('  npm run export          — Export to CSV/XLSX');
   console.log('  npm run dashboard       — Check local dashboard');
   console.log('  npm run build           — Rebuild with updated demo data\n');
 }

@@ -124,9 +124,8 @@ async function main() {
   fs.mkdirSync(TABLES_DIR, { recursive: true });
   fs.mkdirSync(HTML_DIR, { recursive: true });
 
-  const { parseCsvFile, parseXlsxFile, buildTableProfile, textSummaryOfSheet } = await import('../lib/spreadsheet-parser');
-  const { generateMockSpreadsheetAnalysis } = await import('../lib/mock-spreadsheet-provider');
-  const { SpreadsheetAnalysisSchema } = await import('../schemas/spreadsheet.schema');
+  const { parseCsvFile, parseXlsxFile, buildTableProfile } = await import('../lib/spreadsheet-parser');
+  const { runSpreadsheetAnalysis } = await import('../lib/ai-provider');
 
   for (const filename of files) {
     const ext = path.extname(filename).toLowerCase();
@@ -138,9 +137,7 @@ async function main() {
     try {
       const sheets = ext === '.csv' ? parseCsvFile(filepath) : parseXlsxFile(filepath);
       const profiles = sheets.map((s) => buildTableProfile(s));
-      const analysis = SpreadsheetAnalysisSchema.parse(
-        generateMockSpreadsheetAnalysis(filename, sheets, profiles)
-      );
+      const analysis = await runSpreadsheetAnalysis(filename, sheets, profiles);
 
       // JSON
       const jsonPath = path.join(TABLES_DIR, `${slug}-spreadsheet.json`);

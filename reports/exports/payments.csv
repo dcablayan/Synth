@@ -1,0 +1,11 @@
+vendor,amount,dueDate,status,sourceFile,contractMatch,mismatch
+Acme Corp,$12500.00,2024-02-15,Paid,sample-payment-schedule.csv,,
+DataStream Inc,$8750.00,2024-02-28,Paid,sample-payment-schedule.csv,,
+Acme Corp,$12500.00,2024-03-15,Paid,sample-payment-schedule.csv,,
+LegalDocs Ltd,$3200.00,2024-03-20,Paid,sample-payment-schedule.csv,,
+DataStream Inc,$9100.00,2024-03-31,Overdue,sample-payment-schedule.csv,,
+Acme Corp,$12500.00,2024-04-15,Pending,sample-payment-schedule.csv,,
+TechVendors LLC,$5500.00,2024-04-20,Pending,sample-payment-schedule.csv,,
+LegalDocs Ltd,$3200.00,2024-04-25,Pending,sample-payment-schedule.csv,,
+CloudHosting Pro,$45000.00,2024-01-05,Paid,sample-vendor-invoices.csv,,
+Stripe Inc,$1250.00,2024-01-12,Paid,sample-vendor-invoices.csv,,
