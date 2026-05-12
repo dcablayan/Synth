@@ -24,18 +24,19 @@ export default function CaseStudyPage() {
         <div className="mb-12">
           <div className="text-blue-400 text-xs uppercase tracking-widest font-semibold mb-4">Case Study</div>
           <h1 className="text-4xl font-bold text-white mb-4 leading-tight">
-            Building Synth: A Repo-First AI Contract Review System
+            Building Synth v4: Legal and Financial Data Room Review
           </h1>
           <p className="text-slate-400 text-lg leading-relaxed">
-            How I built a local-first, CLI-driven, agent-native document review system as a portfolio prototype —
-            and why the design choices matter for production-grade AI tools.
+            How I built a local-first, CLI-driven, agent-native document review system that handles contracts,
+            spreadsheets, cap tables, and cross-document data room analysis — and why the design choices matter for
+            production-grade AI tools.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-slate-500">
             <span>Solo build · 2026</span>
             <span>·</span>
-            <span>TypeScript · Next.js · Playwright · Zod</span>
+            <span>TypeScript · Next.js · Playwright · Zod · xlsx</span>
             <span>·</span>
-            <span>v3</span>
+            <span>v4</span>
           </div>
         </div>
 
@@ -69,7 +70,7 @@ export default function CaseStudyPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
                 { label: 'Chat with PDF', items: ['Freeform Q&A output', 'Nothing to audit', 'Re-run = different answer', 'No downstream format', 'No validation layer', 'No PDF, no memo, no revision packet'] },
-                { label: 'Synth', items: ['Zod-validated JSON output', 'Reports are saved artifacts', 'Re-run = same schema, consistent structure', 'HTML → PDF → dashboard', 'Schema validation on every output', 'Full packet: review + memo + revisions'] },
+                { label: 'Synth v4', items: ['Zod-validated JSON output', 'Reports are saved artifacts', 'Re-run = same schema, consistent structure', 'HTML → PDF → dashboard', 'CSV/XLSX ingestion + table profiling', 'Cross-document: contracts + spreadsheets + cap tables'] },
               ].map(({ label, items }) => (
                 <div key={label} className="bg-slate-900 border border-slate-800 rounded-lg p-4">
                   <div className="text-white text-xs font-semibold mb-2">{label}</div>
@@ -107,14 +108,18 @@ export default function CaseStudyPage() {
               <div className="text-slate-500 mb-2">┌─────────────────────────────────────────┐</div>
               <div className="text-slate-500">│  CLI Layer  (<span className="text-blue-400">src/cli/</span>)                   │</div>
               <div className="text-slate-500">│  analyze · demo · memo · revise · packet  │</div>
+              <div className="text-slate-500">│  ingest · spreadsheet · dataroom (v4)     │</div>
               <div className="text-slate-500">│  seed-demo · eval · pdf · doctor · verify │</div>
               <div className="text-slate-500">├─────────────────────────────────────────┤</div>
               <div className="text-slate-500">│  Library Layer  (<span className="text-blue-400">src/lib/</span>)              │</div>
               <div className="text-slate-500">│  ai-provider · mock-provider · parser     │</div>
+              <div className="text-slate-500">│  spreadsheet-parser (v4) · mock-spreadsheet-provider (v4)│</div>
               <div className="text-slate-500">│  html-renderer · pdf-writer · risk-scoring│</div>
               <div className="text-slate-500">├─────────────────────────────────────────┤</div>
               <div className="text-slate-500">│  Schema Layer  (<span className="text-blue-400">src/schemas/</span>)          │</div>
               <div className="text-slate-500">│  Zod: review · financial · memo · revision│</div>
+              <div className="text-slate-500">│  spreadsheet (v4): TableProfile · SpreadsheetAnalysis │</div>
+              <div className="text-slate-500">│  DataRoomSummary · CrossDocumentFinding (v4)│</div>
               <div className="text-slate-500">├─────────────────────────────────────────┤</div>
               <div className="text-slate-500">│  UI Layer  (<span className="text-blue-400">src/app/</span>)                 │</div>
               <div className="text-slate-500">│  / · /demo · /artifacts · /dashboard      │</div>
@@ -140,8 +145,8 @@ export default function CaseStudyPage() {
             </div>
           </Section>
 
-          {/* What Changed v1 to v3 */}
-          <Section title="What Changed from v1 to v3">
+          {/* What Changed v1 to v4 */}
+          <Section title="What Changed from v1 to v4">
             <div className="space-y-3">
               {[
                 {
@@ -177,7 +182,22 @@ export default function CaseStudyPage() {
                     'AI reliability: safe JSON parsing, error saving, graceful fallback',
                     'Source metadata on all outputs (filename, extension, chars, provider mode)',
                     'Dashboard v3: recruiter card, metadata display, fallback badges',
-                    'GitHub Actions CI: type-check + verify + build + eval',
+                  ],
+                },
+                {
+                  version: 'v4',
+                  label: 'Data Room Review',
+                  items: [
+                    'CSV + XLSX ingestion with table profiling (headers, types, amounts, dates, entities)',
+                    'New schemas: TableProfile, SpreadsheetAnalysis, DataRoomSummary, CrossDocumentFinding, PaymentScheduleFinding, CapTableFinding',
+                    'npm run ingest — parse all file types in inbox',
+                    'npm run spreadsheet — analyze CSV/XLSX → reports/tables/ (JSON + MD + HTML)',
+                    'npm run dataroom — full mixed-packet analysis → reports/dataroom/ (JSON + MD + HTML + PDF)',
+                    'Cross-document checks: payment terms vs. schedules, cap table vs. term sheet, duplicate vendors',
+                    'Document-aware mock mode for spreadsheets (uses real headers, amounts, entities)',
+                    'Eval v4: spreadsheet parsing, header extraction, amount detection, cap table, dataroom schema',
+                    'Dashboard v4: spreadsheet profiles, data room overview, payment schedule, cap table findings',
+                    'Artifacts v4: spreadsheet JSON, dataroom JSON, cap table analysis',
                   ],
                 },
               ].map(({ version, label, items }) => (
@@ -202,17 +222,24 @@ export default function CaseStudyPage() {
           {/* Workflow */}
           <Section title="How the Workflow Works">
             <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 font-mono text-xs text-slate-300 space-y-1 mb-4">
-              <div className="text-slate-500"># 1. Drop document into inbox</div>
+              <div className="text-slate-500"># 1. Drop documents into inbox</div>
               <div>cp my-contract.pdf documents/inbox/</div>
-              <div className="mt-2 text-slate-500"># 2. Run full pipeline</div>
+              <div>cp cap-table.csv documents/inbox/</div>
+              <div className="mt-2 text-slate-500"># 2a. Contract review pipeline</div>
               <div>npm run packet</div>
               <div className="pl-4 text-blue-400">→ Detect document type (.txt/.md/.pdf/.docx)</div>
-              <div className="pl-4 text-blue-400">→ Run contract review (mock or real AI)</div>
-              <div className="pl-4 text-blue-400">→ Run financial analysis</div>
-              <div className="pl-4 text-blue-400">→ Generate executive memo</div>
-              <div className="pl-4 text-blue-400">→ Generate revision packet</div>
-              <div className="pl-4 text-blue-400">→ Render HTML → generate PDFs via Playwright</div>
-              <div className="pl-4 text-blue-400">→ Generate full-packet PDF</div>
+              <div className="pl-4 text-blue-400">→ Run contract review + financial + memo + revision</div>
+              <div className="pl-4 text-blue-400">→ Render HTML → PDF via Playwright</div>
+              <div className="mt-2 text-slate-500"># 2b. v4: Spreadsheet analysis</div>
+              <div>npm run spreadsheet</div>
+              <div className="pl-4 text-blue-400">→ Parse CSV/XLSX → extract headers, amounts, entities</div>
+              <div className="pl-4 text-blue-400">→ Detect: payment schedule / cap table / invoice</div>
+              <div className="pl-4 text-blue-400">→ Save JSON + MD + HTML → reports/tables/</div>
+              <div className="mt-2 text-slate-500"># 2c. v4: Full data room analysis</div>
+              <div>npm run dataroom</div>
+              <div className="pl-4 text-blue-400">→ Load all contracts + spreadsheets as a packet</div>
+              <div className="pl-4 text-blue-400">→ Run cross-document checks</div>
+              <div className="pl-4 text-blue-400">→ Save JSON + MD + HTML + PDF → reports/dataroom/</div>
               <div className="mt-2 text-slate-500"># 3. Open dashboard</div>
               <div>npm run dashboard</div>
             </div>
@@ -262,8 +289,10 @@ export default function CaseStudyPage() {
                 {[
                   'Built a local-first AI document review system end-to-end in TypeScript: CLI pipeline, schema validation (Zod), HTML/PDF rendering (Playwright), and Next.js dashboard',
                   'Designed AI output validation layer with safe JSON parsing, Zod schema enforcement, error logging, and graceful mock fallback — preventing silent failures in structured AI outputs',
-                  'Implemented multi-format document ingestion (.txt, .md, .pdf, .docx) with an abstracted AI provider layer supporting both live (OpenAI-compatible) and mock modes',
-                  'Built eval harness with deterministic correctness checks: document type detection, sentinel field validation, quote specificity, and full pipeline smoke testing',
+                  'Implemented multi-format document ingestion (.txt, .md, .pdf, .docx, .csv, .xlsx) with an abstracted AI provider layer supporting both live (OpenAI-compatible) and mock modes',
+                  'Built spreadsheet analysis engine for CSV/XLSX: column profiling, currency/date/entity extraction, payment schedule and cap table detection, repeated vendor detection',
+                  'Designed cross-document data room analysis — reconciling contract terms against payment schedules, cap tables, and vendor invoices for mismatches and data quality issues',
+                  'Built eval harness with deterministic correctness checks: document type detection, spreadsheet parsing, amount extraction, cross-document mismatch detection, and dataroom schema validation',
                   'Created agent-native documentation (CLAUDE.md, CODEX.md) enabling AI agents to operate, understand, and extend the system without human instruction',
                   'Shipped static demo layer with committed fixture data so the deployed site demonstrates full functionality without local setup or API keys',
                 ].map((bullet) => (
@@ -279,9 +308,9 @@ export default function CaseStudyPage() {
           {/* Closing */}
           <div className="border-t border-slate-800 pt-8 mt-8">
             <p className="text-slate-400 text-sm leading-relaxed mb-4">
-              Synth is a solo-built prototype demonstrating what a serious, repo-first AI document operations system looks like —
-              one that can be cloned, run locally, operated by another AI agent, and extended without touching a UI.
-              It is not production legal software.
+              Synth v4 is a solo-built prototype demonstrating what a serious, repo-first AI document operations system looks like —
+              one that handles contracts, spreadsheets, cap tables, and cross-document data room analysis. It can be cloned, run
+              locally, operated by another AI agent, and extended without touching a UI. It is not production legal software.
             </p>
             <div className="flex flex-wrap gap-3">
               <Link href="/demo" className="bg-blue-600 hover:bg-blue-500 text-white text-xs px-4 py-2 rounded transition-colors">

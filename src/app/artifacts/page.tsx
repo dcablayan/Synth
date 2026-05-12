@@ -10,6 +10,7 @@ const artifacts = [
     href: '/demo-artifacts/demo-full-packet.html',
     icon: '📦',
     highlight: true,
+    badge: 'Full Packet',
   },
   {
     title: 'Contract Review',
@@ -37,6 +38,36 @@ const artifacts = [
     size: 'Single-page memo',
     href: '/demo-artifacts/demo-memo.html',
     icon: '📋',
+  },
+  {
+    title: 'Data Room Summary',
+    description:
+      'Cross-document analysis combining contracts and spreadsheets — payment schedule, cap table rows, party mismatches, and data quality warnings.',
+    format: 'JSON',
+    size: 'v4 · Data Room',
+    href: '/demo-artifacts/demo-dataroom.json',
+    icon: '🗂️',
+    badge: 'v4',
+  },
+  {
+    title: 'Payment Schedule Analysis',
+    description:
+      'Spreadsheet profile for sample-payment-schedule.csv — extracted vendors, amounts, due dates, overdue rows, repeated vendor detection.',
+    format: 'JSON',
+    size: 'v4 · Spreadsheet',
+    href: '/demo-artifacts/demo-sample-payment-schedule-spreadsheet.json',
+    icon: '💳',
+    badge: 'v4',
+  },
+  {
+    title: 'Cap Table Analysis',
+    description:
+      'Spreadsheet profile for sample-cap-table.csv — investor rows, share classes, ownership percentages, totals, equity structure.',
+    format: 'JSON',
+    size: 'v4 · Cap Table',
+    href: '/demo-artifacts/demo-sample-cap-table-spreadsheet.json',
+    icon: '📈',
+    badge: 'v4',
   },
   {
     title: 'Sample Review (Markdown)',
@@ -84,13 +115,12 @@ export default function ArtifactsPage() {
         <div className="mb-10">
           <div className="inline-flex items-center gap-2 bg-blue-950 border border-blue-800 text-blue-300 text-xs px-3 py-1.5 rounded-full mb-6">
             <span className="w-1.5 h-1.5 bg-blue-400 rounded-full" />
-            Sample outputs from mock-mode pipeline
+            v4 · Contracts + Spreadsheets + Data Room Review
           </div>
           <h1 className="text-3xl font-bold text-white mb-3">Artifact Gallery</h1>
           <p className="text-slate-400 text-sm max-w-2xl leading-relaxed">
-            These are sample outputs from running the Synth pipeline on{' '}
-            <code className="bg-slate-800 text-blue-300 px-1.5 py-0.5 rounded">sample-saas-agreement.txt</code>{' '}
-            in mock mode. Clone the repo to generate real AI-powered outputs from your own documents.
+            Sample outputs from running the Synth v4 pipeline in mock mode — contracts, spreadsheets, cap tables, and
+            cross-document data room analysis. Clone the repo to generate AI-powered outputs from your own documents.
           </p>
         </div>
 
@@ -103,8 +133,8 @@ export default function ArtifactsPage() {
               Every report is schema-validated with Zod — not freeform text. The JSON output is the ground truth; HTML and PDF are rendered from it.
             </div>
             <div>
-              <div className="text-slate-300 font-medium mb-1">Multi-format pipeline</div>
-              Each document produces JSON, Markdown, HTML, and PDF — all from the same structured output, ensuring consistency across formats.
+              <div className="text-slate-300 font-medium mb-1">Mixed-document data room (v4)</div>
+              Synth v4 analyzes contracts and spreadsheets together — extracting cap table rows, payment schedules, vendor invoices, and cross-document mismatches.
             </div>
             <div>
               <div className="text-slate-300 font-medium mb-1">Local-first design</div>
@@ -133,9 +163,9 @@ export default function ArtifactsPage() {
                   <span className="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded font-mono">
                     {artifact.format}
                   </span>
-                  {artifact.highlight && (
-                    <span className="text-xs text-blue-400 bg-blue-950 border border-blue-800 px-2 py-0.5 rounded">
-                      Full Packet
+                  {artifact.badge && (
+                    <span className={`text-xs px-2 py-0.5 rounded border ${artifact.badge === 'v4' ? 'text-green-300 bg-green-950 border-green-800' : 'text-blue-400 bg-blue-950 border-blue-800'}`}>
+                      {artifact.badge}
                     </span>
                   )}
                 </div>
@@ -164,12 +194,16 @@ export default function ArtifactsPage() {
             <div>git clone https://github.com/dylancablayan/synth</div>
             <div>cd synth &amp;&amp; npm install</div>
             <div>npx playwright install chromium</div>
-            <div className="mt-2 text-slate-500"># Run on sample documents (no API key needed)</div>
+            <div className="mt-2 text-slate-500"># Contract review pipeline</div>
             <div>npm run demo</div>
-            <div className="mt-2 text-slate-500"># Generate fresh demo artifacts</div>
+            <div className="mt-2 text-slate-500"># v4: ingest all file types</div>
+            <div>npm run ingest</div>
+            <div className="mt-2 text-slate-500"># v4: analyze CSV/XLSX spreadsheets</div>
+            <div>npm run spreadsheet</div>
+            <div className="mt-2 text-slate-500"># v4: full data room analysis</div>
+            <div>npm run dataroom</div>
+            <div className="mt-2 text-slate-500"># Regenerate demo artifacts</div>
             <div>npm run seed-demo</div>
-            <div className="mt-2 text-slate-500"># Open local dashboard</div>
-            <div>npm run dashboard</div>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link href="/demo" className="bg-blue-600 hover:bg-blue-500 text-white text-xs px-4 py-2 rounded transition-colors">

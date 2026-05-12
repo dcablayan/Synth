@@ -1,0 +1,176 @@
+{
+  "filename": "sample-payment-schedule.csv",
+  "sheets": [
+    {
+      "sheetName": "Sheet1",
+      "rowCount": 15,
+      "columnCount": 7,
+      "columns": [
+        {
+          "name": "Vendor",
+          "type": "string",
+          "sampleValues": [
+            "Acme Corp",
+            "DataStream Inc",
+            "Acme Corp",
+            "LegalDocs Ltd",
+            "DataStream Inc"
+          ],
+          "uniqueCount": 9,
+          "blankCount": 0,
+          "isCurrencyLike": false,
+          "isDateLike": false
+        },
+        {
+          "name": "Invoice Number",
+          "type": "string",
+          "sampleValues": [
+            "INV-2024-001",
+            "INV-2024-002",
+            "INV-2024-003",
+            "INV-2024-004",
+            "INV-2024-005"
+          ],
+          "uniqueCount": 14,
+          "blankCount": 1,
+          "isCurrencyLike": false,
+          "isDateLike": false
+        },
+        {
+          "name": "Amount",
+          "type": "currency",
+          "sampleValues": [
+            "$12500.00",
+            "$8750.00",
+            "$12500.00",
+            "$3200.00",
+            "$9100.00"
+          ],
+          "uniqueCount": 5,
+          "blankCount": 5,
+          "isCurrencyLike": true,
+          "isDateLike": false
+        },
+        {
+          "name": "Due Date",
+          "type": "date",
+          "sampleValues": [
+            "2024-02-15",
+            "2024-02-28",
+            "2024-03-15",
+            "2024-03-20",
+            "2024-03-31"
+          ],
+          "uniqueCount": 10,
+          "blankCount": 5,
+          "isCurrencyLike": false,
+          "isDateLike": true
+        },
+        {
+          "name": "Status",
+          "type": "string",
+          "sampleValues": [
+            "Paid",
+            "Paid",
+            "Paid",
+            "Paid",
+            "Overdue"
+          ],
+          "uniqueCount": 3,
+          "blankCount": 5,
+          "isCurrencyLike": false,
+          "isDateLike": false
+        },
+        {
+          "name": "Contract Reference",
+          "type": "string",
+          "sampleValues": [
+            "SaaS-2024-001",
+            "SaaS-2024-001",
+            "SaaS-2024-001",
+            "CONSULTING-2024-02",
+            "SaaS-2024-001"
+          ],
+          "uniqueCount": 3,
+          "blankCount": 5,
+          "isCurrencyLike": false,
+          "isDateLike": false
+        },
+        {
+          "name": "Notes",
+          "type": "string",
+          "sampleValues": [
+            "Monthly license fee",
+            "Overage charges Feb",
+            "Monthly license fee",
+            "Legal review retainer",
+            "Overage charges Mar"
+          ],
+          "uniqueCount": 6,
+          "blankCount": 5,
+          "isCurrencyLike": false,
+          "isDateLike": false
+        }
+      ],
+      "detectedEntities": [
+        "Acme Corp",
+        "DataStream Inc",
+        "LegalDocs Ltd",
+        "TechVendors LLC",
+        "Acme Corp Total",
+        "DataStream Inc Total",
+        "LegalDocs Ltd Total",
+        "TechVendors LLC Total"
+      ],
+      "detectedAmounts": [
+        "$12500.00",
+        "$8750.00",
+        "$3200.00",
+        "$9100.00",
+        "$5500.00",
+        "$62500.00",
+        "$26950.00",
+        "$6400.00"
+      ],
+      "detectedDates": [
+        "2024-02-15",
+        "2024-02-28",
+        "2024-03-15",
+        "2024-03-20",
+        "2024-03-31",
+        "2024-04-15",
+        "2024-04-20",
+        "2024-04-25",
+        "2024-04-30",
+        "2024-05-15"
+      ],
+      "detectedEmails": [],
+      "repeatedVendors": [],
+      "totalAmounts": [
+        {
+          "label": "Acme Corp Total (Invoice Number)",
+          "amount": "$62500.00"
+        },
+        {
+          "label": "DataStream Inc Total (Invoice Number)",
+          "amount": "$26950.00"
+        },
+        {
+          "label": "LegalDocs Ltd Total (Invoice Number)",
+          "amount": "$6400.00"
+        },
+        {
+          "label": "TechVendors LLC Total (Invoice Number)",
+          "amount": "$5500.00"
+        }
+      ],
+      "isPaymentSchedule": true,
+      "isCapTable": false,
+      "isInvoice": true,
+      "isVendorList": true,
+      "warnings": [
+        "1 row(s) marked as overdue"
+      ]
+    }
+  ]
+}

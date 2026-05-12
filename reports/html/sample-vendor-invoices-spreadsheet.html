@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spreadsheet Analysis: sample vendor invoices</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #0f172a; color: #e2e8f0; margin: 0; padding: 24px; }
+  .container { max-width: 900px; margin: 0 auto; }
+  h1 { color: #38bdf8; font-size: 1.4rem; margin-bottom: 4px; }
+  h3 { color: #94a3b8; font-size: 1rem; margin: 0 0 8px 0; }
+  .meta { color: #64748b; font-size: 0.8rem; }
+  .disclaimer { background: #422006; border: 1px solid #92400e; border-radius: 8px; padding: 10px 14px; font-size: 0.78rem; color: #fde68a; margin-bottom: 20px; }
+  .summary { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; margin-bottom: 20px; }
+  .findings { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; margin-bottom: 20px; }
+  .findings ul { margin: 8px 0; padding-left: 18px; }
+  .findings li { color: #94a3b8; font-size: 0.85rem; margin: 4px 0; }
+  .sheet-card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+  .sheet-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 10px; }
+  th { background: #0f172a; color: #64748b; font-weight: 600; padding: 6px 8px; text-align: left; }
+  td { padding: 5px 8px; border-bottom: 1px solid #1e293b; color: #cbd5e1; }
+  code { background: #0f172a; color: #38bdf8; padding: 1px 4px; border-radius: 3px; font-size: 0.78rem; }
+  em { color: #94a3b8; font-style: normal; }
+  .warning { color: #fbbf24; font-size: 0.82rem; }
+  .badge { background: #7c3aed; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.72rem; }
+  .badge-green { background: #065f46; }
+  .badge-blue { background: #1e40af; }
+  .badge-orange { background: #92400e; }
+  .provider { background: #1e293b; border: 1px solid #334155; padding: 8px 12px; border-radius: 6px; font-size: 0.75rem; color: #64748b; margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>sample vendor invoices</h1>
+  <p class="meta">1 sheet(s) · 12 rows · Generated 2026-05-12T11:19:45.516Z · Mock Mode</p>
+  <div class="disclaimer">⚠ Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.</div>
+  <div class="summary">
+    <h3>Summary</h3>
+    <p>This spreadsheet (sample-vendor-invoices.csv) contains 1 sheet(s) with 12 total data rows. It appears to be a payment schedule tracking vendor invoices and due dates. It contains vendor invoice data. All financial figures were extracted directly from the spreadsheet — no AI analysis was performed (mock mode).</p>
+  </div>
+  
+  <div class="findings">
+    <h3>Key Findings</h3>
+    <ul><li>Payment schedule has 1 row(s) marked as overdue</li><li>Invoice/vendor sheet: 12 rows, 12 entities</li></ul>
+  </div>
+  <div class="findings"><h3>Data Quality Warnings</h3><ul><li class="warning">1 row(s) marked as overdue</li></ul></div>
+  <h3 style="margin-top:20px">Sheet Profiles</h3>
+  
+    <div class="sheet-card">
+      <div class="sheet-header">
+        <h3>Sheet1 <span class="badge">Payment Schedule</span> <span class="badge badge-blue">Invoice</span> <span class="badge badge-orange">Vendor List</span></h3>
+        <span class="meta">12 rows · 11 columns</span>
+      </div>
+      <p><strong>Entities:</strong> CloudHosting Pro, billing@cloudhosting.pro, Stripe Inc, invoices@stripe.com, Acme Legal LLP, accounts@acmelegal.com, SalesForce Inc, billing@salesforce.com</p>
+      <p><strong>Amounts:</strong> $45000.00, $0.00, $1250.00, $8500.00, $18000.00, $15000.00</p>
+      <p><strong>Dates:</strong> 2024-01-05, 2024-01-12, 2024-01-15, 2024-01-20, 2024-02-01</p>
+      
+      
+      <p class="warning">⚠ 1 row(s) marked as overdue</p>
+      <table>
+        <thead><tr><th>Column</th><th>Type</th><th>Unique</th><th>Blanks</th><th>Samples</th></tr></thead>
+        <tbody>
+      <tr>
+        <td>Invoice Date</td>
+        <td><code>date</code></td>
+        <td>12</td>
+        <td>0</td>
+        <td><em>2024-01-05</em>, <em>2024-01-12</em>, <em>2024-01-15</em>, <em>2024-01-20</em>, <em>2024-02-01</em></td>
+      </tr>
+      <tr>
+        <td>Invoice Number</td>
+        <td><code>string</code></td>
+        <td>12</td>
+        <td>0</td>
+        <td><em>INV-VEN-001</em>, <em>INV-VEN-002</em>, <em>INV-VEN-003</em>, <em>INV-VEN-004</em>, <em>INV-VEN-005</em></td>
+      </tr>
+      <tr>
+        <td>Vendor Name</td>
+        <td><code>string</code></td>
+        <td>6</td>
+        <td>0</td>
+        <td><em>CloudHosting Pro</em>, <em>Stripe Inc</em>, <em>Acme Legal LLP</em>, <em>SalesForce Inc</em>, <em>CloudHosting Pro</em></td>
+      </tr>
+      <tr>
+        <td>Vendor Email</td>
+        <td><code>email</code></td>
+        <td>6</td>
+        <td>0</td>
+        <td><em>billing@cloudhosting.pro</em>, <em>invoices@stripe.com</em>, <em>accounts@acmelegal.com</em>, <em>billing@salesforce.com</em>, <em>billing@cloudhosting.pro</em></td>
+      </tr>
+      <tr>
+        <td>Service Description</td>
+        <td><code>string</code></td>
+        <td>12</td>
+        <td>0</td>
+        <td><em>Cloud infrastructure Q1 2024</em>, <em>Payment processing fees December</em>, <em>Contract review services</em>, <em>CRM annual license</em>, <em>Cloud infrastructure February</em></td>
+      </tr>
+      <tr>
+        <td>Amount</td>
+        <td><code>currency</code></td>
+        <td>11</td>
+        <td>0</td>
+        <td><em>$45000.00</em>, <em>$1250.00</em>, <em>$8500.00</em>, <em>$18000.00</em>, <em>$15000.00</em></td>
+      </tr>
+      <tr>
+        <td>Tax</td>
+        <td><code>currency</code></td>
+        <td>1</td>
+        <td>0</td>
+        <td><em>$0.00</em>, <em>$0.00</em>, <em>$0.00</em>, <em>$0.00</em>, <em>$0.00</em></td>
+      </tr>
+      <tr>
+        <td>Total</td>
+        <td><code>currency</code></td>
+        <td>11</td>
+        <td>0</td>
+        <td><em>$45000.00</em>, <em>$1250.00</em>, <em>$8500.00</em>, <em>$18000.00</em>, <em>$15000.00</em></td>
+      </tr>
+      <tr>
+        <td>Payment Terms</td>
+        <td><code>string</code></td>
+        <td>3</td>
+        <td>0</td>
+        <td><em>Net 30</em>, <em>Immediate</em>, <em>Net 45</em>, <em>Net 30</em>, <em>Net 30</em></td>
+      </tr>
+      <tr>
+        <td>Status</td>
+        <td><code>string</code></td>
+        <td>3</td>
+        <td>0</td>
+        <td><em>Paid</em>, <em>Paid</em>, <em>Paid</em>, <em>Paid</em>, <em>Paid</em></td>
+      </tr>
+      <tr>
+        <td>Category</td>
+        <td><code>string</code></td>
+        <td>4</td>
+        <td>0</td>
+        <td><em>Infrastructure</em>, <em>Payment Processing</em>, <em>Legal</em>, <em>Software</em>, <em>Infrastructure</em></td>
+      </tr></tbody>
+      </table>
+    </div>
+  <div class="provider">sourceFilename: sample-vendor-invoices.csv · extension: .csv · providerMode: mock</div>
+</div>
+</body>
+</html>

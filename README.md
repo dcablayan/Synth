@@ -1,12 +1,12 @@
-# Synth v3
+# Synth v4
 
-**AI contract review for legal and financial documents.**
+**AI-powered legal and financial data room review — contracts, spreadsheets, cap tables, payment schedules.**
 
 [![CI](https://github.com/dylancablayan/synth/actions/workflows/ci.yml/badge.svg)](https://github.com/dylancablayan/synth/actions/workflows/ci.yml)
 
 > ⚠️ Synth is not legal advice or financial advice. It is a document review aid built as a portfolio project. Consult a qualified professional before making any decisions based on this software.
 
-Synth is a local-first, CLI-driven document review system. Drop a contract into `/documents/inbox`, run a command, and get a structured risk review, financial analysis, revision packet, and polished PDF — all saved to your machine.
+Synth is a local-first, CLI-driven document review system. Drop contracts, spreadsheets, cap tables, or invoices into `/documents/inbox`, run a command, and get structured analysis, cross-document findings, and polished reports saved to your machine.
 
 **[Live Demo →](https://synth.dylancablayan.com/demo)** · **[Artifact Gallery →](https://synth.dylancablayan.com/artifacts)** · **[Case Study →](https://synth.dylancablayan.com/case-study)**
 
@@ -20,7 +20,10 @@ cd synth
 npm install
 npx playwright install chromium
 npm run doctor
-npm run demo
+npm run demo           # contract review pipeline (3 sample docs)
+npm run ingest         # parse all file types in inbox
+npm run spreadsheet    # analyze CSV/XLSX
+npm run dataroom       # full data room analysis
 npm run dashboard
 ```
 
@@ -34,58 +37,75 @@ No API key required — runs in mock mode by default.
 |---------|-------------|
 | `npm run doctor` | Check that everything is set up correctly |
 | `npm run verify` | Verify all required files and scripts exist |
-| `npm run demo` | Run the full pipeline on all 3 sample documents |
+| `npm run demo` | Run the full contract pipeline on all 3 sample documents |
 | `npm run analyze` | Analyze documents in `documents/inbox/` |
 | `npm run memo` | Generate executive memo for latest analysis |
 | `npm run revise` | Generate revision packet for latest analysis |
 | `npm run pdf` | Generate individual PDFs from HTML reports |
-| `npm run packet` | Run full pipeline: analyze → memo → revise → pdf → full-packet |
+| `npm run packet` | Run full contract pipeline: analyze → memo → revise → pdf |
+| `npm run ingest` | Parse all supported files (contracts + spreadsheets) in inbox |
+| `npm run spreadsheet` | Analyze CSV/XLSX → reports/tables/ (JSON + MD + HTML) |
+| `npm run dataroom` | Full mixed-packet analysis → reports/dataroom/ (JSON + MD + HTML + PDF) |
 | `npm run seed-demo` | Refresh static demo data and artifact gallery from pipeline |
-| `npm run eval` | Run deterministic eval harness on sample documents |
+| `npm run eval` | Run deterministic eval harness on sample documents + spreadsheets |
 | `npm run dashboard` | Open local dashboard at http://localhost:3000 |
 | `npm run build` | Build Next.js for deployment |
 | `npm run type-check` | TypeScript type check (no emit) |
 
 ---
 
-## Deployed vs. Local
+## Supported Input Formats
 
-**Deployed site** (`/demo`, `/artifacts`): Works without cloning the repo. Uses static fixture data committed to the repo. Shows full review, financial analysis, memo, revisions, and downloadable artifacts.
+| Format | Extension | Analysis |
+|--------|-----------|---------|
+| Plain text | `.txt` | Contract review |
+| Markdown | `.md` | Contract review |
+| PDF (text-based) | `.pdf` | Contract review |
+| Word document | `.docx` | Contract review |
+| CSV spreadsheet | `.csv` | Spreadsheet / data room analysis |
+| Excel spreadsheet | `.xlsx` | Spreadsheet / data room analysis |
 
-**Local workflow** (`npm run demo`, `npm run packet`): Runs the CLI pipeline on your documents. Generates real JSON, Markdown, HTML, and PDF reports in `/reports/`. Requires Node.js 18+ and Playwright Chromium for PDF generation.
+Drop files into `documents/inbox/` and run `npm run ingest` (all types) or `npm run packet` (contracts only).
 
 ---
 
-## Demo Mode
-
-The `/demo` route is a recruiter-ready, no-setup demonstration of Synth's outputs. It uses committed fixture data in `/src/data/demo/` — no local reports, no API key, no filesystem access needed.
-
-To refresh the demo data from the live pipeline:
+## Spreadsheet Analysis (v4)
 
 ```bash
-npm run seed-demo
+npm run spreadsheet
 ```
 
-This runs the sample SaaS agreement through the full pipeline and copies the outputs to:
-- `src/data/demo/` — JSON fixtures for the `/demo` route
-- `public/demo-artifacts/` — downloadable artifacts for `/artifacts`
+Analyzes CSV/XLSX files and saves to `reports/tables/`:
+- Extracts column types (string, number, date, currency, email)
+- Detects payment schedules, cap tables, invoices, vendor lists
+- Extracts entities, amounts, dates, emails
+- Detects repeated vendors, overdue rows, blank cell warnings
+- Computes totals/subtotals
+- Saves JSON + Markdown + HTML per file
 
 ---
 
-## Artifact Gallery
+## Data Room Analysis (v4)
 
-The `/artifacts` route shows downloadable sample outputs:
+```bash
+npm run dataroom
+```
 
-| Artifact | Format |
-|----------|--------|
-| Full Review Packet | HTML |
-| Contract Review | HTML |
-| Revision Packet | HTML |
-| Executive Memo | HTML |
-| Contract Review | Markdown |
-| Contract Review | JSON |
+Analyzes the full `/documents/inbox` as a mixed packet and saves to `reports/dataroom/`:
+- Cross-document checks: contract terms vs. payment schedules, cap tables vs. term sheets
+- Party/vendor name reconciliation across documents
+- Payment schedule findings with vendor, amount, due date, status
+- Cap table rows with investor, share class, ownership %
+- Data quality warnings (overdue rows, blank cells, repeated vendors)
+- Full dataroom JSON + Markdown + HTML + PDF (if Playwright available)
 
-All artifacts are in `public/demo-artifacts/`. Run `npm run seed-demo` to regenerate them.
+---
+
+## Deployed vs. Local
+
+**Deployed site** (`/demo`, `/artifacts`): Works without cloning the repo. Uses static fixture data. Shows full review, financial analysis, memo, revisions, spreadsheet analyses, and data room summary.
+
+**Local workflow** (`npm run demo`, `npm run dataroom`): Runs the full pipeline on your documents. Generates real JSON, Markdown, HTML, and PDF reports in `/reports/`. Requires Node.js 18+ and Playwright Chromium for PDF generation.
 
 ---
 
@@ -95,18 +115,32 @@ All artifacts are in `public/demo-artifacts/`. Run `npm run seed-demo` to regene
 npm run eval
 ```
 
-Runs deterministic checks on the 3 sample documents:
+Runs deterministic checks (89 total in v4):
 
+**Contract checks (per document):**
 - Sample docs parse (`.txt`, `.md`, `.pdf`, `.docx` supported)
-- Document type is detected correctly
-- Known clauses are found when present
+- Document type detected correctly
+- Known clauses found when present
 - Missing fields return `"Not found in the document."` (not empty string)
 - Risks include real supporting quotes (not generic "See document")
-- Provider metadata is attached to outputs
 - Full pipeline (review → financial → memo → revision) completes
 - Legal disclaimers are present in all outputs
 
-Reports saved to `reports/evals/` as JSON + Markdown.
+**Spreadsheet checks (v4, per file):**
+- CSV/XLSX parses without error
+- Headers extracted
+- Row count > 0
+- Correct type detected (payment schedule / cap table / invoice)
+- Currency amounts extracted
+- SpreadsheetAnalysis schema validates
+- Key findings generated
+
+**Data room checks (v4):**
+- DataRoomSummary schema validates
+- Payment findings present
+- Cap table findings present
+- Disclaimer present
+- Executive summary is not generic
 
 ---
 
@@ -121,33 +155,44 @@ Reports saved to `reports/evals/` as JSON + Markdown.
 
 ---
 
-## Report Metadata
+## New Schemas (v4)
 
-Every output (review, financial, memo, revision) includes:
+| Schema | Description |
+|--------|-------------|
+| `TableProfile` | Per-sheet column profiles, detected entities, amounts, dates, warnings |
+| `SpreadsheetAnalysis` | Full spreadsheet analysis with all table profiles |
+| `DataRoomSummary` | Cross-document data room summary |
+| `CrossDocumentFinding` | Single cross-document mismatch finding |
+| `PaymentScheduleFinding` | One payment row with vendor, amount, status |
+| `CapTableFinding` | One cap table row with investor, share class, ownership |
 
-```json
-{
-  "sourceFilename": "my-contract.pdf",
-  "sourceExtension": ".pdf",
-  "parsedCharacterCount": 12453,
-  "providerMode": "mock",
-  "fallbackUsed": false,
-  "warnings": []
-}
+---
+
+## Output Structure
+
+```
+reports/
+  reviews/    — JSON + Markdown contract reviews
+  financials/ — Financial analysis JSON
+  memos/      — Memo JSON + Markdown
+  revisions/  — Revision packet JSON + Markdown
+  html/       — HTML reports (contracts + spreadsheets)
+  tables/     — Spreadsheet profile JSON + Markdown + HTML (v4)
+  dataroom/   — Data room JSON + Markdown + HTML + PDF (v4)
+  pdfs/       — PDFs (requires Playwright Chromium)
+  evals/      — Eval harness JSON + Markdown reports
+  errors/     — Raw AI error logs (when fallback is triggered)
 ```
 
 ---
 
-## Supported Input Formats
+## Recruiter Screenshot Checklist
 
-| Format | Extension |
-|--------|-----------|
-| Plain text | `.txt` |
-| Markdown | `.md` |
-| PDF (text-based) | `.pdf` |
-| Word document | `.docx` |
-
-Drop files into `documents/inbox/` and run `npm run packet`.
+1. `/demo` — Static demo with full review, financials, memo, revisions
+2. `/artifacts` — Downloadable sample outputs including v4 spreadsheet + dataroom JSON
+3. `/dashboard` (local) — Run `npm run demo && npm run dataroom` first
+4. `/case-study` — Architecture, v1→v4 evolution, safety design, resume bullets
+5. `npm run eval` — 89 pass/fail checks in the terminal
 
 ---
 
@@ -165,66 +210,45 @@ Any OpenAI-compatible endpoint works (OpenRouter, Together, Groq, local Ollama, 
 
 ---
 
-## Output Structure
-
-```
-reports/
-  reviews/    — JSON + Markdown contract reviews
-  financials/ — Financial analysis JSON
-  memos/      — Memo JSON + Markdown
-  revisions/  — Revision packet JSON + Markdown
-  html/       — HTML reports
-  pdfs/       — PDFs (requires Playwright Chromium)
-  evals/      — Eval harness JSON + Markdown reports
-  errors/     — Raw AI error logs (when fallback is triggered)
-```
-
----
-
-## Recruiter Screenshot Checklist
-
-For a full demo of Synth's capabilities:
-
-1. `/demo` — Static demo with full review, financials, memo, revisions
-2. `/artifacts` — Downloadable sample outputs in HTML, Markdown, and JSON
-3. `/dashboard` (local) — Run `npm run demo` first, then `npm run dashboard`
-4. `/case-study` — Architecture, v1→v3 evolution, safety design, resume bullets
-5. `npm run eval` — Pass/fail eval harness output in the terminal
-
----
-
-## CI
-
-GitHub Actions runs on every push to `main`:
-
-- `npm ci`
-- `npm run type-check`
-- `npm run verify`
-- `npm run build`
-- `npm run eval`
-
-Eval reports are uploaded as CI artifacts.
-
----
-
 ## Project Structure
 
 ```
 src/
   app/         — Next.js routes: /, /demo, /artifacts, /dashboard, /case-study
   cli/         — CLI commands (tsx scripts)
+    ingest.ts      — Parse all file types (v4)
+    spreadsheet.ts — Analyze CSV/XLSX (v4)
+    dataroom.ts    — Full data room analysis (v4)
   data/demo/   — Static fixture data for /demo route
   lib/         — AI provider, document loader, parser, renderers
+    spreadsheet-parser.ts       — CSV/XLSX parsing + table profiling (v4)
+    mock-spreadsheet-provider.ts — Mock analysis for spreadsheets + dataroom (v4)
   prompts/     — AI prompt modules
+    spreadsheet-analysis.prompt.ts — v4
+    dataroom-review.prompt.ts      — v4
   schemas/     — Zod schemas for all outputs
+    spreadsheet.schema.ts — v4 schemas
 documents/
-  inbox/       — Drop your contracts here
-  samples/     — Reference documents
+  inbox/       — Drop your contracts and spreadsheets here
+    sample-payment-schedule.csv — v4 sample
+    sample-cap-table.csv        — v4 sample
+    sample-vendor-invoices.csv  — v4 sample
 public/
   demo-artifacts/ — Static downloadable artifacts for /artifacts
 reports/         — All pipeline outputs
 agent/           — CLAUDE.md, CODEX.md agent docs
 ```
+
+---
+
+## Limitations
+
+- Mock mode produces illustrative output, not document-specific AI analysis
+- Scanned PDFs (image-only) are not supported — only text-based PDFs
+- XLSX support covers standard table sheets; complex pivot tables or merged cells may not parse correctly
+- Cross-document findings are heuristic-based in mock mode — use AI mode for deeper analysis
+- Not production legal or compliance software
+- PDF generation requires Playwright + Chromium
 
 ---
 

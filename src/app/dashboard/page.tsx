@@ -5,6 +5,7 @@ import type { Review } from '@/schemas/review.schema';
 import type { Financial } from '@/schemas/financial.schema';
 import type { Memo } from '@/schemas/memo.schema';
 import type { Revision } from '@/schemas/revision.schema';
+import type { DataRoomSummary, SpreadsheetAnalysis } from '@/schemas/spreadsheet.schema';
 
 function getRiskColor(level: string): string {
   switch (level) {
@@ -36,6 +37,28 @@ function loadReports<T>(dir: string, suffix: string): T[] {
     .filter(Boolean) as T[];
 }
 
+function loadDataRoomReports(): DataRoomSummary[] {
+  const dir = path.join(process.cwd(), 'reports', 'dataroom');
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir)
+    .filter((f) => f.endsWith('.json'))
+    .map((f) => {
+      try { return JSON.parse(fs.readFileSync(path.join(dir, f), 'utf-8')) as DataRoomSummary; } catch { return null; }
+    })
+    .filter(Boolean) as DataRoomSummary[];
+}
+
+function loadSpreadsheetReports(): SpreadsheetAnalysis[] {
+  const dir = path.join(process.cwd(), 'reports', 'tables');
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir)
+    .filter((f) => f.endsWith('-spreadsheet.json'))
+    .map((f) => {
+      try { return JSON.parse(fs.readFileSync(path.join(dir, f), 'utf-8')) as SpreadsheetAnalysis; } catch { return null; }
+    })
+    .filter(Boolean) as SpreadsheetAnalysis[];
+}
+
 export const dynamic = 'force-dynamic';
 
 export default function DashboardPage() {
@@ -43,6 +66,10 @@ export default function DashboardPage() {
   const financials = loadReports<Financial>('financials', '-financial.json');
   const memos = loadReports<Memo>('memos', '-memo.json');
   const revisions = loadReports<Revision>('revisions', '-revision.json');
+  const dataRoomReports = loadDataRoomReports();
+  const spreadsheetReports = loadSpreadsheetReports();
+  const latestDataRoom = dataRoomReports[dataRoomReports.length - 1];
+  const hasV4Data = dataRoomReports.length > 0 || spreadsheetReports.length > 0;
 
   const latestReview = reviews.sort((a, b) =>
     new Date(b.generatedAt).getTime() - new Date(a.generatedAt).getTime()
@@ -97,6 +124,18 @@ export default function DashboardPage() {
           <EmptyState />
         ) : (
           <>
+            {/* v4 badge */}
+            <div className="flex flex-wrap gap-2 mb-6">
+              <span className="text-xs bg-blue-900/50 border border-blue-700/50 text-blue-300 px-3 py-1 rounded-full font-mono">
+                v4 · Contracts + Spreadsheets + Data Room Review
+              </span>
+              {hasV4Data && (
+                <span className="text-xs bg-green-900/50 border border-green-700/50 text-green-300 px-3 py-1 rounded-full font-mono">
+                  {spreadsheetReports.length} spreadsheet{spreadsheetReports.length !== 1 ? 's' : ''} · {dataRoomReports.length} data room report{dataRoomReports.length !== 1 ? 's' : ''}
+                </span>
+              )}
+            </div>
+
             {/* Header stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
               {[
@@ -175,9 +214,9 @@ export default function DashboardPage() {
                     {[
                       { icon: '⌨️', text: 'CLI-driven, local-first workflow' },
                       { icon: '✅', text: 'Zod schema validation on every output' },
-                      { icon: '📄', text: 'PDF pipeline via Playwright' },
+                      { icon: '📊', text: 'CSV/XLSX ingestion with table profiling' },
+                      { icon: '🔗', text: 'Cross-document mismatch detection' },
                       { icon: '🔒', text: 'No data leaves your machine by default' },
-                      { icon: '🔁', text: 'AI fallback to mock if parsing fails' },
                       { icon: '🤖', text: 'Agent-native: full CLAUDE.md docs included' },
                     ].map(({ icon, text }) => (
                       <li key={text} className="flex items-start gap-2 text-xs text-slate-400">
@@ -325,6 +364,75 @@ export default function DashboardPage() {
                   </>
                 )}
 
+                {/* Spreadsheet Profiles */}
+                {spreadsheetReports.length > 0 && (
+                  <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                    <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Spreadsheet Profiles</h2>
+                    <div className="space-y-3">
+                      {spreadsheetReports.map((s, i) => (
+                        <div key={i} className="border border-slate-800 rounded-lg p-3">
+                          <div className="flex items-start justify-between gap-2 mb-1">
+                            <span className="text-xs font-mono text-blue-300">{s.sourceFilename}</span>
+                            <span className="text-xs text-slate-500">{s.sheetCount} sheet{s.sheetCount !== 1 ? 's' : ''} · {s.totalRows} rows</span>
+                          </div>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {s.tables.map((t, ti) => (
+                              <span key={ti} className="text-xs px-1.5 py-0.5 bg-slate-800 text-slate-400 rounded">
+                                {t.sheetName}{t.isPaymentSchedule ? ' [payment]' : ''}{t.isCapTable ? ' [cap-table]' : ''}{t.isInvoice ? ' [invoice]' : ''}
+                              </span>
+                            ))}
+                          </div>
+                          {s.warnings.length > 0 && (
+                            <p className="text-xs text-yellow-400/70 mt-1">⚠ {s.warnings[0]}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Data Room Overview */}
+                {latestDataRoom && (
+                  <div className="bg-slate-900 border border-blue-900/40 rounded-xl p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h2 className="text-sm font-semibold text-blue-400 uppercase tracking-wider">Data Room Overview</h2>
+                      <span className="text-xs bg-blue-900/40 border border-blue-800/40 text-blue-300 px-2 py-0.5 rounded">
+                        {latestDataRoom.fileCount} files
+                      </span>
+                    </div>
+                    <p className="text-slate-300 text-sm leading-relaxed mb-4">{latestDataRoom.executiveSummary}</p>
+                    <div className="grid grid-cols-3 gap-3 mb-4">
+                      {[
+                        { label: 'Cross-Doc Findings', value: latestDataRoom.crossDocumentFindings.length },
+                        { label: 'Payment Items', value: latestDataRoom.paymentScheduleFindings.length },
+                        { label: 'Cap Table Rows', value: latestDataRoom.capTableFindings.length },
+                      ].map((s) => (
+                        <div key={s.label} className="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
+                          <div className="text-lg font-bold text-white">{s.value}</div>
+                          <div className="text-xs text-slate-500 mt-0.5">{s.label}</div>
+                        </div>
+                      ))}
+                    </div>
+                    {latestDataRoom.crossDocumentFindings.slice(0, 2).map((f, i) => (
+                      <div key={i} className="border border-slate-800 rounded-lg p-3 mb-2">
+                        <div className="flex items-start justify-between gap-2 mb-1">
+                          <span className="text-xs font-medium text-white">{f.title}</span>
+                          <span className={`text-xs px-1.5 py-0.5 rounded border ${getRiskColor(f.severity)}`}>{f.severity}</span>
+                        </div>
+                        <p className="text-xs text-slate-400">{f.description}</p>
+                      </div>
+                    ))}
+                    {latestDataRoom.dataQualityWarnings.length > 0 && (
+                      <div className="mt-3 pt-3 border-t border-slate-800">
+                        <div className="text-xs text-slate-500 mb-1">Data Quality</div>
+                        {latestDataRoom.dataQualityWarnings.slice(0, 2).map((w, i) => (
+                          <p key={i} className="text-xs text-yellow-400/70">⚠ {w}</p>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* Memo Preview */}
                 {latestMemo && (
                   <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
@@ -462,8 +570,10 @@ function EmptyState() {
           <div className="space-y-3">
             {[
               { cmd: 'npm run demo', desc: 'Run full pipeline on the 3 included sample contracts' },
-              { cmd: 'npm run packet', desc: 'Run pipeline on your own contracts in documents/inbox/' },
-              { cmd: 'npm run analyze', desc: 'Analyze only (no memo/revision/PDF)' },
+              { cmd: 'npm run ingest', desc: 'Parse all files in documents/inbox/ (contracts + spreadsheets)' },
+              { cmd: 'npm run spreadsheet', desc: 'Analyze CSV/XLSX files → reports/tables/' },
+              { cmd: 'npm run dataroom', desc: 'Analyze mixed packet → reports/dataroom/' },
+              { cmd: 'npm run packet', desc: 'Run contract pipeline on documents in inbox' },
             ].map(({ cmd, desc }) => (
               <div key={cmd} className="flex items-start gap-4">
                 <code className="bg-slate-800 border border-slate-700 text-blue-400 px-2 py-1 rounded text-xs font-mono whitespace-nowrap">{cmd}</code>
@@ -481,6 +591,8 @@ function EmptyState() {
               { ext: '.md', desc: 'Markdown' },
               { ext: '.pdf', desc: 'PDF (text-based)' },
               { ext: '.docx', desc: 'Word document' },
+              { ext: '.csv', desc: 'CSV spreadsheet' },
+              { ext: '.xlsx', desc: 'Excel spreadsheet' },
             ].map(({ ext, desc }) => (
               <div key={ext} className="flex items-center gap-2">
                 <code className="text-blue-400 font-mono text-xs">{ext}</code>

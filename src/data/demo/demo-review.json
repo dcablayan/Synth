@@ -1,118 +1,87 @@
 {
-  "documentTitle": "SaaS Subscription Agreement — CloudBase Inc.",
+  "documentTitle": "SAAS SUBSCRIPTION AGREEMENT",
   "documentType": "SaaS Agreement",
-  "parties": ["CloudBase Inc. (Provider)", "Acme Corp. (Customer)"],
-  "executiveSummary": "This SaaS Subscription Agreement grants Acme Corp. a non-exclusive, non-transferable license to use CloudBase Inc.'s platform for a 12-month initial term with automatic annual renewal. The agreement presents High overall risk driven by a low liability cap (1× monthly fees), broadly drafted unilateral modification rights, and a 60-day termination-for-convenience notice window that works against the customer. Key financial terms are front-loaded with all fees non-refundable after payment. Legal counsel review is recommended before execution.",
-  "keyDates": [
-    { "label": "Contract Effective Date", "date": "2024-01-15" },
-    { "label": "Initial Term End", "date": "2025-01-15" },
-    { "label": "Auto-Renewal Notice Deadline", "date": "2024-10-15" },
-    { "label": "Payment Due Date", "date": "2024-01-15" }
+  "parties": [
+    "Nexus Analytics",
+    "a Delaware corporation (\"Provider\")"
   ],
-  "paymentTerms": "$2,400/year billed annually in advance. All fees are non-refundable. Late payments accrue interest at 1.5% per month.",
-  "renewalTerms": "Automatically renews for successive 12-month terms unless either party provides 90 days' written notice before the renewal date. CloudBase may increase fees on renewal with 60 days' notice.",
-  "terminationTerms": "Either party may terminate for cause with 30 days' written notice to cure. Customer may terminate for convenience with 60 days' notice but is not entitled to a refund for the remaining term. CloudBase may suspend access immediately for payment default.",
-  "liabilityIssues": "Aggregate liability is capped at the fees paid in the 1 month immediately preceding the claim — significantly below potential business exposure.",
-  "indemnificationIssues": "Customer broadly indemnifies CloudBase for claims arising from Customer's data and use of the platform. CloudBase indemnifies for IP infringement only, with carve-outs for modifications by Customer.",
-  "confidentialityTerms": "Mutual confidentiality obligations survive termination for 3 years. Exceptions for publicly available information and regulatory disclosures.",
-  "governingLaw": "State of Delaware, USA. Disputes resolved by binding arbitration under AAA rules; class action waiver included.",
+  "executiveSummary": "This SaaS Agreement has been reviewed by Synth in mock mode. The document contains several clauses that warrant attention, including payment terms, termination provisions, and liability limitations. This is a demonstration analysis — no actual AI analysis was performed. Review all findings with a qualified professional.",
+  "keyDates": [
+    {
+      "label": "Effective Date",
+      "date": "See document"
+    },
+    {
+      "label": "Initial Term End",
+      "date": "See document"
+    }
+  ],
+  "paymentTerms": "$4,500 per month (the \"Subscription Fee\"), billed annually in advance",
+  "renewalTerms": "automatically renew for successive one-year periods (each a \"Renewal Term\") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",
+  "terminationTerms": "Either party may terminate this Agreement for material breach upon sixty (60) days written notice if the breach is not cured within such period",
+  "liabilityIssues": "IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITIES, EVEN IF PROVIDER HAS BEEN ADVISED OF THE POS",
+  "indemnificationIssues": "Indemnification provisions present. Review scope and carve-outs with legal counsel.",
+  "confidentialityTerms": "Each party agrees to maintain the confidentiality of the other party's Confidential Information and not to disclose such information to any third party without prior written consent",
+  "governingLaw": "governed by the laws of the State of Delaware, without regard to conflict of l",
   "missingClauses": [
-    "Force majeure / service interruption clause",
+    "Force majeure clause (not clearly present)",
     "Data processing agreement / GDPR addendum",
-    "SLA / uptime guarantees and remedies",
-    "Audit rights for security practices",
-    "Data portability and deletion on termination"
+    "SLA / uptime guarantees"
   ],
   "unusualClauses": [
-    "Provider may modify platform features or pricing unilaterally with 30 days' notice",
-    "Class action waiver in arbitration clause limits collective remedies",
-    "No SLA credit mechanism — outages have no financial consequence for Provider"
+    "Unilateral modification rights may allow changes without consent",
+    "Review auto-renewal notice window carefully"
   ],
-  "riskScore": 72,
+  "riskScore": 65,
   "riskLevel": "High",
   "topRisks": [
     {
-      "title": "Minimal Liability Cap",
-      "severity": "Critical",
-      "explanation": "Provider's aggregate liability is capped at 1× monthly subscription fees regardless of the nature or extent of the loss. For an annual $2,400 contract this means the cap is $200 — far below any realistic business damage.",
-      "whyItMatters": "If CloudBase loses your data or causes a material business interruption, your maximum recovery is $200 even if your actual loss is far larger.",
-      "suggestedNextStep": "Negotiate a higher cap — typically 12× monthly fees minimum — and add carve-outs for willful misconduct, gross negligence, and data breach.",
-      "supportingQuote": "Provider's aggregate liability shall not exceed the fees paid by Customer in the one (1) month immediately preceding the claim.",
-      "location": "Section 9.2 — Limitation of Liability"
-    },
-    {
       "title": "Unilateral Modification Rights",
       "severity": "High",
-      "explanation": "CloudBase may modify platform features, pricing, or terms with only 30 days' notice. Customer's only recourse is to terminate — and forfeits any prepaid fees.",
-      "whyItMatters": "Material changes to the product or price can be imposed mid-term. If Customer disagrees, the only exit costs the remaining annual subscription.",
-      "suggestedNextStep": "Request that modifications to pricing or material terms require mutual written agreement, not unilateral notice.",
-      "supportingQuote": "CloudBase reserves the right to modify the Service or these Terms upon thirty (30) days' written notice. Continued use after the notice period constitutes acceptance.",
-      "location": "Section 12.1 — Modifications"
+      "explanation": "Provider may be able to modify terms without customer consent.",
+      "whyItMatters": "Material terms could change after signing without recourse.",
+      "suggestedNextStep": "Request a mutual written amendment requirement.",
+      "supportingQuote": "automatically renew for successive one-year periods (each a \"Renewal Term\") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",
+      "location": "General Provisions"
     },
     {
-      "title": "No Service Level Guarantee",
+      "title": "Limited Liability Cap",
       "severity": "High",
-      "explanation": "The agreement contains no uptime commitments, no SLA credits, and no remedies for service unavailability. CloudBase's liability for downtime is zero by contract.",
-      "whyItMatters": "A SaaS platform that is down costs the Customer in productivity but the agreement provides no contractual recourse.",
-      "suggestedNextStep": "Request a minimum 99.9% uptime SLA with credit schedule (e.g., 10% credit per 1 hour of excess downtime).",
-      "supportingQuote": "THE SERVICE IS PROVIDED 'AS IS' WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.",
-      "location": "Section 8.1 — Disclaimer of Warranties"
+      "explanation": "Liability may be capped at a small fraction of potential damages.",
+      "whyItMatters": "Company may have no meaningful recourse for serious failures.",
+      "suggestedNextStep": "Negotiate a higher cap and carve-outs for willful misconduct.",
+      "supportingQuote": "IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITIES, EVEN IF PROVIDER HAS BEEN ADVISED OF THE POS",
+      "location": "Liability"
     },
     {
-      "title": "Auto-Renewal with 90-Day Notice Window",
+      "title": "Auto-Renewal with Short Notice",
       "severity": "Medium",
-      "explanation": "The contract automatically renews annually. To cancel, Customer must give 90 days' prior written notice — meaning the cancellation deadline is 3 months before the renewal date.",
-      "whyItMatters": "Missing the 90-day window locks Customer into another full 12-month term and another $2,400 payment.",
-      "suggestedNextStep": "Calendar the cancellation deadline immediately. Consider negotiating a shorter window (30–45 days is typical).",
-      "supportingQuote": "This Agreement shall automatically renew for successive one (1) year terms unless either party provides ninety (90) days' prior written notice of non-renewal.",
-      "location": "Section 3.2 — Renewal Terms"
-    },
-    {
-      "title": "Broad Customer Data Indemnification",
-      "severity": "Medium",
-      "explanation": "Customer must indemnify CloudBase against any third-party claims arising from Customer's data or use of the platform. This is broadly worded and could expose Customer to significant liability.",
-      "whyItMatters": "If a third party sues CloudBase based on data Customer uploaded or Customer's use of the platform, Customer is contractually required to defend and hold harmless CloudBase.",
-      "suggestedNextStep": "Narrow the indemnification to claims arising from Customer's willful misconduct or gross negligence. Add a cap on Customer's indemnification exposure.",
-      "supportingQuote": "Customer shall indemnify, defend, and hold harmless CloudBase from any claims, damages, or expenses arising from Customer's use of the Service or Customer's data.",
-      "location": "Section 10.1 — Customer Indemnification"
+      "explanation": "Agreement auto-renews unless cancelled within a specific window.",
+      "whyItMatters": "Missing the notice window locks in another full term.",
+      "suggestedNextStep": "Calendar the cancellation deadline immediately.",
+      "supportingQuote": "automatically renew for successive one-year periods (each a \"Renewal Term\") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",
+      "location": "Term and Renewal"
     }
   ],
   "actionItems": [
-    "Negotiate liability cap to minimum 12× monthly fees with gross negligence and data breach carve-outs",
-    "Request SLA addendum with 99.9% uptime guarantee and credit schedule",
-    "Calendar auto-renewal cancellation deadline (90 days before 2025-01-15 = 2024-10-15)",
-    "Request a mutual written amendment requirement for any pricing or feature changes",
-    "Add a GDPR / data processing addendum before handling any EU personal data",
-    "Request data portability and certified deletion provisions for contract termination",
-    "Have legal counsel review the arbitration and class action waiver clauses"
+    "Review all payment and fee terms with finance team",
+    "Calendar all notice and cancellation deadlines",
+    "Have legal counsel review liability and indemnification provisions",
+    "Request data processing agreement if applicable",
+    "Verify governing law is acceptable for your jurisdiction"
   ],
   "citations": [
     {
-      "section": "Section 9.2 — Limitation of Liability",
-      "quote": "Provider's aggregate liability shall not exceed the fees paid by Customer in the one (1) month immediately preceding the claim.",
-      "relevance": "This 1× monthly cap is the most significant risk in the agreement — far below any realistic business exposure."
-    },
-    {
-      "section": "Section 12.1 — Modifications",
-      "quote": "CloudBase reserves the right to modify the Service or these Terms upon thirty (30) days' written notice.",
-      "relevance": "Unilateral modification rights allow material changes to price and features with minimal notice."
-    },
-    {
-      "section": "Section 3.2 — Renewal Terms",
-      "quote": "This Agreement shall automatically renew for successive one (1) year terms unless either party provides ninety (90) days' prior written notice of non-renewal.",
-      "relevance": "A 90-day window is unusually long; most SaaS agreements use 30–60 days."
-    },
-    {
-      "section": "Section 8.1 — Disclaimer of Warranties",
-      "quote": "THE SERVICE IS PROVIDED 'AS IS' WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.",
-      "relevance": "Combined with no SLA, this means zero contractual recourse for service outages."
+      "section": "Mock Mode Notice",
+      "quote": "This analysis was generated in mock mode. No AI provider was used.",
+      "relevance": "All findings are illustrative. Run with a real provider for document-specific analysis."
     }
   ],
-  "generatedAt": "2024-01-15T10:30:00.000Z",
+  "generatedAt": "2026-05-12T11:22:59.882Z",
   "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.",
   "sourceFilename": "sample-saas-agreement.txt",
   "sourceExtension": ".txt",
-  "parsedCharacterCount": 8742,
+  "parsedCharacterCount": 6491,
   "providerMode": "mock",
   "fallbackUsed": false
 }

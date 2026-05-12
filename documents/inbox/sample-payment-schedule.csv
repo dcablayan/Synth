@@ -1,0 +1,16 @@
+Vendor,Invoice Number,Amount,Due Date,Status,Contract Reference,Notes
+Acme Corp,INV-2024-001,$12500.00,2024-02-15,Paid,SaaS-2024-001,Monthly license fee
+DataStream Inc,INV-2024-002,$8750.00,2024-02-28,Paid,SaaS-2024-001,Overage charges Feb
+Acme Corp,INV-2024-003,$12500.00,2024-03-15,Paid,SaaS-2024-001,Monthly license fee
+LegalDocs Ltd,INV-2024-004,$3200.00,2024-03-20,Paid,CONSULTING-2024-02,Legal review retainer
+DataStream Inc,INV-2024-005,$9100.00,2024-03-31,Overdue,SaaS-2024-001,Overage charges Mar
+Acme Corp,INV-2024-006,$12500.00,2024-04-15,Pending,SaaS-2024-001,Monthly license fee
+TechVendors LLC,INV-2024-007,$5500.00,2024-04-20,Pending,VENDOR-2024-03,Integration services
+LegalDocs Ltd,INV-2024-008,$3200.00,2024-04-25,Pending,CONSULTING-2024-02,Legal review retainer
+DataStream Inc,INV-2024-009,$9100.00,2024-04-30,Pending,SaaS-2024-001,Overage charges Apr
+Acme Corp,INV-2024-010,$12500.00,2024-05-15,Pending,SaaS-2024-001,Monthly license fee
+Total,,,,,,
+Acme Corp Total,$62500.00,,,,,
+DataStream Inc Total,$26950.00,,,,,
+LegalDocs Ltd Total,$6400.00,,,,,
+TechVendors LLC Total,$5500.00,,,,,

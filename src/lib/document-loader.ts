@@ -12,6 +12,8 @@ export interface LoadedDocument {
 const INBOX_DIR = path.join(process.cwd(), 'documents', 'inbox');
 const PROCESSED_DIR = path.join(process.cwd(), 'documents', 'processed');
 const SUPPORTED_EXTENSIONS = ['.txt', '.md', '.pdf', '.docx'];
+export const SPREADSHEET_EXTENSIONS = ['.csv', '.xlsx'];
+export const ALL_SUPPORTED_EXTENSIONS = [...SUPPORTED_EXTENSIONS, ...SPREADSHEET_EXTENSIONS];
 
 async function extractText(filepath: string, ext: string): Promise<string> {
   if (ext === '.txt' || ext === '.md') {
@@ -56,6 +58,22 @@ async function extractText(filepath: string, ext: string): Promise<string> {
     }
   }
 
+  if (ext === '.csv') {
+    return fs.readFileSync(filepath, 'utf-8');
+  }
+
+  if (ext === '.xlsx') {
+    try {
+      const { parseXlsxFile, buildTableProfile, textSummaryOfSheet } = await import('./spreadsheet-parser');
+      const sheets = parseXlsxFile(filepath);
+      return sheets.map((s) => textSummaryOfSheet(s, buildTableProfile(s))).join('\n\n---\n\n');
+    } catch (err) {
+      throw new Error(
+        `Failed to parse XLSX "${path.basename(filepath)}": ${err instanceof Error ? err.message : String(err)}`
+      );
+    }
+  }
+
   throw new Error(`Unsupported file type: ${ext}`);
 }
 
@@ -66,12 +84,12 @@ export async function loadDocumentsFromInbox(): Promise<LoadedDocument[]> {
 
   const files = fs.readdirSync(INBOX_DIR).filter((f) => {
     const ext = path.extname(f).toLowerCase();
-    return SUPPORTED_EXTENSIONS.includes(ext) && !f.startsWith('.');
+    return (SUPPORTED_EXTENSIONS.includes(ext) || SPREADSHEET_EXTENSIONS.includes(ext)) && !f.startsWith('.');
   });
 
   if (files.length === 0) {
     throw new Error(
-      `No documents found in ${INBOX_DIR}. Supported formats: ${SUPPORTED_EXTENSIONS.join(', ')}`
+      `No documents found in ${INBOX_DIR}. Supported formats: ${ALL_SUPPORTED_EXTENSIONS.join(', ')}`
     );
   }
 

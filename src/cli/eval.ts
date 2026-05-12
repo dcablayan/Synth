@@ -3,6 +3,9 @@ import fs from 'fs';
 import path from 'path';
 import { chunkText, extractDocumentTitle, detectDocumentType } from '../lib/parser';
 import { runContractReview, runFinancialAnalysis, runMemoGeneration, runRevisionGeneration } from '../lib/ai-provider';
+import { parseCsvFile, buildTableProfile } from '../lib/spreadsheet-parser';
+import { generateMockSpreadsheetAnalysis, generateMockDataRoomSummary } from '../lib/mock-spreadsheet-provider';
+import { SpreadsheetAnalysisSchema, DataRoomSummarySchema } from '../schemas/spreadsheet.schema';
 
 const CWD = process.cwd();
 const INBOX = path.join(CWD, 'documents', 'inbox');
@@ -204,6 +207,164 @@ async function evalDocument(filename: string, expectedType: string): Promise<Doc
   };
 }
 
+async function evalSpreadsheets(): Promise<DocResult[]> {
+  const SPREADSHEETS: Array<{ file: string; expectedType: keyof typeof flags }> = [
+    { file: 'sample-payment-schedule.csv', expectedType: 'isPaymentSchedule' },
+    { file: 'sample-cap-table.csv', expectedType: 'isCapTable' },
+    { file: 'sample-vendor-invoices.csv', expectedType: 'isInvoice' },
+  ];
+
+  const flags = {
+    isPaymentSchedule: true,
+    isCapTable: true,
+    isInvoice: true,
+  };
+
+  const results: DocResult[] = [];
+
+  for (const { file, expectedType } of SPREADSHEETS) {
+    const filepath = path.join(INBOX, file);
+    const checks: Check[] = [];
+
+    if (!fs.existsSync(filepath)) {
+      results.push({
+        file,
+        checks: [{ name: 'File exists', pass: false, message: `Not found: ${filepath}` }],
+        passed: 0,
+        failed: 1,
+      });
+      continue;
+    }
+
+    // Check 1: Parses without error
+    let sheets: ReturnType<typeof parseCsvFile>;
+    try {
+      sheets = parseCsvFile(filepath);
+      checks.push(check('CSV parses', true, `${sheets.length} sheet(s) loaded`, ''));
+    } catch (e) {
+      checks.push({ name: 'CSV parses', pass: false, message: `Parse error: ${e instanceof Error ? e.message : e}` });
+      results.push({ file, checks, passed: 0, failed: 1 });
+      continue;
+    }
+
+    const profile = buildTableProfile(sheets[0]);
+
+    // Check 2: Headers extracted
+    checks.push(check(
+      'Headers extracted',
+      sheets[0].headers.length > 0,
+      `${sheets[0].headers.length} headers: ${sheets[0].headers.slice(0, 4).join(', ')}`,
+      'No headers found'
+    ));
+
+    // Check 3: Row count > 0
+    checks.push(check(
+      'Row count > 0',
+      profile.rowCount > 0,
+      `${profile.rowCount} rows`,
+      'No data rows found'
+    ));
+
+    // Check 4: Correct type detected
+    checks.push(check(
+      `Detected as ${expectedType}`,
+      profile[expectedType],
+      `${expectedType} = true`,
+      `${expectedType} not detected (headers: ${sheets[0].headers.join(', ')})`
+    ));
+
+    // Check 5: Amounts extracted
+    checks.push(check(
+      'Currency amounts extracted',
+      profile.detectedAmounts.length > 0,
+      `${profile.detectedAmounts.length} amount(s): ${profile.detectedAmounts.slice(0, 3).join(', ')}`,
+      'No currency amounts found'
+    ));
+
+    // Check 6: SpreadsheetAnalysis schema validates
+    try {
+      const analysis = SpreadsheetAnalysisSchema.parse(
+        generateMockSpreadsheetAnalysis(file, sheets, [profile])
+      );
+      checks.push(check('SpreadsheetAnalysis schema validates', true, `summary: "${analysis.summary.slice(0, 50)}..."`, ''));
+      checks.push(check(
+        'Disclaimer present',
+        analysis.disclaimer.includes('not legal advice'),
+        'Disclaimer intact',
+        'Missing "not legal advice" in disclaimer'
+      ));
+      checks.push(check(
+        'Key findings generated',
+        analysis.keyFindings.length > 0,
+        `${analysis.keyFindings.length} finding(s)`,
+        'No key findings generated'
+      ));
+    } catch (e) {
+      checks.push({ name: 'SpreadsheetAnalysis schema validates', pass: false, message: `Schema error: ${e instanceof Error ? e.message : e}` });
+    }
+
+    results.push({
+      file,
+      checks,
+      passed: checks.filter((c) => c.pass).length,
+      failed: checks.filter((c) => !c.pass).length,
+    });
+  }
+
+  // DataRoom summary eval
+  const dataroomChecks: Check[] = [];
+  try {
+    const contractText = fs.readFileSync(path.join(INBOX, 'sample-saas-agreement.txt'), 'utf-8');
+    const contractDocs = [{ filename: 'sample-saas-agreement.txt', text: contractText }];
+    const csvDocs = SPREADSHEETS
+      .filter(({ file }) => fs.existsSync(path.join(INBOX, file)))
+      .map(({ file }) => {
+        const sheets = parseCsvFile(path.join(INBOX, file));
+        const profiles = sheets.map((s) => buildTableProfile(s));
+        return { filename: file, sheets, profiles };
+      });
+
+    const dataroom = DataRoomSummarySchema.parse(
+      generateMockDataRoomSummary(contractDocs, csvDocs, [])
+    );
+    dataroomChecks.push(check('DataRoom summary generates', true, `${dataroom.fileCount} files, ${dataroom.crossDocumentFindings.length} finding(s)`, ''));
+    dataroomChecks.push(check(
+      'DataRoom disclaimer present',
+      dataroom.disclaimer.includes('not legal advice'),
+      'Disclaimer intact',
+      'Missing disclaimer in dataroom'
+    ));
+    dataroomChecks.push(check(
+      'Payment findings present',
+      dataroom.paymentScheduleFindings.length > 0,
+      `${dataroom.paymentScheduleFindings.length} payment finding(s)`,
+      'No payment findings'
+    ));
+    dataroomChecks.push(check(
+      'Cap table findings present',
+      dataroom.capTableFindings.length > 0,
+      `${dataroom.capTableFindings.length} cap table row(s)`,
+      'No cap table findings'
+    ));
+    dataroomChecks.push(check(
+      'Executive summary not generic',
+      dataroom.executiveSummary.length > 50 && !GENERIC_SEE_DOC.test(dataroom.executiveSummary),
+      `Summary: "${dataroom.executiveSummary.slice(0, 60)}..."`,
+      'Executive summary is too short or generic'
+    ));
+  } catch (e) {
+    dataroomChecks.push({ name: 'DataRoom summary generates', pass: false, message: `Error: ${e instanceof Error ? e.message : e}` });
+  }
+  results.push({
+    file: '[DataRoom Summary]',
+    checks: dataroomChecks,
+    passed: dataroomChecks.filter((c) => c.pass).length,
+    failed: dataroomChecks.filter((c) => !c.pass).length,
+  });
+
+  return results;
+}
+
 async function main() {
   console.log('\n╔══════════════════════════════════════════════════╗');
   console.log('║           Synth · Eval Harness                   ║');
@@ -231,6 +392,20 @@ async function main() {
     }
     console.log(`     ${result.passed} passed, ${result.failed} failed\n`);
   }
+
+  // v4: spreadsheet + dataroom checks
+  console.log('  📊 Evaluating spreadsheets + data room (v4)...\n');
+  const spreadsheetResults = await evalSpreadsheets();
+  for (const result of spreadsheetResults) {
+    console.log(`  📊 ${result.file}`);
+    for (const c of result.checks) {
+      const icon = c.pass ? '  ✅' : '  ❌';
+      console.log(`${icon} ${c.name}`);
+      if (!c.pass) console.log(`       → ${c.message}`);
+    }
+    console.log(`     ${result.passed} passed, ${result.failed} failed\n`);
+  }
+  results.push(...spreadsheetResults);
 
   const totalPassed = results.reduce((s, r) => s + r.passed, 0);
   const totalFailed = results.reduce((s, r) => s + r.failed, 0);

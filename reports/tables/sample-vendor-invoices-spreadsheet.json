@@ -1,0 +1,250 @@
+{
+  "documentTitle": "sample vendor invoices",
+  "sourceFilename": "sample-vendor-invoices.csv",
+  "sourceExtension": ".csv",
+  "sheetCount": 1,
+  "totalRows": 12,
+  "tables": [
+    {
+      "sheetName": "Sheet1",
+      "rowCount": 12,
+      "columnCount": 11,
+      "columns": [
+        {
+          "name": "Invoice Date",
+          "type": "date",
+          "sampleValues": [
+            "2024-01-05",
+            "2024-01-12",
+            "2024-01-15",
+            "2024-01-20",
+            "2024-02-01"
+          ],
+          "uniqueCount": 12,
+          "blankCount": 0,
+          "isCurrencyLike": false,
+          "isDateLike": true
+        },
+        {
+          "name": "Invoice Number",
+          "type": "string",
+          "sampleValues": [
+            "INV-VEN-001",
+            "INV-VEN-002",
+            "INV-VEN-003",
+            "INV-VEN-004",
+            "INV-VEN-005"
+          ],
+          "uniqueCount": 12,
+          "blankCount": 0,
+          "isCurrencyLike": false,
+          "isDateLike": false
+        },
+        {
+          "name": "Vendor Name",
+          "type": "string",
+          "sampleValues": [
+            "CloudHosting Pro",
+            "Stripe Inc",
+            "Acme Legal LLP",
+            "SalesForce Inc",
+            "CloudHosting Pro"
+          ],
+          "uniqueCount": 6,
+          "blankCount": 0,
+          "isCurrencyLike": false,
+          "isDateLike": false
+        },
+        {
+          "name": "Vendor Email",
+          "type": "email",
+          "sampleValues": [
+            "billing@cloudhosting.pro",
+            "invoices@stripe.com",
+            "accounts@acmelegal.com",
+            "billing@salesforce.com",
+            "billing@cloudhosting.pro"
+          ],
+          "uniqueCount": 6,
+          "blankCount": 0,
+          "isCurrencyLike": false,
+          "isDateLike": false
+        },
+        {
+          "name": "Service Description",
+          "type": "string",
+          "sampleValues": [
+            "Cloud infrastructure Q1 2024",
+            "Payment processing fees December",
+            "Contract review services",
+            "CRM annual license",
+            "Cloud infrastructure February"
+          ],
+          "uniqueCount": 12,
+          "blankCount": 0,
+          "isCurrencyLike": false,
+          "isDateLike": false
+        },
+        {
+          "name": "Amount",
+          "type": "currency",
+          "sampleValues": [
+            "$45000.00",
+            "$1250.00",
+            "$8500.00",
+            "$18000.00",
+            "$15000.00"
+          ],
+          "uniqueCount": 11,
+          "blankCount": 0,
+          "isCurrencyLike": true,
+          "isDateLike": false
+        },
+        {
+          "name": "Tax",
+          "type": "currency",
+          "sampleValues": [
+            "$0.00",
+            "$0.00",
+            "$0.00",
+            "$0.00",
+            "$0.00"
+          ],
+          "uniqueCount": 1,
+          "blankCount": 0,
+          "isCurrencyLike": true,
+          "isDateLike": false
+        },
+        {
+          "name": "Total",
+          "type": "currency",
+          "sampleValues": [
+            "$45000.00",
+            "$1250.00",
+            "$8500.00",
+            "$18000.00",
+            "$15000.00"
+          ],
+          "uniqueCount": 11,
+          "blankCount": 0,
+          "isCurrencyLike": true,
+          "isDateLike": false
+        },
+        {
+          "name": "Payment Terms",
+          "type": "string",
+          "sampleValues": [
+            "Net 30",
+            "Immediate",
+            "Net 45",
+            "Net 30",
+            "Net 30"
+          ],
+          "uniqueCount": 3,
+          "blankCount": 0,
+          "isCurrencyLike": false,
+          "isDateLike": false
+        },
+        {
+          "name": "Status",
+          "type": "string",
+          "sampleValues": [
+            "Paid",
+            "Paid",
+            "Paid",
+            "Paid",
+            "Paid"
+          ],
+          "uniqueCount": 3,
+          "blankCount": 0,
+          "isCurrencyLike": false,
+          "isDateLike": false
+        },
+        {
+          "name": "Category",
+          "type": "string",
+          "sampleValues": [
+            "Infrastructure",
+            "Payment Processing",
+            "Legal",
+            "Software",
+            "Infrastructure"
+          ],
+          "uniqueCount": 4,
+          "blankCount": 0,
+          "isCurrencyLike": false,
+          "isDateLike": false
+        }
+      ],
+      "detectedEntities": [
+        "CloudHosting Pro",
+        "billing@cloudhosting.pro",
+        "Stripe Inc",
+        "invoices@stripe.com",
+        "Acme Legal LLP",
+        "accounts@acmelegal.com",
+        "SalesForce Inc",
+        "billing@salesforce.com",
+        "AWS",
+        "aws-billing@amazon.com",
+        "DataDog Inc",
+        "billing@datadoghq.com"
+      ],
+      "detectedAmounts": [
+        "$45000.00",
+        "$0.00",
+        "$1250.00",
+        "$8500.00",
+        "$18000.00",
+        "$15000.00",
+        "$1380.00",
+        "$12000.00",
+        "$9200.00",
+        "$6500.00",
+        "$4500.00",
+        "$1520.00"
+      ],
+      "detectedDates": [
+        "2024-01-05",
+        "2024-01-12",
+        "2024-01-15",
+        "2024-01-20",
+        "2024-02-01",
+        "2024-02-10",
+        "2024-02-14",
+        "2024-02-20",
+        "2024-03-01",
+        "2024-03-05"
+      ],
+      "detectedEmails": [
+        "billing@cloudhosting.pro",
+        "invoices@stripe.com",
+        "accounts@acmelegal.com",
+        "billing@salesforce.com",
+        "aws-billing@amazon.com",
+        "billing@datadoghq.com"
+      ],
+      "repeatedVendors": [],
+      "totalAmounts": [],
+      "isPaymentSchedule": true,
+      "isCapTable": false,
+      "isInvoice": true,
+      "isVendorList": true,
+      "warnings": [
+        "1 row(s) marked as overdue"
+      ]
+    }
+  ],
+  "summary": "This spreadsheet (sample-vendor-invoices.csv) contains 1 sheet(s) with 12 total data rows. It appears to be a payment schedule tracking vendor invoices and due dates. It contains vendor invoice data. All financial figures were extracted directly from the spreadsheet — no AI analysis was performed (mock mode).",
+  "keyFindings": [
+    "Payment schedule has 1 row(s) marked as overdue",
+    "Invoice/vendor sheet: 12 rows, 12 entities"
+  ],
+  "warnings": [
+    "1 row(s) marked as overdue"
+  ],
+  "providerMode": "mock",
+  "fallbackUsed": false,
+  "generatedAt": "2026-05-12T11:19:45.516Z",
+  "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions."
+}

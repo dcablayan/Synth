@@ -1,0 +1,16 @@
+Investor,Share Class,Shares,Price Per Share,Investment Amount,Ownership %,Lead Investor,Investment Date,Notes
+Founders,Common,4000000,$0.0001,$400.00,40.00%,Yes,2022-01-15,Founders pool
+Option Pool,Common,1500000,$0.0001,$150.00,15.00%,No,2022-01-15,Employee option pool
+Sequoia Capital,Series A Preferred,1500000,$5.00,$7500000.00,15.00%,Yes,2024-01-10,Lead Series A investor
+Accel Partners,Series A Preferred,1000000,$5.00,$5000000.00,10.00%,No,2024-01-10,Series A follow-on
+Y Combinator,SAFE,300000,$5.00,$1500000.00,3.00%,No,2023-06-01,YC SAFE convert
+Angel Investors,Common,200000,$2.50,$500000.00,2.00%,No,2022-09-01,Pre-seed angels
+Conversion Pool,Series A Preferred,500000,$5.00,$2500000.00,5.00%,No,2024-01-10,SAFE conversions
+Reserved,Unissued,1000000,$0.0001,$100.00,10.00%,No,,Reserved for future grants
+Total,,$10000000,,,$17000650.00,100.00%,,
+Notes:,,,,,,,,
+Post-money valuation: $50000000.00,,,,,,,,
+Pre-money valuation: $33000000.00,,,,,,,,
+Series A total raised: $17000000.00,,,,,,,,
+Liquidation preference: 1x non-participating,,,,,,,,
+Anti-dilution: Broad-based weighted average,,,,,,,,

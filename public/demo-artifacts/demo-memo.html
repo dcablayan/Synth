@@ -2,96 +2,75 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Executive Memo — SaaS Subscription Agreement · Synth Demo</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: Georgia, 'Times New Roman', serif; color: #1a1a2e; background: #fff; font-size: 14px; line-height: 1.6; }
-  .page { max-width: 800px; margin: 0 auto; padding: 40px; }
-  h1 { font-size: 24px; color: #0f172a; margin-bottom: 8px; }
-  h2 { font-size: 18px; color: #1e3a5f; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; margin: 32px 0 16px; }
-  h3 { font-size: 15px; color: #1e3a5f; margin: 20px 0 8px; }
-  p { margin-bottom: 12px; }
-  .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: bold; color: #fff; letter-spacing: 0.5px; }
-  .cover { text-align: center; padding: 60px 40px; border-bottom: 3px solid #1e3a5f; margin-bottom: 40px; }
-  .cover h1 { font-size: 28px; margin-bottom: 16px; }
-  .cover .meta { color: #64748b; font-size: 13px; margin-top: 8px; }
-  .disclaimer { background: #fef9c3; border: 1px solid #fde047; padding: 12px 16px; border-radius: 6px; font-size: 12px; color: #713f12; margin: 24px 0; }
-  .demo-banner { background: #dbeafe; border: 1px solid #93c5fd; padding: 10px 16px; border-radius: 6px; font-size: 12px; color: #1e40af; margin-bottom: 24px; }
-  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-size: 11px; color: #94a3b8; text-align: center; }
-  ul { padding-left: 20px; }
-  li { margin-bottom: 6px; }
-  table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-  th { background: #1e3a5f; color: #fff; padding: 8px 12px; text-align: left; font-size: 13px; }
-  td { padding: 8px 12px; border-bottom: 1px solid #e2e8f0; font-size: 13px; vertical-align: top; }
-  tr:nth-child(even) td { background: #f8fafc; }
-  .risk-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
-  .action-box { background: #fef3c7; border: 1px solid #fde68a; border-radius: 8px; padding: 16px; margin: 8px 0; }
-</style>
+<title>Executive Memo — SAAS SUBSCRIPTION AGREEMENT</title>
+
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: Georgia, 'Times New Roman', serif; color: #1a1a2e; background: #fff; font-size: 14px; line-height: 1.6; }
+      .page { max-width: 800px; margin: 0 auto; padding: 40px; }
+      h1 { font-size: 24px; color: #0f172a; margin-bottom: 8px; }
+      h2 { font-size: 18px; color: #1e3a5f; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; margin: 32px 0 16px; }
+      h3 { font-size: 15px; color: #1e3a5f; margin: 20px 0 8px; }
+      p { margin-bottom: 12px; }
+      table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+      th { background: #1e3a5f; color: #fff; padding: 8px 12px; text-align: left; font-size: 13px; }
+      td { padding: 8px 12px; border-bottom: 1px solid #e2e8f0; font-size: 13px; vertical-align: top; }
+      tr:nth-child(even) td { background: #f8fafc; }
+      blockquote { border-left: 4px solid #3b82f6; padding: 8px 16px; margin: 12px 0; background: #eff6ff; color: #1e40af; font-style: italic; }
+      .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: bold; color: #fff; letter-spacing: 0.5px; }
+      .cover { text-align: center; padding: 60px 40px; border-bottom: 3px solid #1e3a5f; margin-bottom: 40px; }
+      .cover h1 { font-size: 28px; margin-bottom: 16px; }
+      .cover .meta { color: #64748b; font-size: 13px; margin-top: 8px; }
+      .cover .risk-score { font-size: 48px; font-weight: bold; color: #1e3a5f; margin: 16px 0 4px; }
+      .disclaimer { background: #fef9c3; border: 1px solid #fde047; padding: 12px 16px; border-radius: 6px; font-size: 12px; color: #713f12; margin: 24px 0; }
+      .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-size: 11px; color: #94a3b8; text-align: center; }
+      ul { padding-left: 20px; }
+      li { margin-bottom: 6px; }
+      .risk-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 12px 0; }
+      .risk-card.Critical { border-left: 4px solid #dc2626; }
+      .risk-card.High { border-left: 4px solid #ea580c; }
+      .risk-card.Medium { border-left: 4px solid #d97706; }
+      .risk-card.Low { border-left: 4px solid #16a34a; }
+    </style>
+  
 </head>
 <body>
 <div class="page">
 
-<div class="demo-banner">📋 Synth Demo Artifact — Executive memo for sample-saas-agreement.txt. <a href="/demo" style="color:#1d4ed8">View interactive demo →</a></div>
-
 <div class="cover">
   <div style="color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:2px;margin-bottom:16px">Synth · Executive Memo</div>
-  <h1>SaaS Subscription Agreement — CloudBase Inc.</h1>
-  <div class="meta">MEMO DATE: 2024-01-15 &nbsp;·&nbsp; Risk Score: 72/100 (High)</div>
+  <h1>SAAS SUBSCRIPTION AGREEMENT</h1>
+  <div class="meta">Memo Date: 2026-05-12</div>
 </div>
 
 <div class="disclaimer">⚠️ Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.</div>
 
 <h2>Executive Summary</h2>
-<p>This SaaS Subscription Agreement with CloudBase Inc. presents High overall risk (score: 72/100). The two most serious issues are a minimal liability cap (1× monthly fees = $200) that leaves us with nearly no recourse for service failure, and unilateral modification rights that allow CloudBase to change pricing or features with 30 days' notice mid-term. The 90-day auto-renewal notice window and fully non-refundable fees compound the financial exposure. Legal counsel review is recommended before execution. We should not sign as-is without negotiating the liability cap and requesting an SLA addendum.</p>
+<p>This memo summarizes key findings from the Synth review of "SAAS SUBSCRIPTION AGREEMENT". The document presents High risk (score: 65/100). Several provisions require immediate attention, including liability limitations, renewal terms, and modification rights. This memo was generated in mock mode — run with a real AI provider for document-specific analysis.</p>
 
 <h2>Biggest Risks</h2>
-<div class="risk-row"><span class="badge" style="background:#dc2626;min-width:60px;text-align:center">Critical</span><span>Minimal Liability Cap ($200 effective ceiling) — 1× monthly fee cap means maximum recovery from CloudBase for any failure — including data loss — is $200.</span></div>
-<div class="risk-row"><span class="badge" style="background:#ea580c;min-width:60px;text-align:center">High</span><span>Unilateral Feature and Pricing Changes — CloudBase can change the product, pricing, or terms with 30 days' notice. Rejecting the change forfeits remaining prepaid fees.</span></div>
-<div class="risk-row"><span class="badge" style="background:#ea580c;min-width:60px;text-align:center">High</span><span>No SLA or Uptime Guarantee — The service is provided 'as is' with no uptime commitment. Extended outages cost us in productivity with no contractual recourse.</span></div>
-<div class="risk-row"><span class="badge" style="background:#d97706;min-width:60px;text-align:center">Medium</span><span>90-Day Auto-Renewal Notice Window — We must cancel by October 15, 2024 to avoid auto-renewal. Missing this deadline locks us into another $2,400 payment.</span></div>
+<div class="risk-card High" style="margin:12px 0"><span class="badge" style="background:#ea580c">High</span> <strong>Unilateral Modification Rights</strong><p style="margin-top:8px">Provider may be able to modify terms without customer consent.</p></div><div class="risk-card High" style="margin:12px 0"><span class="badge" style="background:#ea580c">High</span> <strong>Limited Liability Cap</strong><p style="margin-top:8px">Liability may be capped at a small fraction of potential damages.</p></div><div class="risk-card Medium" style="margin:12px 0"><span class="badge" style="background:#d97706">Medium</span> <strong>Auto-Renewal with Short Notice</strong><p style="margin-top:8px">Agreement auto-renews unless cancelled within a specific window.</p></div>
 
 <h2>Financial Obligations</h2>
-<ul>
-  <li>$2,400 due at contract execution (non-refundable)</li>
-  <li>1.5% monthly late fee (18% APR) if payment is delayed</li>
-  <li>Full annual fee owed again if auto-renewal notice window is missed</li>
-  <li>Potential uncapped fee increase on renewal (60-day notice)</li>
-</ul>
+<ul><li>Review all fee structures in document</li><li>Note all payment deadlines</li><li>Check for auto-renewal costs</li></ul>
 
 <h2>Important Deadlines</h2>
 <table>
-  <tr><th>Event</th><th>Date</th></tr>
-  <tr><td>Contract Execution / Payment Due</td><td>2024-01-15</td></tr>
-  <tr><td><strong>⚠️ Auto-Renewal Cancellation Deadline</strong></td><td><strong>2024-10-15</strong></td></tr>
-  <tr><td>Initial Term End / Renewal Date</td><td>2025-01-15</td></tr>
+  <tr><th>Deadline</th><th>Date</th></tr>
+  <tr><td>Effective Date</td><td>See document</td></tr><tr><td>Initial Term End</td><td>See document</td></tr>
 </table>
 
-<h2>Questions for Lawyer</h2>
-<ul>
-  <li>Can we negotiate the liability cap to at least 12× monthly fees, with data breach and gross negligence carve-outs?</li>
-  <li>Will CloudBase accept a mutual written amendment requirement for any fee or feature changes?</li>
-  <li>Is the class action waiver in the arbitration clause enforceable in our jurisdiction?</li>
-  <li>Can we add a GDPR/data processing addendum before go-live?</li>
-  <li>What are our data portability rights at termination — can we get certified deletion?</li>
-  <li>Is a 30-day cure period negotiable for payment defaults before suspension?</li>
-</ul>
+<h2>Questions for Your Lawyer</h2>
+<ol><li>Is the liability cap sufficient for our exposure?</li><li>Are the indemnification obligations reasonable?</li><li>What is the practical impact of the governing law choice?</li><li>Can we negotiate a mutual written amendment requirement?</li><li>What data rights does the other party retain?</li></ol>
 
 <h2>Action Items</h2>
-<div class="action-box">
-  <ol style="padding-left:20px">
-    <li>🚫 <strong>DO NOT SIGN</strong> without liability cap renegotiation</li>
-    <li>📅 Calendar auto-renewal deadline: <strong>October 15, 2024</strong></li>
-    <li>Request SLA addendum with 99.9% uptime and credit schedule</li>
-    <li>Request mutual written amendment clause for pricing and feature changes</li>
-    <li>Request GDPR / DPA addendum if any EU personal data will be processed</li>
-    <li>Have legal counsel review arbitration and class action waiver clauses</li>
-  </ol>
-</div>
+<ol><li>Review all payment and fee terms with finance team</li><li>Calendar all notice and cancellation deadlines</li><li>Have legal counsel review liability and indemnification provisions</li><li>Request data processing agreement if applicable</li><li>Verify governing law is acceptable for your jurisdiction</li></ol>
 
 <div class="footer">
-  Generated by Synth v3 &nbsp;·&nbsp; Demo Mode &nbsp;·&nbsp; Not legal advice &nbsp;·&nbsp; synth.dylancablayan.com
+  <p>Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.</p>
+  <p>Generated by Synth · 5/12/2026, 1:22:59 AM</p>
 </div>
+
 </div>
 </body>
 </html>

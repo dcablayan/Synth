@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spreadsheet Analysis: sample cap table</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #0f172a; color: #e2e8f0; margin: 0; padding: 24px; }
+  .container { max-width: 900px; margin: 0 auto; }
+  h1 { color: #38bdf8; font-size: 1.4rem; margin-bottom: 4px; }
+  h3 { color: #94a3b8; font-size: 1rem; margin: 0 0 8px 0; }
+  .meta { color: #64748b; font-size: 0.8rem; }
+  .disclaimer { background: #422006; border: 1px solid #92400e; border-radius: 8px; padding: 10px 14px; font-size: 0.78rem; color: #fde68a; margin-bottom: 20px; }
+  .summary { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; margin-bottom: 20px; }
+  .findings { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; margin-bottom: 20px; }
+  .findings ul { margin: 8px 0; padding-left: 18px; }
+  .findings li { color: #94a3b8; font-size: 0.85rem; margin: 4px 0; }
+  .sheet-card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+  .sheet-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 10px; }
+  th { background: #0f172a; color: #64748b; font-weight: 600; padding: 6px 8px; text-align: left; }
+  td { padding: 5px 8px; border-bottom: 1px solid #1e293b; color: #cbd5e1; }
+  code { background: #0f172a; color: #38bdf8; padding: 1px 4px; border-radius: 3px; font-size: 0.78rem; }
+  em { color: #94a3b8; font-style: normal; }
+  .warning { color: #fbbf24; font-size: 0.82rem; }
+  .badge { background: #7c3aed; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.72rem; }
+  .badge-green { background: #065f46; }
+  .badge-blue { background: #1e40af; }
+  .badge-orange { background: #92400e; }
+  .provider { background: #1e293b; border: 1px solid #334155; padding: 8px 12px; border-radius: 6px; font-size: 0.75rem; color: #64748b; margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>sample cap table</h1>
+  <p class="meta">1 sheet(s) · 15 rows · Generated 2026-05-12T11:19:45.514Z · Mock Mode</p>
+  <div class="disclaimer">⚠ Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.</div>
+  <div class="summary">
+    <h3>Summary</h3>
+    <p>This spreadsheet (sample-cap-table.csv) contains 1 sheet(s) with 15 total data rows. It appears to be a payment schedule tracking vendor invoices and due dates. It contains cap table / equity ownership data. All financial figures were extracted directly from the spreadsheet — no AI analysis was performed (mock mode).</p>
+  </div>
+  
+  <div class="findings">
+    <h3>Key Findings</h3>
+    <ul><li>Payment totals detected: Total (Shares): $10000000, Total (Ownership %): $17000650.00</li><li>Cap table detected with 15 investor rows</li><li>Investors/parties: Founders, Yes, Option Pool, Sequoia Capital, Accel Partners</li><li>Cap table total: $10000000</li></ul>
+  </div>
+  <div class="findings"><h3>Data Quality Warnings</h3><ul><li class="warning">High blank cell rate: 40% of cells are empty</li></ul></div>
+  <h3 style="margin-top:20px">Sheet Profiles</h3>
+  
+    <div class="sheet-card">
+      <div class="sheet-header">
+        <h3>Sheet1 <span class="badge">Payment Schedule</span> <span class="badge badge-green">Cap Table</span></h3>
+        <span class="meta">15 rows · 9 columns</span>
+      </div>
+      <p><strong>Entities:</strong> Founders, Yes, Option Pool, Sequoia Capital, Accel Partners, Y Combinator, Angel Investors, Conversion Pool</p>
+      <p><strong>Amounts:</strong> 4000000, $400.00, 1500000, $150.00, $5.00, $7500000.00</p>
+      <p><strong>Dates:</strong> 2022-01-15, 2024-01-10, 2023-06-01, 2022-09-01</p>
+      <p><strong>Totals:</strong> Total (Shares): <strong>$10000000</strong> · Total (Ownership %): <strong>$17000650.00</strong></p>
+      
+      <p class="warning">⚠ High blank cell rate: 40% of cells are empty</p>
+      <table>
+        <thead><tr><th>Column</th><th>Type</th><th>Unique</th><th>Blanks</th><th>Samples</th></tr></thead>
+        <tbody>
+      <tr>
+        <td>Investor</td>
+        <td><code>string</code></td>
+        <td>15</td>
+        <td>0</td>
+        <td><em>Founders</em>, <em>Option Pool</em>, <em>Sequoia Capital</em>, <em>Accel Partners</em>, <em>Y Combinator</em></td>
+      </tr>
+      <tr>
+        <td>Share Class</td>
+        <td><code>string</code></td>
+        <td>4</td>
+        <td>7</td>
+        <td><em>Common</em>, <em>Common</em>, <em>Series A Preferred</em>, <em>Series A Preferred</em>, <em>SAFE</em></td>
+      </tr>
+      <tr>
+        <td>Shares</td>
+        <td><code>currency</code></td>
+        <td>7</td>
+        <td>6</td>
+        <td><em>4000000</em>, <em>1500000</em>, <em>1500000</em>, <em>1000000</em>, <em>300000</em></td>
+      </tr>
+      <tr>
+        <td>Price Per Share</td>
+        <td><code>number</code></td>
+        <td>3</td>
+        <td>7</td>
+        <td><em>$0.0001</em>, <em>$0.0001</em>, <em>$5.00</em>, <em>$5.00</em>, <em>$5.00</em></td>
+      </tr>
+      <tr>
+        <td>Investment Amount</td>
+        <td><code>currency</code></td>
+        <td>8</td>
+        <td>7</td>
+        <td><em>$400.00</em>, <em>$150.00</em>, <em>$7500000.00</em>, <em>$5000000.00</em>, <em>$1500000.00</em></td>
+      </tr>
+      <tr>
+        <td>Ownership %</td>
+        <td><code>string</code></td>
+        <td>7</td>
+        <td>6</td>
+        <td><em>40.00%</em>, <em>15.00%</em>, <em>15.00%</em>, <em>10.00%</em>, <em>3.00%</em></td>
+      </tr>
+      <tr>
+        <td>Lead Investor</td>
+        <td><code>string</code></td>
+        <td>3</td>
+        <td>6</td>
+        <td><em>Yes</em>, <em>No</em>, <em>Yes</em>, <em>No</em>, <em>No</em></td>
+      </tr>
+      <tr>
+        <td>Investment Date</td>
+        <td><code>date</code></td>
+        <td>4</td>
+        <td>8</td>
+        <td><em>2022-01-15</em>, <em>2022-01-15</em>, <em>2024-01-10</em>, <em>2024-01-10</em>, <em>2023-06-01</em></td>
+      </tr>
+      <tr>
+        <td>Notes</td>
+        <td><code>string</code></td>
+        <td>8</td>
+        <td>7</td>
+        <td><em>Founders pool</em>, <em>Employee option pool</em>, <em>Lead Series A investor</em>, <em>Series A follow-on</em>, <em>YC SAFE convert</em></td>
+      </tr></tbody>
+      </table>
+    </div>
+  <div class="provider">sourceFilename: sample-cap-table.csv · extension: .csv · providerMode: mock</div>
+</div>
+</body>
+</html>

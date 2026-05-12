@@ -1,7 +1,7 @@
 {
   "name": "synth",
-  "version": "0.1.0",
-  "description": "AI contract review for legal and financial documents.",
+  "version": "0.4.0",
+  "description": "AI-powered legal and financial data room review — contracts, spreadsheets, cap tables, payment schedules.",
   "private": true,
   "scripts": {
     "doctor": "tsx src/cli/doctor.ts",
@@ -14,6 +14,9 @@
     "packet": "tsx src/cli/packet.ts",
     "seed-demo": "tsx src/cli/seed-demo.ts",
     "eval": "tsx src/cli/eval.ts",
+    "ingest": "tsx src/cli/ingest.ts",
+    "spreadsheet": "tsx src/cli/spreadsheet.ts",
+    "dataroom": "tsx src/cli/dataroom.ts",
     "dashboard": "next dev",
     "build": "next build",
     "start": "next start",
@@ -21,6 +24,7 @@
   },
   "dependencies": {
     "chalk": "^5.3.0",
+    "csv-parse": "^6.2.1",
     "glob": "^10.4.1",
     "gray-matter": "^4.0.3",
     "mammoth": "^1.12.0",
@@ -31,6 +35,7 @@
     "react": "^18",
     "react-dom": "^18",
     "tsx": "^4.11.0",
+    "xlsx": "^0.18.5",
     "zod": "^3.23.8"
   },
   "devDependencies": {

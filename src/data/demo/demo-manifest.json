@@ -1,13 +1,17 @@
 {
-  "version": "3",
-  "generatedAt": "2024-01-15T10:30:00.000Z",
+  "version": "4",
+  "generatedAt": "2026-05-12T11:22:59.904Z",
   "sourceDocument": "sample-saas-agreement.txt",
   "description": "Demo fixture data for the Synth /demo route. Generated from sample-saas-agreement.txt in mock mode.",
+  "providerMode": "mock",
+  "riskScore": 65,
+  "riskLevel": "High",
   "files": {
     "review": "demo-review.json",
     "financial": "demo-financial.json",
     "memo": "demo-memo.json",
-    "revision": "demo-revision.json"
+    "revision": "demo-revision.json",
+    "dataroom": "demo-dataroom.json"
   },
   "artifacts": {
     "fullPacketHtml": "/demo-artifacts/demo-full-packet.html",
@@ -15,6 +19,7 @@
     "revisionHtml": "/demo-artifacts/demo-revision.html",
     "memoHtml": "/demo-artifacts/demo-memo.html",
     "reviewMarkdown": "/demo-artifacts/demo-review.md",
-    "reviewJson": "/demo-artifacts/demo-review.json"
+    "reviewJson": "/demo-artifacts/demo-review.json",
+    "dataroomJson": "/demo-artifacts/demo-dataroom.json"
   }
 }

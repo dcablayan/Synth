@@ -1,0 +1,210 @@
+{
+  "filename": "sample-cap-table.csv",
+  "sheets": [
+    {
+      "sheetName": "Sheet1",
+      "rowCount": 15,
+      "columnCount": 9,
+      "columns": [
+        {
+          "name": "Investor",
+          "type": "string",
+          "sampleValues": [
+            "Founders",
+            "Option Pool",
+            "Sequoia Capital",
+            "Accel Partners",
+            "Y Combinator"
+          ],
+          "uniqueCount": 15,
+          "blankCount": 0,
+          "isCurrencyLike": false,
+          "isDateLike": false
+        },
+        {
+          "name": "Share Class",
+          "type": "string",
+          "sampleValues": [
+            "Common",
+            "Common",
+            "Series A Preferred",
+            "Series A Preferred",
+            "SAFE"
+          ],
+          "uniqueCount": 4,
+          "blankCount": 7,
+          "isCurrencyLike": false,
+          "isDateLike": false
+        },
+        {
+          "name": "Shares",
+          "type": "currency",
+          "sampleValues": [
+            "4000000",
+            "1500000",
+            "1500000",
+            "1000000",
+            "300000"
+          ],
+          "uniqueCount": 7,
+          "blankCount": 6,
+          "isCurrencyLike": true,
+          "isDateLike": false
+        },
+        {
+          "name": "Price Per Share",
+          "type": "number",
+          "sampleValues": [
+            "$0.0001",
+            "$0.0001",
+            "$5.00",
+            "$5.00",
+            "$5.00"
+          ],
+          "uniqueCount": 3,
+          "blankCount": 7,
+          "isCurrencyLike": false,
+          "isDateLike": false
+        },
+        {
+          "name": "Investment Amount",
+          "type": "currency",
+          "sampleValues": [
+            "$400.00",
+            "$150.00",
+            "$7500000.00",
+            "$5000000.00",
+            "$1500000.00"
+          ],
+          "uniqueCount": 8,
+          "blankCount": 7,
+          "isCurrencyLike": true,
+          "isDateLike": false
+        },
+        {
+          "name": "Ownership %",
+          "type": "string",
+          "sampleValues": [
+            "40.00%",
+            "15.00%",
+            "15.00%",
+            "10.00%",
+            "3.00%"
+          ],
+          "uniqueCount": 7,
+          "blankCount": 6,
+          "isCurrencyLike": false,
+          "isDateLike": false
+        },
+        {
+          "name": "Lead Investor",
+          "type": "string",
+          "sampleValues": [
+            "Yes",
+            "No",
+            "Yes",
+            "No",
+            "No"
+          ],
+          "uniqueCount": 3,
+          "blankCount": 6,
+          "isCurrencyLike": false,
+          "isDateLike": false
+        },
+        {
+          "name": "Investment Date",
+          "type": "date",
+          "sampleValues": [
+            "2022-01-15",
+            "2022-01-15",
+            "2024-01-10",
+            "2024-01-10",
+            "2023-06-01"
+          ],
+          "uniqueCount": 4,
+          "blankCount": 8,
+          "isCurrencyLike": false,
+          "isDateLike": true
+        },
+        {
+          "name": "Notes",
+          "type": "string",
+          "sampleValues": [
+            "Founders pool",
+            "Employee option pool",
+            "Lead Series A investor",
+            "Series A follow-on",
+            "YC SAFE convert"
+          ],
+          "uniqueCount": 8,
+          "blankCount": 7,
+          "isCurrencyLike": false,
+          "isDateLike": false
+        }
+      ],
+      "detectedEntities": [
+        "Founders",
+        "Yes",
+        "Option Pool",
+        "Sequoia Capital",
+        "Accel Partners",
+        "Y Combinator",
+        "Angel Investors",
+        "Conversion Pool",
+        "Reserved",
+        "100.00%",
+        "Notes:",
+        "Post-money valuation: $50000000.00",
+        "Pre-money valuation: $33000000.00",
+        "Series A total raised: $17000000.00",
+        "Liquidation preference: 1x non-participating",
+        "Anti-dilution: Broad-based weighted average"
+      ],
+      "detectedAmounts": [
+        "4000000",
+        "$400.00",
+        "1500000",
+        "$150.00",
+        "$5.00",
+        "$7500000.00",
+        "1000000",
+        "$5000000.00",
+        "300000",
+        "$1500000.00",
+        "200000",
+        "$2.50",
+        "$500000.00",
+        "500000",
+        "$2500000.00",
+        "$100.00",
+        "$10000000",
+        "$17000650.00"
+      ],
+      "detectedDates": [
+        "2022-01-15",
+        "2024-01-10",
+        "2023-06-01",
+        "2022-09-01"
+      ],
+      "detectedEmails": [],
+      "repeatedVendors": [],
+      "totalAmounts": [
+        {
+          "label": "Total (Shares)",
+          "amount": "$10000000"
+        },
+        {
+          "label": "Total (Ownership %)",
+          "amount": "$17000650.00"
+        }
+      ],
+      "isPaymentSchedule": true,
+      "isCapTable": true,
+      "isInvoice": false,
+      "isVendorList": false,
+      "warnings": [
+        "High blank cell rate: 40% of cells are empty"
+      ]
+    }
+  ]
+}
