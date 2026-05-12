@@ -63,6 +63,8 @@ const SRC_FILES = [
   'src/lib/report-writer.ts',
   'src/lib/html-renderer.ts',
   'src/lib/pdf-writer.ts',
+  'src/lib/template-loader.ts',
+  'src/lib/revision-engine.ts',
   'src/schemas/review.schema.ts',
   'src/schemas/financial.schema.ts',
   'src/schemas/memo.schema.ts',
@@ -79,6 +81,25 @@ console.log('\n── Sample Documents ─────────────�
 requireNonEmpty('documents/inbox/sample-saas-agreement.txt');
 requireNonEmpty('documents/inbox/sample-term-sheet.txt');
 requireNonEmpty('documents/inbox/sample-contractor-agreement.txt');
+
+// Supported input formats note
+console.log('\n── Supported Input Formats ───────────────────────');
+ok('.txt  — plain text');
+ok('.md   — markdown');
+ok('.pdf  — PDF (text-based, requires pdf-parse)');
+ok('.docx — Word document (requires mammoth)');
+try {
+  require.resolve('pdf-parse');
+  ok('pdf-parse installed');
+} catch {
+  warn('pdf-parse not installed — PDF ingestion unavailable (run: npm install pdf-parse)');
+}
+try {
+  require.resolve('mammoth');
+  ok('mammoth installed');
+} catch {
+  warn('mammoth not installed — DOCX ingestion unavailable (run: npm install mammoth)');
+}
 
 // PDF templates
 console.log('\n── PDF Templates ─────────────────────────────────');

@@ -16,6 +16,10 @@ function getRiskColor(level: string): string {
   }
 }
 
+function isMockModeData(review: Review): boolean {
+  return review.citations.some((c) => c.section === 'Mock Mode Notice');
+}
+
 function loadReports<T>(dir: string, suffix: string): T[] {
   const fullDir = path.join(process.cwd(), 'reports', dir);
   if (!fs.existsSync(fullDir)) return [];
@@ -48,6 +52,10 @@ export default function DashboardPage() {
 
   const pdfDir = path.join(process.cwd(), 'reports', 'pdfs');
   const pdfs = fs.existsSync(pdfDir) ? fs.readdirSync(pdfDir).filter((f) => f.endsWith('.pdf')) : [];
+  const fullPacketPDFs = pdfs.filter((f) => f.includes('-full-packet'));
+  const otherPDFs = pdfs.filter((f) => !f.includes('-full-packet'));
+
+  const mockMode = latestReview ? isMockModeData(latestReview) : null;
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
@@ -55,12 +63,17 @@ export default function DashboardPage() {
       <nav className="border-b border-slate-800 px-6 py-4 sticky top-0 bg-slate-950/90 backdrop-blur z-10">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/" className="text-blue-400 font-mono font-bold text-lg">⬡ Synth</Link>
+            <Link href="/" className="text-blue-400 font-mono font-bold text-lg">&#9123; Synth</Link>
             <span className="text-slate-600">/</span>
             <span className="text-slate-300 text-sm">Dashboard</span>
           </div>
           <div className="flex items-center gap-3">
             <Link href="/case-study" className="text-slate-400 hover:text-slate-100 text-sm">Case Study</Link>
+            {mockMode !== null && (
+              <span className={`text-xs px-2 py-1 rounded border font-mono ${mockMode ? 'text-yellow-400 bg-yellow-950 border-yellow-800' : 'text-green-400 bg-green-950 border-green-800'}`}>
+                {mockMode ? 'mock mode' : 'ai mode'}
+              </span>
+            )}
             <span className="text-xs bg-slate-800 border border-slate-700 text-slate-400 px-2 py-1 rounded">
               {reviews.length} review{reviews.length !== 1 ? 's' : ''}
             </span>
@@ -71,7 +84,7 @@ export default function DashboardPage() {
       {/* Disclaimer */}
       <div className="bg-yellow-950/40 border-b border-yellow-800/30 px-6 py-2">
         <div className="max-w-7xl mx-auto text-yellow-200/70 text-xs text-center">
-          ⚠️ Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.
+          &#9888; Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.
         </div>
       </div>
 
@@ -95,6 +108,20 @@ export default function DashboardPage() {
               ))}
             </div>
 
+            {/* Mock mode notice */}
+            {mockMode && (
+              <div className="bg-yellow-950/30 border border-yellow-800/40 rounded-xl p-4 mb-6 flex items-start gap-3">
+                <span className="text-yellow-400 text-sm mt-0.5">&#9888;</span>
+                <div>
+                  <div className="text-yellow-300 text-sm font-medium mb-1">Mock Mode Active</div>
+                  <p className="text-yellow-200/60 text-xs leading-relaxed">
+                    These results were generated without an AI provider. Key terms are extracted directly from the document text where possible.
+                    Set <code className="bg-slate-800 text-blue-400 px-1 rounded">OPENAI_API_KEY</code> in <code className="bg-slate-800 text-blue-400 px-1 rounded">.env.local</code> for full AI analysis.
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left: Document list */}
               <div className="lg:col-span-1">
@@ -108,7 +135,12 @@ export default function DashboardPage() {
                           {r.riskLevel}
                         </span>
                       </div>
-                      <div className="text-xs text-slate-500 mb-2">{r.documentType}</div>
+                      <div className="text-xs text-slate-500 mb-2 flex items-center gap-2">
+                        <span>{r.documentType}</span>
+                        {isMockModeData(r) && (
+                          <span className="text-yellow-600 font-mono">mock</span>
+                        )}
+                      </div>
                       <div className="text-xs text-slate-400">
                         Risk: <span className="font-medium text-white">{r.riskScore}/100</span>
                         <span className="mx-2 text-slate-700">·</span>
@@ -254,7 +286,7 @@ export default function DashboardPage() {
                       <span className="text-xs text-slate-600">{latestRevision.clauseRevisions.length} clause(s)</span>
                     </div>
                     <p className="text-xs text-yellow-400/70 mb-4 bg-yellow-950/30 border border-yellow-800/30 rounded p-2">
-                      ⚠️ {latestRevision.revisionDisclaimer}
+                      &#9888; {latestRevision.revisionDisclaimer}
                     </p>
                     <div className="space-y-3">
                       {latestRevision.clauseRevisions.slice(0, 2).map((c, i) => (
@@ -270,21 +302,41 @@ export default function DashboardPage() {
                   </div>
                 )}
 
-                {/* PDF exports */}
-                {pdfs.length > 0 && (
-                  <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-                    <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">PDF Reports</h2>
+                {/* Full Packet PDFs */}
+                {fullPacketPDFs.length > 0 && (
+                  <div className="bg-slate-900 border border-blue-900/50 rounded-xl p-6">
+                    <h2 className="text-sm font-semibold text-blue-400 uppercase tracking-wider mb-4">Full Review Packet</h2>
                     <div className="space-y-2">
-                      {pdfs.map((pdf) => (
-                        <div key={pdf} className="flex items-center gap-3 text-sm">
-                          <span className="text-slate-600">📄</span>
-                          <span className="text-slate-400 font-mono text-xs">{pdf}</span>
-                          <span className="text-slate-600 text-xs">reports/pdfs/{pdf}</span>
+                      {fullPacketPDFs.map((pdf) => (
+                        <div key={pdf} className="flex items-center gap-3">
+                          <span className="text-blue-500 text-base">&#128196;</span>
+                          <div>
+                            <div className="text-slate-200 font-mono text-xs">{pdf}</div>
+                            <div className="text-slate-600 text-xs">reports/pdfs/{pdf}</div>
+                          </div>
                         </div>
                       ))}
                     </div>
                     <p className="text-slate-600 text-xs mt-4">
-                      Open these files from your filesystem. Run{' '}
+                      Combined review + financial + memo + revision in a single PDF.
+                    </p>
+                  </div>
+                )}
+
+                {/* Individual PDF exports */}
+                {otherPDFs.length > 0 && (
+                  <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                    <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Individual PDFs</h2>
+                    <div className="space-y-2">
+                      {otherPDFs.map((pdf) => (
+                        <div key={pdf} className="flex items-center gap-3 text-sm">
+                          <span className="text-slate-600">&#128196;</span>
+                          <span className="text-slate-400 font-mono text-xs">{pdf}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-slate-600 text-xs mt-4">
+                      Open from <code className="bg-slate-800 text-blue-400 px-1 rounded">reports/pdfs/</code>. Run{' '}
                       <code className="bg-slate-800 text-blue-400 px-1 rounded">npm run pdf</code> to regenerate.
                     </p>
                   </div>
@@ -300,19 +352,57 @@ export default function DashboardPage() {
 
 function EmptyState() {
   return (
-    <div className="text-center py-20">
-      <div className="text-5xl mb-6">📂</div>
-      <h2 className="text-xl font-bold text-white mb-3">No reports found</h2>
-      <p className="text-slate-400 text-sm mb-8 max-w-sm mx-auto">
-        Drop documents into <code className="bg-slate-800 text-blue-400 px-1 rounded">/documents/inbox</code> and run
-        the analyzer to see results here.
-      </p>
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 max-w-md mx-auto text-left">
-        <div className="text-sm font-mono space-y-2 text-slate-300">
-          <div><span className="text-slate-600">$ </span>npm run demo</div>
-          <div><span className="text-slate-600">$ </span>npm run analyze</div>
-          <div><span className="text-slate-600">$ </span>npm run packet</div>
+    <div className="py-16 max-w-2xl mx-auto">
+      <div className="text-center mb-10">
+        <div className="text-5xl mb-6">&#128193;</div>
+        <h2 className="text-xl font-bold text-white mb-3">No reports yet</h2>
+        <p className="text-slate-400 text-sm max-w-sm mx-auto">
+          Drop a contract into <code className="bg-slate-800 text-blue-400 px-1 rounded">documents/inbox/</code> and run the pipeline to see results here.
+        </p>
+      </div>
+
+      <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-6">
+        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Quick start</div>
+        <div className="space-y-3">
+          {[
+            { cmd: 'npm run demo', desc: 'Run full pipeline on the 3 included sample contracts' },
+            { cmd: 'npm run packet', desc: 'Run pipeline on your own contracts in documents/inbox/' },
+            { cmd: 'npm run analyze', desc: 'Analyze only (no memo/revision/PDF)' },
+          ].map(({ cmd, desc }) => (
+            <div key={cmd} className="flex items-start gap-4">
+              <code className="bg-slate-800 border border-slate-700 text-blue-400 px-2 py-1 rounded text-xs font-mono whitespace-nowrap">{cmd}</code>
+              <span className="text-slate-400 text-xs pt-1">{desc}</span>
+            </div>
+          ))}
         </div>
+      </div>
+
+      <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-6">
+        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Supported input formats</div>
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            { ext: '.txt', desc: 'Plain text' },
+            { ext: '.md', desc: 'Markdown' },
+            { ext: '.pdf', desc: 'PDF (text-based)' },
+            { ext: '.docx', desc: 'Word document' },
+          ].map(({ ext, desc }) => (
+            <div key={ext} className="flex items-center gap-2">
+              <code className="text-blue-400 font-mono text-xs">{ext}</code>
+              <span className="text-slate-500 text-xs">{desc}</span>
+            </div>
+          ))}
+        </div>
+        <p className="text-slate-600 text-xs mt-3">Drop files into <code className="bg-slate-800 text-blue-400 px-1 rounded">documents/inbox/</code></p>
+      </div>
+
+      <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">No API key required</div>
+        <p className="text-slate-400 text-xs leading-relaxed mb-2">
+          Synth runs in mock mode by default — no API key needed. Mock mode extracts real text snippets from your document for key terms.
+        </p>
+        <p className="text-slate-600 text-xs">
+          For full AI analysis, add <code className="bg-slate-800 text-blue-400 px-1 rounded">OPENAI_API_KEY</code> to <code className="bg-slate-800 text-blue-400 px-1 rounded">.env.local</code>
+        </p>
       </div>
     </div>
   );

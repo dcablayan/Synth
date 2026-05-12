@@ -15,7 +15,7 @@ async function main() {
 
   let docs;
   try {
-    docs = loadDocumentsFromInbox();
+    docs = await loadDocumentsFromInbox();
   } catch (e) {
     console.error(`❌ ${e instanceof Error ? e.message : e}`);
     process.exit(1);

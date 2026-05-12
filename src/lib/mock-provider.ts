@@ -1,28 +1,52 @@
 import { detectDocumentType, extractDocumentTitle, extractParties } from './parser';
+import {
+  extractPaymentTerms,
+  extractRenewalTerms,
+  extractTerminationTerms,
+  extractGoverningLaw,
+  extractConfidentialityTerms,
+  extractLiabilityCap,
+  extractKeyDates,
+} from './parser';
+import {
+  buildPriorityChanges,
+  buildNegotiationNotes,
+  buildLawyerQuestions,
+  buildRevisionSummary,
+} from './revision-engine';
 
 const DISCLAIMER = 'Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.';
+const NOT_FOUND = 'Not found in the document.';
 
 export function generateMockReview(documentText: string, documentTitle: string) {
   const docType = detectDocumentType(documentText);
   const parties = extractParties(documentText);
   const now = new Date().toISOString();
 
+  const paymentTerms = extractPaymentTerms(documentText);
+  const renewalTerms = extractRenewalTerms(documentText);
+  const terminationTerms = extractTerminationTerms(documentText);
+  const governingLaw = extractGoverningLaw(documentText);
+  const confidentialityTerms = extractConfidentialityTerms(documentText);
+  const liabilityIssues = extractLiabilityCap(documentText);
+  const keyDates = extractKeyDates(documentText);
+
+  const liabilityQuote = liabilityIssues !== NOT_FOUND ? liabilityIssues : 'See document for liability cap language.';
+  const renewalQuote = renewalTerms !== NOT_FOUND ? renewalTerms : 'See document for renewal terms.';
+
   return {
     documentTitle,
     documentType: docType,
     parties: parties.length > 0 ? parties : ['Party A', 'Party B'],
-    executiveSummary: `This ${docType} has been reviewed by Synth in mock mode. The document contains several clauses that warrant attention, including payment terms, termination provisions, and liability limitations. This is a demonstration analysis using mock data — no actual AI analysis was performed. Review all findings with a qualified professional.`,
-    keyDates: [
-      { label: 'Effective Date', date: 'See document' },
-      { label: 'Initial Term End', date: 'See document' },
-    ],
-    paymentTerms: 'See document — payment terms detected but mock mode is active. Run with an AI provider for full extraction.',
-    renewalTerms: 'Auto-renewal terms detected. See document for specific notice periods.',
-    terminationTerms: 'Termination provisions present. See document for cure periods and notice requirements.',
-    liabilityIssues: 'Liability cap clauses detected. Caps may be significantly below potential damages. Verify with counsel.',
+    executiveSummary: `This ${docType} has been reviewed by Synth in mock mode. The document contains several clauses that warrant attention, including payment terms, termination provisions, and liability limitations. This is a demonstration analysis — no actual AI analysis was performed. Review all findings with a qualified professional.`,
+    keyDates,
+    paymentTerms,
+    renewalTerms,
+    terminationTerms,
+    liabilityIssues,
     indemnificationIssues: 'Indemnification provisions present. Review scope and carve-outs with legal counsel.',
-    confidentialityTerms: 'Confidentiality obligations present. Duration and scope require review.',
-    governingLaw: 'See document for governing law and dispute resolution provisions.',
+    confidentialityTerms,
+    governingLaw,
     missingClauses: [
       'Force majeure clause (not clearly present)',
       'Data processing agreement / GDPR addendum',
@@ -41,7 +65,7 @@ export function generateMockReview(documentText: string, documentTitle: string) 
         explanation: 'Provider may be able to modify terms without customer consent.',
         whyItMatters: 'Material terms could change after signing without recourse.',
         suggestedNextStep: 'Request a mutual written amendment requirement.',
-        supportingQuote: 'See document for specific language — mock mode active.',
+        supportingQuote: renewalQuote,
         location: 'General Provisions',
       },
       {
@@ -50,7 +74,7 @@ export function generateMockReview(documentText: string, documentTitle: string) 
         explanation: 'Liability may be capped at a small fraction of potential damages.',
         whyItMatters: 'Company may have no meaningful recourse for serious failures.',
         suggestedNextStep: 'Negotiate a higher cap and carve-outs for willful misconduct.',
-        supportingQuote: 'See document — mock mode active.',
+        supportingQuote: liabilityQuote,
         location: 'Liability',
       },
       {
@@ -59,7 +83,7 @@ export function generateMockReview(documentText: string, documentTitle: string) 
         explanation: 'Agreement auto-renews unless cancelled within a specific window.',
         whyItMatters: 'Missing the notice window locks in another full term.',
         suggestedNextStep: 'Calendar the cancellation deadline immediately.',
-        supportingQuote: 'See document — mock mode active.',
+        supportingQuote: renewalQuote,
         location: 'Term and Renewal',
       },
     ],
@@ -74,7 +98,7 @@ export function generateMockReview(documentText: string, documentTitle: string) 
       {
         section: 'Mock Mode Notice',
         quote: 'This analysis was generated in mock mode. No AI provider was used.',
-        relevance: 'All findings are illustrative only. Run with a real provider for document-specific analysis.',
+        relevance: 'All findings are illustrative. Run with a real provider for document-specific analysis.',
       },
     ],
     generatedAt: now,
@@ -84,32 +108,34 @@ export function generateMockReview(documentText: string, documentTitle: string) 
 
 export function generateMockFinancial(documentText: string, documentTitle: string) {
   const now = new Date().toISOString();
+  const paymentTerms = extractPaymentTerms(documentText);
+  const renewalTerms = extractRenewalTerms(documentText);
 
   return {
     documentTitle,
-    totalContractValue: 'See document — mock mode active',
-    recurringFees: 'Recurring fee structure detected. See document for amounts.',
-    oneTimeFees: 'One-time fees may be present. Review document.',
-    paymentSchedule: 'Payment schedule requires review. See document.',
+    totalContractValue: paymentTerms !== NOT_FOUND ? paymentTerms : NOT_FOUND,
+    recurringFees: paymentTerms !== NOT_FOUND ? paymentTerms : 'Recurring fee structure may be present. See document.',
+    oneTimeFees: NOT_FOUND,
+    paymentSchedule: paymentTerms !== NOT_FOUND ? paymentTerms : 'Payment schedule requires review. See document.',
     lateFees: 'Late payment penalties may apply. See document for rate.',
-    penalties: 'Penalty clauses detected. Review with counsel.',
-    discounts: 'Not found in the document.',
-    equityTerms: 'Not found in the document.',
-    revenueShare: 'Not found in the document.',
-    refundTerms: 'Refund provisions present. Review for limitations.',
-    renewalCostChanges: 'Price increase provisions detected. Review escalation terms.',
+    penalties: 'Penalty clauses may be present. Review with counsel.',
+    discounts: NOT_FOUND,
+    equityTerms: NOT_FOUND,
+    revenueShare: NOT_FOUND,
+    refundTerms: 'Refund provisions may be present. Review for limitations.',
+    renewalCostChanges: renewalTerms !== NOT_FOUND ? renewalTerms : 'Price escalation terms require review. See document.',
     financialRedFlags: [
       {
         issue: 'Non-refundable fees',
         explanation: 'All fees may be non-refundable regardless of circumstances.',
         severity: 'High' as const,
-        supportingQuote: 'See document — mock mode active.',
+        supportingQuote: paymentTerms !== NOT_FOUND ? paymentTerms : 'See document for fee language.',
       },
       {
         issue: 'Automatic price increases',
         explanation: 'Price may increase automatically on renewal.',
         severity: 'Medium' as const,
-        supportingQuote: 'See document — mock mode active.',
+        supportingQuote: renewalTerms !== NOT_FOUND ? renewalTerms : 'See document for renewal cost language.',
       },
     ],
     citations: [
@@ -124,13 +150,20 @@ export function generateMockFinancial(documentText: string, documentTitle: strin
   };
 }
 
-export function generateMockMemo(review: { documentTitle: string; riskLevel: string; riskScore: number; topRisks: Array<{ title: string; severity: string; explanation: string }>; keyDates: Array<{ label: string; date: string }>; actionItems: string[] }) {
+export function generateMockMemo(review: {
+  documentTitle: string;
+  riskLevel: string;
+  riskScore: number;
+  topRisks: Array<{ title: string; severity: string; explanation: string }>;
+  keyDates: Array<{ label: string; date: string }>;
+  actionItems: string[];
+}) {
   const now = new Date().toISOString();
 
   return {
     documentTitle: review.documentTitle,
     memoDate: now.split('T')[0],
-    executiveSummary: `This memo summarizes key findings from the Synth review of "${review.documentTitle}". The document presents ${review.riskLevel} risk (score: ${review.riskScore}/100). Several provisions require immediate attention, including liability limitations, renewal terms, and modification rights. This memo was generated in mock mode.`,
+    executiveSummary: `This memo summarizes key findings from the Synth review of "${review.documentTitle}". The document presents ${review.riskLevel} risk (score: ${review.riskScore}/100). Several provisions require immediate attention, including liability limitations, renewal terms, and modification rights. This memo was generated in mock mode — run with a real AI provider for document-specific analysis.`,
     biggestRisks: review.topRisks.map((r) => ({
       risk: r.title,
       severity: r.severity,
@@ -146,58 +179,64 @@ export function generateMockMemo(review: { documentTitle: string; riskLevel: str
       'What data rights does the other party retain?',
     ],
     actionItems: review.actionItems,
-    disclaimer: 'This memo is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.',
+    disclaimer: DISCLAIMER,
     generatedAt: now,
   };
 }
 
-export function generateMockRevision(documentText: string, review: { documentTitle: string }) {
+export function generateMockRevision(documentText: string, review: {
+  documentTitle: string;
+  documentType?: string;
+  topRisks?: Array<{ title: string; severity: string; suggestedNextStep: string; supportingQuote?: string }>;
+  missingClauses?: string[];
+}) {
   const now = new Date().toISOString();
+  const liabilityQuote = extractLiabilityCap(documentText);
+  const renewalQuote = extractRenewalTerms(documentText);
+
+  const fullReview = {
+    documentTitle: review.documentTitle,
+    documentType: (review.documentType ?? 'Other') as Parameters<typeof buildPriorityChanges>[0]['documentType'],
+    topRisks: (review.topRisks ?? []) as Parameters<typeof buildPriorityChanges>[0]['topRisks'],
+    missingClauses: review.missingClauses ?? [],
+  } as Parameters<typeof buildPriorityChanges>[0];
 
   return {
     documentTitle: review.documentTitle,
-    revisionSummary: `This revision packet identifies key areas of "${review.documentTitle}" that warrant negotiation or revision. Generated in mock mode — document-specific language requires real AI analysis. All suggested language is for review by a qualified professional only.`,
-    priorityChanges: [
-      'Negotiate mutual written amendment requirement',
-      'Increase liability cap or add carve-outs',
-      'Reduce or eliminate auto-renewal notice window',
-      'Clarify data rights and usage restrictions',
-      'Add force majeure provision',
-    ],
+    revisionSummary: buildRevisionSummary(fullReview),
+    priorityChanges: buildPriorityChanges(fullReview).length > 0
+      ? buildPriorityChanges(fullReview)
+      : [
+          'Negotiate mutual written amendment requirement',
+          'Increase liability cap or add carve-outs',
+          'Reduce or eliminate auto-renewal notice window',
+          'Clarify data rights and usage restrictions',
+          'Add force majeure provision',
+        ],
     clauseRevisions: [
       {
         section: 'Liability Limitation',
-        originalLanguage: 'See document — mock mode active',
+        originalLanguage: liabilityQuote !== NOT_FOUND ? liabilityQuote : 'See document for liability language.',
         issue: 'Liability cap may be significantly below potential damages',
         suggestedReplacementLanguage:
           '[SUGGESTED FOR PROFESSIONAL REVIEW] Consider negotiating a higher cap, or carve-outs for willful misconduct, gross negligence, and data breach scenarios.',
         whyItMatters: 'Low liability caps leave you with no meaningful recourse for serious failures.',
         severity: 'High' as const,
-        supportingQuote: 'See document — run with AI provider for document-specific quotes.',
+        supportingQuote: liabilityQuote !== NOT_FOUND ? liabilityQuote : 'See document for specific language.',
       },
       {
         section: 'Auto-Renewal',
-        originalLanguage: 'See document — mock mode active',
+        originalLanguage: renewalQuote !== NOT_FOUND ? renewalQuote : 'See document for renewal language.',
         issue: 'Auto-renewal with potentially short cancellation window',
         suggestedReplacementLanguage:
           '[SUGGESTED FOR PROFESSIONAL REVIEW] Negotiate a shorter notice window (e.g., 30 days) and require affirmative renewal consent.',
         whyItMatters: 'Missing the cancellation window locks you into another full-term commitment.',
         severity: 'Medium' as const,
-        supportingQuote: 'See document — mock mode active.',
+        supportingQuote: renewalQuote !== NOT_FOUND ? renewalQuote : 'See document for specific language.',
       },
     ],
-    negotiationNotes: [
-      'Start with the highest-severity items first',
-      'Document all verbal agreements in writing',
-      'Request a redline of any counter-proposals',
-      'Consider requesting a 30-day review period before signing',
-    ],
-    lawyerQuestions: [
-      'Is the arbitration clause enforceable in our jurisdiction?',
-      'What are our rights if the other party breaches?',
-      'How should we handle data security requirements?',
-      'Are there any jurisdiction-specific requirements we need to address?',
-    ],
+    negotiationNotes: buildNegotiationNotes(),
+    lawyerQuestions: buildLawyerQuestions(fullReview),
     revisionDisclaimer:
       'Suggested revisions are not legal advice. They are suggested replacement language for review by a qualified professional. Consult an attorney before using any suggested language.',
     generatedAt: now,
