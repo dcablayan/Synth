@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Verify sample documents
+        run: npm run verify
+
+      - name: Build (Next.js)
+        run: npm run build
+
+      - name: Run eval harness
+        run: npm run eval
+        env:
+          # Run in mock mode in CI — no API key needed
+          CI: true
+        # If Playwright/Chromium is unavailable, eval should still pass
+        # (PDF checks are skipped gracefully when Chromium is not installed)
+        continue-on-error: false
+
+      - name: Upload eval reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-reports
+          path: reports/evals/
+          retention-days: 30

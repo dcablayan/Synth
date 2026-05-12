@@ -1,45 +1,49 @@
 {
   "documentTitle": "INDEPENDENT CONTRACTOR AGREEMENT",
-  "revisionSummary": "This revision packet identifies key areas of \"INDEPENDENT CONTRACTOR AGREEMENT\" that warrant negotiation or revision. Generated in mock mode — document-specific language requires real AI analysis. All suggested language is for review by a qualified professional only.",
+  "revisionSummary": "This revision packet identifies 3 area(s) of \"INDEPENDENT CONTRACTOR AGREEMENT\" warranting negotiation or revision, including 2 high-priority item(s). All suggested language is for review by a qualified professional only and does not constitute legal advice.",
   "priorityChanges": [
-    "Negotiate mutual written amendment requirement",
-    "Increase liability cap or add carve-outs",
-    "Reduce or eliminate auto-renewal notice window",
-    "Clarify data rights and usage restrictions",
-    "Add force majeure provision"
+    "Address: Unilateral Modification Rights — Request a mutual written amendment requirement.",
+    "Address: Limited Liability Cap — Negotiate a higher cap and carve-outs for willful misconduct.",
+    "Add missing clauses: Force majeure clause (not clearly present), Data processing agreement / GDPR addendum, SLA / uptime guarantees"
   ],
   "clauseRevisions": [
     {
       "section": "Liability Limitation",
-      "originalLanguage": "See document — mock mode active",
+      "originalLanguage": "IN NO EVENT SHALL COMPANY BE LIABLE TO CONTRACTOR FOR ANY INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF OR RELATED TO THIS AGREEMENT",
       "issue": "Liability cap may be significantly below potential damages",
       "suggestedReplacementLanguage": "[SUGGESTED FOR PROFESSIONAL REVIEW] Consider negotiating a higher cap, or carve-outs for willful misconduct, gross negligence, and data breach scenarios.",
       "whyItMatters": "Low liability caps leave you with no meaningful recourse for serious failures.",
       "severity": "High",
-      "supportingQuote": "See document — run with AI provider for document-specific quotes."
+      "supportingQuote": "IN NO EVENT SHALL COMPANY BE LIABLE TO CONTRACTOR FOR ANY INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF OR RELATED TO THIS AGREEMENT"
     },
     {
       "section": "Auto-Renewal",
-      "originalLanguage": "See document — mock mode active",
+      "originalLanguage": "Renewal clause language not extracted from document text.",
       "issue": "Auto-renewal with potentially short cancellation window",
       "suggestedReplacementLanguage": "[SUGGESTED FOR PROFESSIONAL REVIEW] Negotiate a shorter notice window (e.g., 30 days) and require affirmative renewal consent.",
       "whyItMatters": "Missing the cancellation window locks you into another full-term commitment.",
       "severity": "Medium",
-      "supportingQuote": "See document — mock mode active."
+      "supportingQuote": "Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions."
     }
   ],
   "negotiationNotes": [
     "Start with the highest-severity items first",
-    "Document all verbal agreements in writing",
+    "Document all verbal agreements in writing before signing",
     "Request a redline of any counter-proposals",
-    "Consider requesting a 30-day review period before signing"
+    "Consider requesting a 30-day review period before signing",
+    "Get all changes confirmed in a written amendment or restated agreement"
   ],
   "lawyerQuestions": [
-    "Is the arbitration clause enforceable in our jurisdiction?",
-    "What are our rights if the other party breaches?",
-    "How should we handle data security requirements?",
-    "Are there any jurisdiction-specific requirements we need to address?"
+    "Is the liability cap sufficient for our potential exposure?",
+    "Are the indemnification obligations reasonable and balanced?",
+    "What is the practical impact of the governing law choice?",
+    "What are our rights and remedies if the other party materially breaches?",
+    "Is the IP assignment clause broad enough to cover all work product?",
+    "Is the non-compete enforceable in our jurisdiction and scope?"
   ],
   "revisionDisclaimer": "Suggested revisions are not legal advice. They are suggested replacement language for review by a qualified professional. Consult an attorney before using any suggested language.",
-  "generatedAt": "2026-05-12T10:09:10.513Z"
+  "generatedAt": "2026-05-12T11:06:58.697Z",
+  "parsedCharacterCount": 8089,
+  "providerMode": "mock",
+  "fallbackUsed": false
 }

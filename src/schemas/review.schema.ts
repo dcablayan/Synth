@@ -46,6 +46,12 @@ export const ReviewSchema = z.object({
   citations: z.array(CitationSchema),
   generatedAt: z.string(),
   disclaimer: z.string(),
+  sourceFilename: z.string().optional(),
+  sourceExtension: z.string().optional(),
+  parsedCharacterCount: z.number().optional(),
+  providerMode: z.enum(['mock', 'ai']).optional(),
+  fallbackUsed: z.boolean().optional(),
+  warnings: z.array(z.string()).optional(),
 });
 
 export type Review = z.infer<typeof ReviewSchema>;

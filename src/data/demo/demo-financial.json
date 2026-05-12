@@ -1,0 +1,64 @@
+{
+  "documentTitle": "SaaS Subscription Agreement — CloudBase Inc.",
+  "totalContractValue": "$2,400 for the initial 12-month term (plus potential renewal cost increases)",
+  "recurringFees": "$2,400/year billed annually in advance. No monthly billing option offered.",
+  "oneTimeFees": "Not found in the document.",
+  "paymentSchedule": "Full annual fee ($2,400) due at contract execution. No installment option. Late payments accrue 1.5% monthly interest.",
+  "lateFees": "1.5% per month (18% APR) on overdue balances. CloudBase may suspend access after 10 days past due.",
+  "penalties": "Service suspension for non-payment. No cure period beyond 10 days for payment defaults.",
+  "discounts": "Not found in the document.",
+  "equityTerms": "Not found in the document.",
+  "revenueShare": "Not found in the document.",
+  "refundTerms": "All fees are non-refundable. Termination for convenience forfeits remaining prepaid term. No prorated refund on cancellation.",
+  "renewalCostChanges": "CloudBase may increase fees on renewal with 60 days' notice. No cap on the percentage increase. Customer's only recourse is to terminate.",
+  "financialRedFlags": [
+    {
+      "issue": "Non-refundable annual prepayment",
+      "explanation": "All $2,400 must be paid upfront at execution, and no refund is available if the service is inadequate or the contract is terminated early.",
+      "severity": "High",
+      "supportingQuote": "All fees are non-refundable. Customer shall not be entitled to a refund of any prepaid fees upon termination for convenience."
+    },
+    {
+      "issue": "Uncapped renewal price increases",
+      "explanation": "CloudBase can raise prices on renewal with just 60 days' notice and no cap. A significant price increase forces Customer to choose between accepting the increase or losing the prepaid term.",
+      "severity": "High",
+      "supportingQuote": "CloudBase reserves the right to modify fees upon renewal, provided Customer receives sixty (60) days' prior written notice."
+    },
+    {
+      "issue": "High late fee rate",
+      "explanation": "1.5% per month equals 18% APR — significantly above typical commercial late fee rates of 6–10% APR.",
+      "severity": "Medium",
+      "supportingQuote": "Overdue amounts shall accrue interest at the rate of one and one-half percent (1.5%) per month."
+    },
+    {
+      "issue": "Rapid access suspension trigger",
+      "explanation": "CloudBase may suspend service after just 10 days of payment default, with no minimum notice window beyond the initial invoice.",
+      "severity": "Medium",
+      "supportingQuote": "CloudBase may suspend Customer's access to the Service upon ten (10) days' written notice following a payment default."
+    }
+  ],
+  "citations": [
+    {
+      "section": "Section 5.1 — Fees and Payment",
+      "quote": "Customer shall pay all fees in advance at the commencement of each Subscription Term. All fees are non-refundable.",
+      "relevance": "Establishes the non-refundable annual prepayment structure."
+    },
+    {
+      "section": "Section 5.3 — Late Payments",
+      "quote": "Overdue amounts shall accrue interest at the rate of one and one-half percent (1.5%) per month.",
+      "relevance": "18% APR late fee is above standard commercial rates."
+    },
+    {
+      "section": "Section 5.4 — Price Changes",
+      "quote": "CloudBase reserves the right to modify fees upon renewal, provided Customer receives sixty (60) days' prior written notice.",
+      "relevance": "No cap on renewal price increases creates budget unpredictability."
+    }
+  ],
+  "generatedAt": "2024-01-15T10:30:00.000Z",
+  "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.",
+  "sourceFilename": "sample-saas-agreement.txt",
+  "sourceExtension": ".txt",
+  "parsedCharacterCount": 8742,
+  "providerMode": "mock",
+  "fallbackUsed": false
+}

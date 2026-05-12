@@ -17,6 +17,12 @@ export const MemoSchema = z.object({
   actionItems: z.array(z.string()),
   disclaimer: z.string(),
   generatedAt: z.string(),
+  sourceFilename: z.string().optional(),
+  sourceExtension: z.string().optional(),
+  parsedCharacterCount: z.number().optional(),
+  providerMode: z.enum(['mock', 'ai']).optional(),
+  fallbackUsed: z.boolean().optional(),
+  warnings: z.array(z.string()).optional(),
 });
 
 export type Memo = z.infer<typeof MemoSchema>;

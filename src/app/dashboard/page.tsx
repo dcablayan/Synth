@@ -9,15 +9,16 @@ import type { Revision } from '@/schemas/revision.schema';
 function getRiskColor(level: string): string {
   switch (level) {
     case 'Critical': return 'text-red-400 bg-red-950 border-red-800';
-    case 'High': return 'text-orange-400 bg-orange-950 border-orange-800';
-    case 'Medium': return 'text-yellow-400 bg-yellow-950 border-yellow-800';
-    case 'Low': return 'text-green-400 bg-green-950 border-green-800';
-    default: return 'text-slate-400 bg-slate-800 border-slate-700';
+    case 'High':     return 'text-orange-400 bg-orange-950 border-orange-800';
+    case 'Medium':   return 'text-yellow-400 bg-yellow-950 border-yellow-800';
+    case 'Low':      return 'text-green-400 bg-green-950 border-green-800';
+    default:         return 'text-slate-400 bg-slate-800 border-slate-700';
   }
 }
 
 function isMockModeData(review: Review): boolean {
-  return review.citations.some((c) => c.section === 'Mock Mode Notice');
+  return review.providerMode === 'mock' ||
+    review.citations.some((c) => c.section === 'Mock Mode Notice');
 }
 
 function loadReports<T>(dir: string, suffix: string): T[] {
@@ -56,6 +57,7 @@ export default function DashboardPage() {
   const otherPDFs = pdfs.filter((f) => !f.includes('-full-packet'));
 
   const mockMode = latestReview ? isMockModeData(latestReview) : null;
+  const hasReports = reviews.length > 0;
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
@@ -68,7 +70,9 @@ export default function DashboardPage() {
             <span className="text-slate-300 text-sm">Dashboard</span>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/case-study" className="text-slate-400 hover:text-slate-100 text-sm">Case Study</Link>
+            <Link href="/demo" className="text-slate-400 hover:text-slate-100 text-sm transition-colors">Demo</Link>
+            <Link href="/artifacts" className="text-slate-400 hover:text-slate-100 text-sm transition-colors">Artifacts</Link>
+            <Link href="/case-study" className="text-slate-400 hover:text-slate-100 text-sm transition-colors">Case Study</Link>
             {mockMode !== null && (
               <span className={`text-xs px-2 py-1 rounded border font-mono ${mockMode ? 'text-yellow-400 bg-yellow-950 border-yellow-800' : 'text-green-400 bg-green-950 border-green-800'}`}>
                 {mockMode ? 'mock mode' : 'ai mode'}
@@ -89,7 +93,7 @@ export default function DashboardPage() {
       </div>
 
       <main className="max-w-7xl mx-auto px-6 py-8">
-        {reviews.length === 0 ? (
+        {!hasReports ? (
           <EmptyState />
         ) : (
           <>
@@ -124,7 +128,7 @@ export default function DashboardPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left: Document list */}
-              <div className="lg:col-span-1">
+              <div className="lg:col-span-1 space-y-4">
                 <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Documents</h2>
                 <div className="space-y-3">
                   {reviews.map((r, i) => (
@@ -135,19 +139,58 @@ export default function DashboardPage() {
                           {r.riskLevel}
                         </span>
                       </div>
-                      <div className="text-xs text-slate-500 mb-2 flex items-center gap-2">
+                      <div className="text-xs text-slate-500 mb-2 flex items-center gap-2 flex-wrap">
                         <span>{r.documentType}</span>
-                        {isMockModeData(r) && (
+                        {r.sourceExtension && (
+                          <code className="text-blue-500 font-mono bg-slate-800 px-1 rounded">{r.sourceExtension}</code>
+                        )}
+                        {isMockModeData(r) ? (
                           <span className="text-yellow-600 font-mono">mock</span>
+                        ) : (
+                          <span className="text-green-600 font-mono">ai</span>
+                        )}
+                        {r.fallbackUsed && (
+                          <span className="text-orange-500 text-xs">↩ fallback</span>
                         )}
                       </div>
                       <div className="text-xs text-slate-400">
                         Risk: <span className="font-medium text-white">{r.riskScore}/100</span>
                         <span className="mx-2 text-slate-700">·</span>
                         {r.topRisks.length} risk{r.topRisks.length !== 1 ? 's' : ''}
+                        {r.parsedCharacterCount && (
+                          <>
+                            <span className="mx-2 text-slate-700">·</span>
+                            {(r.parsedCharacterCount / 1000).toFixed(1)}k chars
+                          </>
+                        )}
                       </div>
                     </div>
                   ))}
+                </div>
+
+                {/* What recruiters should notice card */}
+                <div className="bg-slate-900 border border-blue-900/40 rounded-xl p-4 mt-4">
+                  <div className="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-3">What recruiters should notice</div>
+                  <ul className="space-y-2">
+                    {[
+                      { icon: '⌨️', text: 'CLI-driven, local-first workflow' },
+                      { icon: '✅', text: 'Zod schema validation on every output' },
+                      { icon: '📄', text: 'PDF pipeline via Playwright' },
+                      { icon: '🔒', text: 'No data leaves your machine by default' },
+                      { icon: '🔁', text: 'AI fallback to mock if parsing fails' },
+                      { icon: '🤖', text: 'Agent-native: full CLAUDE.md docs included' },
+                    ].map(({ icon, text }) => (
+                      <li key={text} className="flex items-start gap-2 text-xs text-slate-400">
+                        <span>{icon}</span>
+                        <span>{text}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-3 pt-3 border-t border-slate-800">
+                    <Link href="/case-study" className="text-blue-400 hover:text-blue-300 text-xs transition-colors">
+                      Full case study →
+                    </Link>
+                  </div>
                 </div>
               </div>
 
@@ -155,6 +198,29 @@ export default function DashboardPage() {
               <div className="lg:col-span-2 space-y-6">
                 {latestReview && (
                   <>
+                    {/* Source metadata */}
+                    {(latestReview.sourceFilename || latestReview.parsedCharacterCount) && (
+                      <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-wrap items-center gap-4">
+                        {latestReview.sourceFilename && (
+                          <div className="flex items-center gap-2">
+                            <span className="text-slate-500 text-xs">Source</span>
+                            <code className="text-blue-300 text-xs bg-slate-800 px-2 py-0.5 rounded">{latestReview.sourceFilename}</code>
+                          </div>
+                        )}
+                        {latestReview.parsedCharacterCount && (
+                          <div className="flex items-center gap-2">
+                            <span className="text-slate-500 text-xs">Parsed</span>
+                            <span className="text-slate-300 text-xs">{latestReview.parsedCharacterCount.toLocaleString()} chars</span>
+                          </div>
+                        )}
+                        {latestReview.fallbackUsed && (
+                          <span className="text-orange-400 text-xs bg-orange-950 border border-orange-800 px-2 py-0.5 rounded">
+                            ↩ fallback used
+                          </span>
+                        )}
+                      </div>
+                    )}
+
                     {/* Executive Summary */}
                     <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
                       <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Executive Summary</h2>
@@ -186,7 +252,7 @@ export default function DashboardPage() {
                             <p className="text-slate-400 text-xs mb-2 leading-relaxed">{risk.explanation}</p>
                             {risk.supportingQuote && (
                               <blockquote className="border-l-2 border-blue-700 pl-3 text-blue-300 text-xs italic">
-                                "{risk.supportingQuote}"
+                                &ldquo;{risk.supportingQuote}&rdquo;
                               </blockquote>
                             )}
                             <p className="text-slate-500 text-xs mt-2">
@@ -352,47 +418,78 @@ export default function DashboardPage() {
 
 function EmptyState() {
   return (
-    <div className="py-16 max-w-2xl mx-auto">
-      <div className="text-center mb-10">
+    <div className="py-12 max-w-4xl mx-auto">
+      <div className="text-center mb-8">
         <div className="text-5xl mb-6">&#128193;</div>
-        <h2 className="text-xl font-bold text-white mb-3">No reports yet</h2>
-        <p className="text-slate-400 text-sm max-w-sm mx-auto">
+        <h2 className="text-xl font-bold text-white mb-3">No local reports yet</h2>
+        <p className="text-slate-400 text-sm max-w-sm mx-auto mb-6">
           Drop a contract into <code className="bg-slate-800 text-blue-400 px-1 rounded">documents/inbox/</code> and run the pipeline to see results here.
         </p>
+        <Link
+          href="/demo"
+          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-sm px-5 py-2.5 rounded-lg transition-colors"
+        >
+          See the interactive demo →
+        </Link>
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-6">
-        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Quick start</div>
-        <div className="space-y-3">
+      {/* What recruiters should notice — even in empty state */}
+      <div className="bg-slate-900 border border-blue-900/40 rounded-xl p-6 mb-6">
+        <div className="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-4">What recruiters should notice</div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
-            { cmd: 'npm run demo', desc: 'Run full pipeline on the 3 included sample contracts' },
-            { cmd: 'npm run packet', desc: 'Run pipeline on your own contracts in documents/inbox/' },
-            { cmd: 'npm run analyze', desc: 'Analyze only (no memo/revision/PDF)' },
-          ].map(({ cmd, desc }) => (
-            <div key={cmd} className="flex items-start gap-4">
-              <code className="bg-slate-800 border border-slate-700 text-blue-400 px-2 py-1 rounded text-xs font-mono whitespace-nowrap">{cmd}</code>
-              <span className="text-slate-400 text-xs pt-1">{desc}</span>
+            { icon: '⌨️', title: 'CLI-driven pipeline', desc: 'Every output is produced by composable CLI commands, not a GUI. The pipeline is scriptable and automatable.' },
+            { icon: '✅', title: 'Schema validation', desc: 'All AI outputs are validated with Zod schemas. Bad output fails loudly — not silently corrupting downstream reports.' },
+            { icon: '📄', title: 'PDF pipeline', desc: 'Reports are rendered to HTML first, then to PDF via Playwright — not a simple text dump. Consistent layout guaranteed.' },
+            { icon: '🔒', title: 'Local-first by default', desc: 'No data leaves your machine unless you explicitly set OPENAI_API_KEY. Mock mode works out of the box.' },
+            { icon: '🔁', title: 'Graceful AI fallback', desc: 'If the AI provider fails or returns unparseable output, Synth saves the raw error and falls back to mock mode automatically.' },
+            { icon: '🤖', title: 'Agent-native design', desc: 'Full CLAUDE.md and CODEX.md agent docs are included so AI agents can operate, extend, and improve the system.' },
+          ].map(({ icon, title, desc }) => (
+            <div key={title} className="flex items-start gap-3">
+              <span className="text-xl">{icon}</span>
+              <div>
+                <div className="text-white text-sm font-medium mb-1">{title}</div>
+                <div className="text-slate-500 text-xs leading-relaxed">{desc}</div>
+              </div>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-6">
-        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Supported input formats</div>
-        <div className="grid grid-cols-2 gap-2">
-          {[
-            { ext: '.txt', desc: 'Plain text' },
-            { ext: '.md', desc: 'Markdown' },
-            { ext: '.pdf', desc: 'PDF (text-based)' },
-            { ext: '.docx', desc: 'Word document' },
-          ].map(({ ext, desc }) => (
-            <div key={ext} className="flex items-center gap-2">
-              <code className="text-blue-400 font-mono text-xs">{ext}</code>
-              <span className="text-slate-500 text-xs">{desc}</span>
-            </div>
-          ))}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Quick start</div>
+          <div className="space-y-3">
+            {[
+              { cmd: 'npm run demo', desc: 'Run full pipeline on the 3 included sample contracts' },
+              { cmd: 'npm run packet', desc: 'Run pipeline on your own contracts in documents/inbox/' },
+              { cmd: 'npm run analyze', desc: 'Analyze only (no memo/revision/PDF)' },
+            ].map(({ cmd, desc }) => (
+              <div key={cmd} className="flex items-start gap-4">
+                <code className="bg-slate-800 border border-slate-700 text-blue-400 px-2 py-1 rounded text-xs font-mono whitespace-nowrap">{cmd}</code>
+                <span className="text-slate-400 text-xs pt-1">{desc}</span>
+              </div>
+            ))}
+          </div>
         </div>
-        <p className="text-slate-600 text-xs mt-3">Drop files into <code className="bg-slate-800 text-blue-400 px-1 rounded">documents/inbox/</code></p>
+
+        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Supported input formats</div>
+          <div className="grid grid-cols-2 gap-2 mb-4">
+            {[
+              { ext: '.txt', desc: 'Plain text' },
+              { ext: '.md', desc: 'Markdown' },
+              { ext: '.pdf', desc: 'PDF (text-based)' },
+              { ext: '.docx', desc: 'Word document' },
+            ].map(({ ext, desc }) => (
+              <div key={ext} className="flex items-center gap-2">
+                <code className="text-blue-400 font-mono text-xs">{ext}</code>
+                <span className="text-slate-500 text-xs">{desc}</span>
+              </div>
+            ))}
+          </div>
+          <p className="text-slate-600 text-xs">Drop files into <code className="bg-slate-800 text-blue-400 px-1 rounded">documents/inbox/</code></p>
+        </div>
       </div>
 
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">

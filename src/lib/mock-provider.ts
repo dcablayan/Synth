@@ -31,8 +31,8 @@ export function generateMockReview(documentText: string, documentTitle: string) 
   const liabilityIssues = extractLiabilityCap(documentText);
   const keyDates = extractKeyDates(documentText);
 
-  const liabilityQuote = liabilityIssues !== NOT_FOUND ? liabilityIssues : 'See document for liability cap language.';
-  const renewalQuote = renewalTerms !== NOT_FOUND ? renewalTerms : 'See document for renewal terms.';
+  const liabilityQuote = liabilityIssues !== NOT_FOUND ? liabilityIssues : 'Liability limitation clause not identified in parsed text. Review document for liability cap provisions.';
+  const renewalQuote = renewalTerms !== NOT_FOUND ? renewalTerms : 'Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions.';
 
   return {
     documentTitle,
@@ -114,28 +114,28 @@ export function generateMockFinancial(documentText: string, documentTitle: strin
   return {
     documentTitle,
     totalContractValue: paymentTerms !== NOT_FOUND ? paymentTerms : NOT_FOUND,
-    recurringFees: paymentTerms !== NOT_FOUND ? paymentTerms : 'Recurring fee structure may be present. See document.',
+    recurringFees: paymentTerms !== NOT_FOUND ? paymentTerms : 'Recurring fee structure not identified in parsed text.',
     oneTimeFees: NOT_FOUND,
-    paymentSchedule: paymentTerms !== NOT_FOUND ? paymentTerms : 'Payment schedule requires review. See document.',
-    lateFees: 'Late payment penalties may apply. See document for rate.',
+    paymentSchedule: paymentTerms !== NOT_FOUND ? paymentTerms : 'Payment schedule not identified in parsed text. Review document for fee structure.',
+    lateFees: 'Late payment penalty terms not identified in parsed text. Review document for late fee provisions.',
     penalties: 'Penalty clauses may be present. Review with counsel.',
     discounts: NOT_FOUND,
     equityTerms: NOT_FOUND,
     revenueShare: NOT_FOUND,
-    refundTerms: 'Refund provisions may be present. Review for limitations.',
-    renewalCostChanges: renewalTerms !== NOT_FOUND ? renewalTerms : 'Price escalation terms require review. See document.',
+    refundTerms: 'Refund provisions not identified in parsed text. Review document for refund conditions.',
+    renewalCostChanges: renewalTerms !== NOT_FOUND ? renewalTerms : 'Price escalation terms not identified in parsed text. Review document for renewal cost provisions.',
     financialRedFlags: [
       {
         issue: 'Non-refundable fees',
         explanation: 'All fees may be non-refundable regardless of circumstances.',
         severity: 'High' as const,
-        supportingQuote: paymentTerms !== NOT_FOUND ? paymentTerms : 'See document for fee language.',
+        supportingQuote: paymentTerms !== NOT_FOUND ? paymentTerms : 'Payment terms not extracted from document text — review for fee non-refundability provisions.',
       },
       {
         issue: 'Automatic price increases',
         explanation: 'Price may increase automatically on renewal.',
         severity: 'Medium' as const,
-        supportingQuote: renewalTerms !== NOT_FOUND ? renewalTerms : 'See document for renewal cost language.',
+        supportingQuote: renewalTerms !== NOT_FOUND ? renewalTerms : 'Renewal cost terms not extracted from document text — review for price escalation provisions.',
       },
     ],
     citations: [
@@ -216,23 +216,23 @@ export function generateMockRevision(documentText: string, review: {
     clauseRevisions: [
       {
         section: 'Liability Limitation',
-        originalLanguage: liabilityQuote !== NOT_FOUND ? liabilityQuote : 'See document for liability language.',
+        originalLanguage: liabilityQuote !== NOT_FOUND ? liabilityQuote : 'Liability clause language not extracted from document text.',
         issue: 'Liability cap may be significantly below potential damages',
         suggestedReplacementLanguage:
           '[SUGGESTED FOR PROFESSIONAL REVIEW] Consider negotiating a higher cap, or carve-outs for willful misconduct, gross negligence, and data breach scenarios.',
         whyItMatters: 'Low liability caps leave you with no meaningful recourse for serious failures.',
         severity: 'High' as const,
-        supportingQuote: liabilityQuote !== NOT_FOUND ? liabilityQuote : 'See document for specific language.',
+        supportingQuote: liabilityQuote !== NOT_FOUND ? liabilityQuote : 'Liability limitation clause not identified in parsed text. Review document for liability cap provisions.',
       },
       {
         section: 'Auto-Renewal',
-        originalLanguage: renewalQuote !== NOT_FOUND ? renewalQuote : 'See document for renewal language.',
+        originalLanguage: renewalQuote !== NOT_FOUND ? renewalQuote : 'Renewal clause language not extracted from document text.',
         issue: 'Auto-renewal with potentially short cancellation window',
         suggestedReplacementLanguage:
           '[SUGGESTED FOR PROFESSIONAL REVIEW] Negotiate a shorter notice window (e.g., 30 days) and require affirmative renewal consent.',
         whyItMatters: 'Missing the cancellation window locks you into another full-term commitment.',
         severity: 'Medium' as const,
-        supportingQuote: renewalQuote !== NOT_FOUND ? renewalQuote : 'See document for specific language.',
+        supportingQuote: renewalQuote !== NOT_FOUND ? renewalQuote : 'Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions.',
       },
     ],
     negotiationNotes: buildNegotiationNotes(),

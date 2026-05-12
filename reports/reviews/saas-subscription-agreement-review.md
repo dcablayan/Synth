@@ -4,14 +4,14 @@
 
 **Document Type:** SaaS Agreement
 **Risk Score:** 65/100 — **High**
-**Generated:** 2026-05-12T10:10:11.228Z
+**Generated:** 2026-05-12T11:06:54.476Z
 **Parties:** Nexus Analytics, a Delaware corporation ("Provider")
 
 ---
 
 ## Executive Summary
 
-This SaaS Agreement has been reviewed by Synth in mock mode. The document contains several clauses that warrant attention, including payment terms, termination provisions, and liability limitations. This is a demonstration analysis using mock data — no actual AI analysis was performed. Review all findings with a qualified professional.
+This SaaS Agreement has been reviewed by Synth in mock mode. The document contains several clauses that warrant attention, including payment terms, termination provisions, and liability limitations. This is a demonstration analysis — no actual AI analysis was performed. Review all findings with a qualified professional.
 
 ---
 
@@ -19,13 +19,13 @@ This SaaS Agreement has been reviewed by Synth in mock mode. The document contai
 
 | Field | Value |
 |-------|-------|
-| Payment Terms | See document — payment terms detected but mock mode is active. Run with an AI provider for full extraction. |
-| Renewal Terms | Auto-renewal terms detected. See document for specific notice periods. |
-| Termination | Termination provisions present. See document for cure periods and notice requirements. |
-| Governing Law | See document for governing law and dispute resolution provisions. |
-| Liability | Liability cap clauses detected. Caps may be significantly below potential damages. Verify with counsel. |
+| Payment Terms | $4,500 per month (the "Subscription Fee"), billed annually in advance |
+| Renewal Terms | automatically renew for successive one-year periods (each a "Renewal Term") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term |
+| Termination | Either party may terminate this Agreement for material breach upon sixty (60) days written notice if the breach is not cured within such period |
+| Governing Law | governed by the laws of the State of Delaware, without regard to conflict of l |
+| Liability | IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITIES, EVEN IF PROVIDER HAS BEEN ADVISED OF THE POS |
 | Indemnification | Indemnification provisions present. Review scope and carve-outs with legal counsel. |
-| Confidentiality | Confidentiality obligations present. Duration and scope require review. |
+| Confidentiality | Each party agrees to maintain the confidentiality of the other party's Confidential Information and not to disclose such information to any third party without prior written consent |
 
 ---
 
@@ -46,7 +46,7 @@ This SaaS Agreement has been reviewed by Synth in mock mode. The document contai
 
 **Suggested next step:** Request a mutual written amendment requirement.
 
-**Supporting quote:** > "See document for specific language — mock mode active."
+**Supporting quote:** > "automatically renew for successive one-year periods (each a "Renewal Term") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term"
 
 **Location:** General Provisions
 
@@ -60,7 +60,7 @@ This SaaS Agreement has been reviewed by Synth in mock mode. The document contai
 
 **Suggested next step:** Negotiate a higher cap and carve-outs for willful misconduct.
 
-**Supporting quote:** > "See document — mock mode active."
+**Supporting quote:** > "IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITIES, EVEN IF PROVIDER HAS BEEN ADVISED OF THE POS"
 
 **Location:** Liability
 
@@ -74,7 +74,7 @@ This SaaS Agreement has been reviewed by Synth in mock mode. The document contai
 
 **Suggested next step:** Calendar the cancellation deadline immediately.
 
-**Supporting quote:** > "See document — mock mode active."
+**Supporting quote:** > "automatically renew for successive one-year periods (each a "Renewal Term") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term"
 
 **Location:** Term and Renewal
 
@@ -108,7 +108,7 @@ This SaaS Agreement has been reviewed by Synth in mock mode. The document contai
 
 **Mock Mode Notice**
 > "This analysis was generated in mock mode. No AI provider was used."
-*All findings are illustrative only. Run with a real provider for document-specific analysis.*
+*All findings are illustrative. Run with a real provider for document-specific analysis.*
 
 ---
 

@@ -1,28 +1,28 @@
 {
   "documentTitle": "TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING",
-  "totalContractValue": "See document — mock mode active",
-  "recurringFees": "Recurring fee structure detected. See document for amounts.",
-  "oneTimeFees": "One-time fees may be present. Review document.",
-  "paymentSchedule": "Payment schedule requires review. See document.",
-  "lateFees": "Late payment penalties may apply. See document for rate.",
-  "penalties": "Penalty clauses detected. Review with counsel.",
+  "totalContractValue": "Not found in the document.",
+  "recurringFees": "Recurring fee structure not identified in parsed text.",
+  "oneTimeFees": "Not found in the document.",
+  "paymentSchedule": "Payment schedule not identified in parsed text. Review document for fee structure.",
+  "lateFees": "Late payment penalty terms not identified in parsed text. Review document for late fee provisions.",
+  "penalties": "Penalty clauses may be present. Review with counsel.",
   "discounts": "Not found in the document.",
   "equityTerms": "Not found in the document.",
   "revenueShare": "Not found in the document.",
-  "refundTerms": "Refund provisions present. Review for limitations.",
-  "renewalCostChanges": "Price increase provisions detected. Review escalation terms.",
+  "refundTerms": "Refund provisions not identified in parsed text. Review document for refund conditions.",
+  "renewalCostChanges": "Price escalation terms not identified in parsed text. Review document for renewal cost provisions.",
   "financialRedFlags": [
     {
       "issue": "Non-refundable fees",
       "explanation": "All fees may be non-refundable regardless of circumstances.",
       "severity": "High",
-      "supportingQuote": "See document — mock mode active."
+      "supportingQuote": "Payment terms not extracted from document text — review for fee non-refundability provisions."
     },
     {
       "issue": "Automatic price increases",
       "explanation": "Price may increase automatically on renewal.",
       "severity": "Medium",
-      "supportingQuote": "See document — mock mode active."
+      "supportingQuote": "Renewal cost terms not extracted from document text — review for price escalation provisions."
     }
   ],
   "citations": [
@@ -32,6 +32,9 @@
       "relevance": "Run with an AI provider for document-specific financial extraction."
     }
   ],
-  "generatedAt": "2026-05-12T10:10:11.229Z",
-  "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions."
+  "generatedAt": "2026-05-12T11:06:56.849Z",
+  "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.",
+  "parsedCharacterCount": 6423,
+  "providerMode": "mock",
+  "fallbackUsed": false
 }

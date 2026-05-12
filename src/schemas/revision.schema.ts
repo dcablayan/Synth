@@ -19,6 +19,12 @@ export const RevisionSchema = z.object({
   lawyerQuestions: z.array(z.string()),
   revisionDisclaimer: z.string(),
   generatedAt: z.string(),
+  sourceFilename: z.string().optional(),
+  sourceExtension: z.string().optional(),
+  parsedCharacterCount: z.number().optional(),
+  providerMode: z.enum(['mock', 'ai']).optional(),
+  fallbackUsed: z.boolean().optional(),
+  warnings: z.array(z.string()).optional(),
 });
 
 export type Revision = z.infer<typeof RevisionSchema>;

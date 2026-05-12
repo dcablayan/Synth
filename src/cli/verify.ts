@@ -55,6 +55,8 @@ const SRC_FILES = [
   'src/cli/revise.ts',
   'src/cli/generate-pdf.ts',
   'src/cli/packet.ts',
+  'src/cli/seed-demo.ts',
+  'src/cli/eval.ts',
   'src/lib/document-loader.ts',
   'src/lib/parser.ts',
   'src/lib/ai-provider.ts',
@@ -124,7 +126,7 @@ requireNonEmpty('README.md');
 console.log('\n── Package Scripts ───────────────────────────────');
 try {
   const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf-8'));
-  const required = ['doctor', 'verify', 'demo', 'analyze', 'memo', 'revise', 'pdf', 'packet', 'dashboard', 'build'];
+  const required = ['doctor', 'verify', 'demo', 'analyze', 'memo', 'revise', 'pdf', 'packet', 'seed-demo', 'eval', 'dashboard', 'build'];
   for (const s of required) {
     if (pkg.scripts?.[s]) {
       ok(`script: ${s}`);
@@ -136,6 +138,25 @@ try {
   fail('Could not read package.json');
 }
 
+// Demo data fixtures
+console.log('\n── Demo Data (v3) ────────────────────────────────');
+requireNonEmpty('src/data/demo/demo-review.json');
+requireNonEmpty('src/data/demo/demo-financial.json');
+requireNonEmpty('src/data/demo/demo-memo.json');
+requireNonEmpty('src/data/demo/demo-revision.json');
+requireNonEmpty('src/data/demo/demo-manifest.json');
+
+// Demo artifacts
+console.log('\n── Demo Artifacts (v3) ───────────────────────────');
+requireNonEmpty('public/demo-artifacts/demo-full-packet.html');
+requireNonEmpty('public/demo-artifacts/demo-review.html');
+requireNonEmpty('public/demo-artifacts/demo-review.md');
+requireNonEmpty('public/demo-artifacts/demo-review.json');
+
+// CI
+console.log('\n── CI ────────────────────────────────────────────');
+requireNonEmpty('.github/workflows/ci.yml');
+
 // Report directories
 console.log('\n── Report Directories ────────────────────────────');
 const REPORT_DIRS = [
@@ -146,6 +167,7 @@ const REPORT_DIRS = [
   'reports/html',
   'reports/pdfs',
   'reports/exports',
+  'reports/evals',
 ];
 for (const d of REPORT_DIRS) {
   if (fs.existsSync(path.join(ROOT, d))) {

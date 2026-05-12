@@ -2,23 +2,21 @@
 
 > **Disclaimer:** Suggested revisions are not legal advice. They are suggested replacement language for review by a qualified professional. Consult an attorney before using any suggested language.
 
-**Generated:** 2026-05-12T10:09:04.376Z
+**Generated:** 2026-05-12T11:06:54.490Z
 
 ---
 
 ## Revision Summary
 
-This revision packet identifies key areas of "SAAS SUBSCRIPTION AGREEMENT" that warrant negotiation or revision. Generated in mock mode — document-specific language requires real AI analysis. All suggested language is for review by a qualified professional only.
+This revision packet identifies 3 area(s) of "SAAS SUBSCRIPTION AGREEMENT" warranting negotiation or revision, including 2 high-priority item(s). All suggested language is for review by a qualified professional only and does not constitute legal advice.
 
 ---
 
 ## Priority Changes
 
-1. Negotiate mutual written amendment requirement
-2. Increase liability cap or add carve-outs
-3. Reduce or eliminate auto-renewal notice window
-4. Clarify data rights and usage restrictions
-5. Add force majeure provision
+1. Address: Unilateral Modification Rights — Request a mutual written amendment requirement.
+2. Address: Limited Liability Cap — Negotiate a higher cap and carve-outs for willful misconduct.
+3. Add missing clauses: Force majeure clause (not clearly present), Data processing agreement / GDPR addendum, SLA / uptime guarantees
 
 ---
 
@@ -29,7 +27,7 @@ This revision packet identifies key areas of "SAAS SUBSCRIPTION AGREEMENT" that 
 **Issue:** Liability cap may be significantly below potential damages
 
 **Original language:**
-> "See document — mock mode active"
+> "IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITIES, EVEN IF PROVIDER HAS BEEN ADVISED OF THE POS"
 
 **Suggested replacement language (for professional review):**
 > [SUGGESTED FOR PROFESSIONAL REVIEW] Consider negotiating a higher cap, or carve-outs for willful misconduct, gross negligence, and data breach scenarios.
@@ -43,7 +41,7 @@ This revision packet identifies key areas of "SAAS SUBSCRIPTION AGREEMENT" that 
 **Issue:** Auto-renewal with potentially short cancellation window
 
 **Original language:**
-> "See document — mock mode active"
+> "automatically renew for successive one-year periods (each a "Renewal Term") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term"
 
 **Suggested replacement language (for professional review):**
 > [SUGGESTED FOR PROFESSIONAL REVIEW] Negotiate a shorter notice window (e.g., 30 days) and require affirmative renewal consent.
@@ -56,18 +54,21 @@ This revision packet identifies key areas of "SAAS SUBSCRIPTION AGREEMENT" that 
 ## Negotiation Notes
 
 - Start with the highest-severity items first
-- Document all verbal agreements in writing
+- Document all verbal agreements in writing before signing
 - Request a redline of any counter-proposals
 - Consider requesting a 30-day review period before signing
+- Get all changes confirmed in a written amendment or restated agreement
 
 ---
 
 ## Questions for Your Lawyer
 
-1. Is the arbitration clause enforceable in our jurisdiction?
-2. What are our rights if the other party breaches?
-3. How should we handle data security requirements?
-4. Are there any jurisdiction-specific requirements we need to address?
+1. Is the liability cap sufficient for our potential exposure?
+2. Are the indemnification obligations reasonable and balanced?
+3. What is the practical impact of the governing law choice?
+4. What are our rights and remedies if the other party materially breaches?
+5. Does the provider have adequate data security and breach notification obligations?
+6. Can we negotiate SLA uptime guarantees with financial remedies?
 
 ---
 

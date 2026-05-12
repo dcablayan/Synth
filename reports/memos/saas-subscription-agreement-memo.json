@@ -1,7 +1,7 @@
 {
   "documentTitle": "SAAS SUBSCRIPTION AGREEMENT",
   "memoDate": "2026-05-12",
-  "executiveSummary": "This memo summarizes key findings from the Synth review of \"SAAS SUBSCRIPTION AGREEMENT\". The document presents High risk (score: 65/100). Several provisions require immediate attention, including liability limitations, renewal terms, and modification rights. This memo was generated in mock mode.",
+  "executiveSummary": "This memo summarizes key findings from the Synth review of \"SAAS SUBSCRIPTION AGREEMENT\". The document presents High risk (score: 65/100). Several provisions require immediate attention, including liability limitations, renewal terms, and modification rights. This memo was generated in mock mode — run with a real AI provider for document-specific analysis.",
   "biggestRisks": [
     {
       "risk": "Unilateral Modification Rights",
@@ -48,6 +48,9 @@
     "Request data processing agreement if applicable",
     "Verify governing law is acceptable for your jurisdiction"
   ],
-  "disclaimer": "This memo is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.",
-  "generatedAt": "2026-05-12T10:09:04.376Z"
+  "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.",
+  "generatedAt": "2026-05-12T11:06:54.489Z",
+  "parsedCharacterCount": 6491,
+  "providerMode": "mock",
+  "fallbackUsed": false
 }

@@ -1,15 +1,15 @@
 # Executive Memo: TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING
 
-> **Disclaimer:** This memo is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.
+> **Disclaimer:** Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.
 
 **Date:** 2026-05-12
-**Generated:** 2026-05-12T10:10:11.456Z
+**Generated:** 2026-05-12T11:06:56.849Z
 
 ---
 
 ## Executive Summary
 
-This memo summarizes key findings from the Synth review of "TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING". The document presents High risk (score: 65/100). Several provisions require immediate attention, including liability limitations, renewal terms, and modification rights. This memo was generated in mock mode.
+This memo summarizes key findings from the Synth review of "TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING". The document presents High risk (score: 65/100). Several provisions require immediate attention, including liability limitations, renewal terms, and modification rights. This memo was generated in mock mode — run with a real AI provider for document-specific analysis.
 
 ---
 
@@ -64,4 +64,4 @@ Agreement auto-renews unless cancelled within a specific window.
 
 ---
 
-*This memo is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.*
+*Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.*

@@ -4,14 +4,14 @@
 
 **Document Type:** Term Sheet
 **Risk Score:** 65/100 — **High**
-**Generated:** 2026-05-12T10:10:11.228Z
+**Generated:** 2026-05-12T11:06:56.848Z
 **Parties:** Party A, Party B
 
 ---
 
 ## Executive Summary
 
-This Term Sheet has been reviewed by Synth in mock mode. The document contains several clauses that warrant attention, including payment terms, termination provisions, and liability limitations. This is a demonstration analysis using mock data — no actual AI analysis was performed. Review all findings with a qualified professional.
+This Term Sheet has been reviewed by Synth in mock mode. The document contains several clauses that warrant attention, including payment terms, termination provisions, and liability limitations. This is a demonstration analysis — no actual AI analysis was performed. Review all findings with a qualified professional.
 
 ---
 
@@ -19,13 +19,13 @@ This Term Sheet has been reviewed by Synth in mock mode. The document contains s
 
 | Field | Value |
 |-------|-------|
-| Payment Terms | See document — payment terms detected but mock mode is active. Run with an AI provider for full extraction. |
-| Renewal Terms | Auto-renewal terms detected. See document for specific notice periods. |
-| Termination | Termination provisions present. See document for cure periods and notice requirements. |
-| Governing Law | See document for governing law and dispute resolution provisions. |
-| Liability | Liability cap clauses detected. Caps may be significantly below potential damages. Verify with counsel. |
+| Payment Terms | Not found in the document. |
+| Renewal Terms | Not found in the document. |
+| Termination | termination of negotiations by Lead Investor, the Company agrees not to solicit, negotiate, or enter into discussions with any other potential investor regarding a financing transaction without Lead Investor's p |
+| Governing Law | GOVERNING LAW |
+| Liability | Not found in the document. |
 | Indemnification | Indemnification provisions present. Review scope and carve-outs with legal counsel. |
-| Confidentiality | Confidentiality obligations present. Duration and scope require review. |
+| Confidentiality | Not found in the document. |
 
 ---
 
@@ -46,7 +46,7 @@ This Term Sheet has been reviewed by Synth in mock mode. The document contains s
 
 **Suggested next step:** Request a mutual written amendment requirement.
 
-**Supporting quote:** > "See document for specific language — mock mode active."
+**Supporting quote:** > "Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions."
 
 **Location:** General Provisions
 
@@ -60,7 +60,7 @@ This Term Sheet has been reviewed by Synth in mock mode. The document contains s
 
 **Suggested next step:** Negotiate a higher cap and carve-outs for willful misconduct.
 
-**Supporting quote:** > "See document — mock mode active."
+**Supporting quote:** > "Liability limitation clause not identified in parsed text. Review document for liability cap provisions."
 
 **Location:** Liability
 
@@ -74,7 +74,7 @@ This Term Sheet has been reviewed by Synth in mock mode. The document contains s
 
 **Suggested next step:** Calendar the cancellation deadline immediately.
 
-**Supporting quote:** > "See document — mock mode active."
+**Supporting quote:** > "Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions."
 
 **Location:** Term and Renewal
 
@@ -108,7 +108,7 @@ This Term Sheet has been reviewed by Synth in mock mode. The document contains s
 
 **Mock Mode Notice**
 > "This analysis was generated in mock mode. No AI provider was used."
-*All findings are illustrative only. Run with a real provider for document-specific analysis.*
+*All findings are illustrative. Run with a real provider for document-specific analysis.*
 
 ---
 

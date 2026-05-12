@@ -1,0 +1,79 @@
+{
+  "documentTitle": "SaaS Subscription Agreement — CloudBase Inc.",
+  "revisionSummary": "This revision packet identifies 5 clauses requiring negotiation before execution. The most critical is the 1× monthly liability cap — we recommend a minimum 12× monthly with carve-outs. Secondary priorities are the unilateral modification rights, absence of an SLA, and the 90-day auto-renewal window. All suggested language below is for professional review only and should not be used without attorney sign-off.",
+  "priorityChanges": [
+    "Increase liability cap to 12× monthly fees minimum with data breach and gross negligence carve-outs",
+    "Add mutual written amendment requirement for pricing or material feature changes",
+    "Add SLA addendum with 99.9% uptime and credit schedule",
+    "Reduce auto-renewal notice window from 90 days to 30 days",
+    "Add data portability, retention schedule, and certified deletion on termination"
+  ],
+  "clauseRevisions": [
+    {
+      "section": "Section 9.2 — Limitation of Liability",
+      "originalLanguage": "Provider's aggregate liability shall not exceed the fees paid by Customer in the one (1) month immediately preceding the claim.",
+      "issue": "1× monthly cap (~$200) is far below realistic business exposure for data loss or extended outage.",
+      "suggestedReplacementLanguage": "[FOR PROFESSIONAL REVIEW] Provider's aggregate liability arising out of or related to this Agreement shall not exceed the greater of (a) the total fees paid by Customer in the twelve (12) months immediately preceding the claim, or (b) [negotiated floor]. Notwithstanding the foregoing, this limitation shall not apply to: (i) either party's indemnification obligations; (ii) claims arising from willful misconduct or gross negligence; (iii) claims arising from a breach of confidentiality obligations; or (iv) claims arising from a data breach involving Customer data.",
+      "whyItMatters": "A $200 effective cap means you have no meaningful recourse for serious failures including data loss, extended downtime, or security breach.",
+      "severity": "Critical",
+      "supportingQuote": "Provider's aggregate liability shall not exceed the fees paid by Customer in the one (1) month immediately preceding the claim."
+    },
+    {
+      "section": "Section 12.1 — Modifications",
+      "originalLanguage": "CloudBase reserves the right to modify the Service or these Terms upon thirty (30) days' written notice. Continued use after the notice period constitutes acceptance.",
+      "issue": "Allows CloudBase to materially change pricing, features, or terms mid-term with only 30 days' notice.",
+      "suggestedReplacementLanguage": "[FOR PROFESSIONAL REVIEW] Any modification to the fees or material terms of this Agreement shall require the mutual written consent of both parties. CloudBase may make non-material changes to the Service with thirty (30) days' notice. If Customer reasonably objects to any material modification, Customer may terminate this Agreement with a pro-rated refund of prepaid fees for the unused term.",
+      "whyItMatters": "Without this change, CloudBase can raise prices or reduce features mid-term and the only way out costs you the remaining prepaid subscription.",
+      "severity": "High",
+      "supportingQuote": "CloudBase reserves the right to modify the Service or these Terms upon thirty (30) days' written notice. Continued use after the notice period constitutes acceptance."
+    },
+    {
+      "section": "Section 8 — Service Levels (to be added)",
+      "originalLanguage": "THE SERVICE IS PROVIDED 'AS IS' WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. [No SLA currently exists.]",
+      "issue": "No uptime commitment, no SLA, no credit for downtime. All outage risk falls entirely on the Customer.",
+      "suggestedReplacementLanguage": "[FOR PROFESSIONAL REVIEW] CloudBase shall use commercially reasonable efforts to ensure the Service is available 99.9% of the time in any given calendar month, excluding scheduled maintenance. In the event the Service fails to meet the 99.9% uptime commitment in any calendar month, Customer shall be entitled to a service credit equal to 10% of monthly fees for each hour of excess downtime, not to exceed 30% of monthly fees in any single month.",
+      "whyItMatters": "Without SLA credits, a 24-hour outage has zero financial consequence for CloudBase and zero recourse for Customer.",
+      "severity": "High",
+      "supportingQuote": "THE SERVICE IS PROVIDED 'AS IS' WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED."
+    },
+    {
+      "section": "Section 3.2 — Renewal Terms",
+      "originalLanguage": "This Agreement shall automatically renew for successive one (1) year terms unless either party provides ninety (90) days' prior written notice of non-renewal.",
+      "issue": "90-day notice window is unusually long — industry standard is 30–60 days. Missing it locks Customer into another full annual payment.",
+      "suggestedReplacementLanguage": "[FOR PROFESSIONAL REVIEW] This Agreement shall automatically renew for successive one (1) year terms unless either party provides thirty (30) days' prior written notice of non-renewal before the end of the then-current term.",
+      "whyItMatters": "A shorter window reduces the chance of inadvertent renewal and aligns with industry norms. Most SaaS agreements use 30 days.",
+      "severity": "Medium",
+      "supportingQuote": "This Agreement shall automatically renew for successive one (1) year terms unless either party provides ninety (90) days' prior written notice of non-renewal."
+    },
+    {
+      "section": "Section 10.1 — Customer Indemnification",
+      "originalLanguage": "Customer shall indemnify, defend, and hold harmless CloudBase from any claims, damages, or expenses arising from Customer's use of the Service or Customer's data.",
+      "issue": "Overly broad — Customer indemnifies for any claim arising from use, even where CloudBase's own negligence contributed.",
+      "suggestedReplacementLanguage": "[FOR PROFESSIONAL REVIEW] Customer shall indemnify, defend, and hold harmless CloudBase from third-party claims arising from: (a) Customer's willful misconduct or gross negligence in the use of the Service; or (b) Customer data that infringes a third party's intellectual property rights. This obligation shall not apply to the extent the claim arises from CloudBase's own negligence, willful misconduct, or breach of this Agreement.",
+      "whyItMatters": "Limiting indemnification to willful misconduct and gross negligence is standard. Broad indemnification can expose Customer even when CloudBase is partially at fault.",
+      "severity": "Medium",
+      "supportingQuote": "Customer shall indemnify, defend, and hold harmless CloudBase from any claims, damages, or expenses arising from Customer's use of the Service or Customer's data."
+    }
+  ],
+  "negotiationNotes": [
+    "Start with the liability cap — this is the highest-leverage clause. Even getting it to 3× monthly fees is a meaningful improvement.",
+    "The SLA addendum is often offered as a paid add-on. Ask for it included; if CloudBase insists on charging, evaluate the cost vs. risk.",
+    "The 90-day renewal window is a negotiating chip — CloudBase may reduce it easily as it has low cost to them.",
+    "If CloudBase won't budge on unilateral modification rights, negotiate a 'material change' definition and a termination-with-refund right.",
+    "A GDPR/DPA addendum is typically non-negotiable for EU data — request it upfront if any EU personal data will be processed."
+  ],
+  "lawyerQuestions": [
+    "Is the class action waiver in the arbitration clause enforceable under applicable law?",
+    "What is the practical enforceability of the Delaware governing law clause for our jurisdiction?",
+    "Are the indemnification obligations reciprocal enough, or do we need further narrowing?",
+    "What data rights do we retain if CloudBase becomes insolvent or is acquired?",
+    "Does the 'as is' warranty disclaimer effectively eliminate implied warranty of fitness for purpose?"
+  ],
+  "revisionDisclaimer": "Suggested revisions are not legal advice. They are suggested replacement language for review by a qualified professional. Consult an attorney before using any suggested language.",
+  "generatedAt": "2024-01-15T10:30:00.000Z",
+  "sourceFilename": "sample-saas-agreement.txt",
+  "sourceExtension": ".txt",
+  "parsedCharacterCount": 8742,
+  "providerMode": "mock",
+  "fallbackUsed": false
+}

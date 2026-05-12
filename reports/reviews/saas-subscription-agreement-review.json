@@ -5,7 +5,7 @@
     "Nexus Analytics",
     "a Delaware corporation (\"Provider\")"
   ],
-  "executiveSummary": "This SaaS Agreement has been reviewed by Synth in mock mode. The document contains several clauses that warrant attention, including payment terms, termination provisions, and liability limitations. This is a demonstration analysis using mock data — no actual AI analysis was performed. Review all findings with a qualified professional.",
+  "executiveSummary": "This SaaS Agreement has been reviewed by Synth in mock mode. The document contains several clauses that warrant attention, including payment terms, termination provisions, and liability limitations. This is a demonstration analysis — no actual AI analysis was performed. Review all findings with a qualified professional.",
   "keyDates": [
     {
       "label": "Effective Date",
@@ -16,13 +16,13 @@
       "date": "See document"
     }
   ],
-  "paymentTerms": "See document — payment terms detected but mock mode is active. Run with an AI provider for full extraction.",
-  "renewalTerms": "Auto-renewal terms detected. See document for specific notice periods.",
-  "terminationTerms": "Termination provisions present. See document for cure periods and notice requirements.",
-  "liabilityIssues": "Liability cap clauses detected. Caps may be significantly below potential damages. Verify with counsel.",
+  "paymentTerms": "$4,500 per month (the \"Subscription Fee\"), billed annually in advance",
+  "renewalTerms": "automatically renew for successive one-year periods (each a \"Renewal Term\") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",
+  "terminationTerms": "Either party may terminate this Agreement for material breach upon sixty (60) days written notice if the breach is not cured within such period",
+  "liabilityIssues": "IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITIES, EVEN IF PROVIDER HAS BEEN ADVISED OF THE POS",
   "indemnificationIssues": "Indemnification provisions present. Review scope and carve-outs with legal counsel.",
-  "confidentialityTerms": "Confidentiality obligations present. Duration and scope require review.",
-  "governingLaw": "See document for governing law and dispute resolution provisions.",
+  "confidentialityTerms": "Each party agrees to maintain the confidentiality of the other party's Confidential Information and not to disclose such information to any third party without prior written consent",
+  "governingLaw": "governed by the laws of the State of Delaware, without regard to conflict of l",
   "missingClauses": [
     "Force majeure clause (not clearly present)",
     "Data processing agreement / GDPR addendum",
@@ -41,7 +41,7 @@
       "explanation": "Provider may be able to modify terms without customer consent.",
       "whyItMatters": "Material terms could change after signing without recourse.",
       "suggestedNextStep": "Request a mutual written amendment requirement.",
-      "supportingQuote": "See document for specific language — mock mode active.",
+      "supportingQuote": "automatically renew for successive one-year periods (each a \"Renewal Term\") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",
       "location": "General Provisions"
     },
     {
@@ -50,7 +50,7 @@
       "explanation": "Liability may be capped at a small fraction of potential damages.",
       "whyItMatters": "Company may have no meaningful recourse for serious failures.",
       "suggestedNextStep": "Negotiate a higher cap and carve-outs for willful misconduct.",
-      "supportingQuote": "See document — mock mode active.",
+      "supportingQuote": "IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITIES, EVEN IF PROVIDER HAS BEEN ADVISED OF THE POS",
       "location": "Liability"
     },
     {
@@ -59,7 +59,7 @@
       "explanation": "Agreement auto-renews unless cancelled within a specific window.",
       "whyItMatters": "Missing the notice window locks in another full term.",
       "suggestedNextStep": "Calendar the cancellation deadline immediately.",
-      "supportingQuote": "See document — mock mode active.",
+      "supportingQuote": "automatically renew for successive one-year periods (each a \"Renewal Term\") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",
       "location": "Term and Renewal"
     }
   ],
@@ -74,9 +74,12 @@
     {
       "section": "Mock Mode Notice",
       "quote": "This analysis was generated in mock mode. No AI provider was used.",
-      "relevance": "All findings are illustrative only. Run with a real provider for document-specific analysis."
+      "relevance": "All findings are illustrative. Run with a real provider for document-specific analysis."
     }
   ],
-  "generatedAt": "2026-05-12T10:10:11.228Z",
-  "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions."
+  "generatedAt": "2026-05-12T11:06:54.476Z",
+  "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.",
+  "parsedCharacterCount": 6491,
+  "providerMode": "mock",
+  "fallbackUsed": false
 }

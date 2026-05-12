@@ -30,6 +30,12 @@ export const FinancialSchema = z.object({
   ),
   generatedAt: z.string(),
   disclaimer: z.string(),
+  sourceFilename: z.string().optional(),
+  sourceExtension: z.string().optional(),
+  parsedCharacterCount: z.number().optional(),
+  providerMode: z.enum(['mock', 'ai']).optional(),
+  fallbackUsed: z.boolean().optional(),
+  warnings: z.array(z.string()).optional(),
 });
 
 export type Financial = z.infer<typeof FinancialSchema>;

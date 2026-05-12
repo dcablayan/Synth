@@ -1,0 +1,61 @@
+{
+  "documentTitle": "SaaS Subscription Agreement — CloudBase Inc.",
+  "memoDate": "2024-01-15",
+  "executiveSummary": "This SaaS Subscription Agreement with CloudBase Inc. presents High overall risk (score: 72/100). The two most serious issues are a minimal liability cap (1× monthly fees = $200) that leaves us with nearly no recourse for service failure, and unilateral modification rights that allow CloudBase to change pricing or features with 30 days' notice mid-term. The 90-day auto-renewal notice window and fully non-refundable fees compound the financial exposure. Legal counsel review is recommended before execution. We should not sign as-is without negotiating the liability cap and requesting an SLA addendum.",
+  "biggestRisks": [
+    {
+      "risk": "Minimal Liability Cap ($200 effective ceiling)",
+      "severity": "Critical",
+      "explanation": "The 1× monthly fee cap means our maximum recovery from CloudBase for any failure — including data loss — is $200. This is the most important clause to renegotiate."
+    },
+    {
+      "risk": "Unilateral Feature and Pricing Changes",
+      "severity": "High",
+      "explanation": "CloudBase can change the product, pricing, or terms with 30 days' notice. If we reject the change, we forfeit remaining prepaid fees."
+    },
+    {
+      "risk": "No SLA or Uptime Guarantee",
+      "severity": "High",
+      "explanation": "The service is provided 'as is' with no uptime commitment. Extended outages cost us in productivity with no contractual recourse."
+    },
+    {
+      "risk": "90-Day Auto-Renewal Notice Window",
+      "severity": "Medium",
+      "explanation": "We must cancel by October 15, 2024 to avoid auto-renewal. Missing this deadline locks us into another $2,400 payment."
+    }
+  ],
+  "financialObligations": [
+    "$2,400 due at contract execution (non-refundable)",
+    "1.5% monthly late fee if payment is delayed",
+    "Full annual fee owed again if auto-renewal notice window is missed",
+    "Potential uncapped fee increase on renewal (60-day notice)"
+  ],
+  "importantDeadlines": [
+    { "label": "Contract Execution / Payment Due", "date": "2024-01-15" },
+    { "label": "Auto-Renewal Cancellation Deadline", "date": "2024-10-15" },
+    { "label": "Initial Term End / Renewal Date", "date": "2025-01-15" }
+  ],
+  "questionsForLawyer": [
+    "Can we negotiate the liability cap to at least 12× monthly fees, with data breach and gross negligence carve-outs?",
+    "Will CloudBase accept a mutual written amendment requirement for any fee or feature changes?",
+    "Is the class action waiver in the arbitration clause enforceable in our jurisdiction?",
+    "Can we add a GDPR/data processing addendum before go-live?",
+    "What are our data portability rights at termination — can we get certified deletion?",
+    "Is a 30-day cure period negotiable for payment defaults before suspension?"
+  ],
+  "actionItems": [
+    "DO NOT SIGN without liability cap renegotiation",
+    "Calendar auto-renewal deadline: October 15, 2024",
+    "Request SLA addendum with 99.9% uptime and credit schedule",
+    "Request mutual written amendment clause for pricing and feature changes",
+    "Request GDPR / DPA addendum if any EU personal data will be processed",
+    "Have legal counsel review arbitration and class action waiver clauses"
+  ],
+  "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.",
+  "generatedAt": "2024-01-15T10:30:00.000Z",
+  "sourceFilename": "sample-saas-agreement.txt",
+  "sourceExtension": ".txt",
+  "parsedCharacterCount": 8742,
+  "providerMode": "mock",
+  "fallbackUsed": false
+}

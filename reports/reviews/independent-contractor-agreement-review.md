@@ -4,14 +4,14 @@
 
 **Document Type:** Contractor Agreement
 **Risk Score:** 65/100 — **High**
-**Generated:** 2026-05-12T10:10:11.218Z
+**Generated:** 2026-05-12T11:06:58.696Z
 **Parties:** Orbis Digital Solutions, a Texas corporation ("Company")
 
 ---
 
 ## Executive Summary
 
-This Contractor Agreement has been reviewed by Synth in mock mode. The document contains several clauses that warrant attention, including payment terms, termination provisions, and liability limitations. This is a demonstration analysis using mock data — no actual AI analysis was performed. Review all findings with a qualified professional.
+This Contractor Agreement has been reviewed by Synth in mock mode. The document contains several clauses that warrant attention, including payment terms, termination provisions, and liability limitations. This is a demonstration analysis — no actual AI analysis was performed. Review all findings with a qualified professional.
 
 ---
 
@@ -19,13 +19,13 @@ This Contractor Agreement has been reviewed by Synth in mock mode. The document 
 
 | Field | Value |
 |-------|-------|
-| Payment Terms | See document — payment terms detected but mock mode is active. Run with an AI provider for full extraction. |
-| Renewal Terms | Auto-renewal terms detected. See document for specific notice periods. |
-| Termination | Termination provisions present. See document for cure periods and notice requirements. |
-| Governing Law | See document for governing law and dispute resolution provisions. |
-| Liability | Liability cap clauses detected. Caps may be significantly below potential damages. Verify with counsel. |
+| Payment Terms | Not found in the document. |
+| Renewal Terms | Not found in the document. |
+| Termination | Either party may terminate this Agreement for any reason or no reason upon fourteen (14) days written notice |
+| Governing Law | governed by the laws of the State of Texas, without regard to conflict of law |
+| Liability | IN NO EVENT SHALL COMPANY BE LIABLE TO CONTRACTOR FOR ANY INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF OR RELATED TO THIS AGREEMENT |
 | Indemnification | Indemnification provisions present. Review scope and carve-outs with legal counsel. |
-| Confidentiality | Confidentiality obligations present. Duration and scope require review. |
+| Confidentiality | Confidential Information") |
 
 ---
 
@@ -46,7 +46,7 @@ This Contractor Agreement has been reviewed by Synth in mock mode. The document 
 
 **Suggested next step:** Request a mutual written amendment requirement.
 
-**Supporting quote:** > "See document for specific language — mock mode active."
+**Supporting quote:** > "Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions."
 
 **Location:** General Provisions
 
@@ -60,7 +60,7 @@ This Contractor Agreement has been reviewed by Synth in mock mode. The document 
 
 **Suggested next step:** Negotiate a higher cap and carve-outs for willful misconduct.
 
-**Supporting quote:** > "See document — mock mode active."
+**Supporting quote:** > "IN NO EVENT SHALL COMPANY BE LIABLE TO CONTRACTOR FOR ANY INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF OR RELATED TO THIS AGREEMENT"
 
 **Location:** Liability
 
@@ -74,7 +74,7 @@ This Contractor Agreement has been reviewed by Synth in mock mode. The document 
 
 **Suggested next step:** Calendar the cancellation deadline immediately.
 
-**Supporting quote:** > "See document — mock mode active."
+**Supporting quote:** > "Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions."
 
 **Location:** Term and Renewal
 
@@ -108,7 +108,7 @@ This Contractor Agreement has been reviewed by Synth in mock mode. The document 
 
 **Mock Mode Notice**
 > "This analysis was generated in mock mode. No AI provider was used."
-*All findings are illustrative only. Run with a real provider for document-specific analysis.*
+*All findings are illustrative. Run with a real provider for document-specific analysis.*
 
 ---
 
