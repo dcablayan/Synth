@@ -1,0 +1,53 @@
+{
+  "documentTitle": "INDEPENDENT CONTRACTOR AGREEMENT",
+  "memoDate": "2026-05-12",
+  "executiveSummary": "This memo summarizes key findings from the Synth review of \"INDEPENDENT CONTRACTOR AGREEMENT\". The document presents High risk (score: 65/100). Several provisions require immediate attention, including liability limitations, renewal terms, and modification rights. This memo was generated in mock mode.",
+  "biggestRisks": [
+    {
+      "risk": "Unilateral Modification Rights",
+      "severity": "High",
+      "explanation": "Provider may be able to modify terms without customer consent."
+    },
+    {
+      "risk": "Limited Liability Cap",
+      "severity": "High",
+      "explanation": "Liability may be capped at a small fraction of potential damages."
+    },
+    {
+      "risk": "Auto-Renewal with Short Notice",
+      "severity": "Medium",
+      "explanation": "Agreement auto-renews unless cancelled within a specific window."
+    }
+  ],
+  "financialObligations": [
+    "Review all fee structures in document",
+    "Note all payment deadlines",
+    "Check for auto-renewal costs"
+  ],
+  "importantDeadlines": [
+    {
+      "label": "Effective Date",
+      "date": "See document"
+    },
+    {
+      "label": "Initial Term End",
+      "date": "See document"
+    }
+  ],
+  "questionsForLawyer": [
+    "Is the liability cap sufficient for our exposure?",
+    "Are the indemnification obligations reasonable?",
+    "What is the practical impact of the governing law choice?",
+    "Can we negotiate a mutual written amendment requirement?",
+    "What data rights does the other party retain?"
+  ],
+  "actionItems": [
+    "Review all payment and fee terms with finance team",
+    "Calendar all notice and cancellation deadlines",
+    "Have legal counsel review liability and indemnification provisions",
+    "Request data processing agreement if applicable",
+    "Verify governing law is acceptable for your jurisdiction"
+  ],
+  "disclaimer": "This memo is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.",
+  "generatedAt": "2026-05-12T10:09:10.512Z"
+}

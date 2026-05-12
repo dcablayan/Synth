@@ -1,0 +1,115 @@
+INDEPENDENT CONTRACTOR AGREEMENT
+
+This Independent Contractor Agreement ("Agreement") is entered into as of March 1, 2024 between Orbis Digital Solutions, Inc., a Texas corporation ("Company"), and Marcus Chen ("Contractor").
+
+1. SERVICES
+
+1.1 Contractor agrees to provide software engineering and product development services as described in Statement of Work No. 1 attached hereto as Exhibit A ("Services").
+
+1.2 Contractor shall perform the Services as an independent contractor and not as an employee of Company. Nothing in this Agreement shall be construed to create an employer-employee, partnership, or joint venture relationship.
+
+1.3 Contractor shall have sole discretion regarding the manner and means of performing the Services, provided that the Services are completed by the deadlines specified in Exhibit A.
+
+2. COMPENSATION
+
+2.1 Rate. Company shall pay Contractor at the rate of $175 per hour for all approved hours worked. Contractor shall submit invoices bi-weekly, and Company shall pay within thirty (30) days of receipt.
+
+2.2 Expenses. Company shall reimburse Contractor for pre-approved expenses only. Any expense over $500 requires written pre-approval from Company's Director of Engineering.
+
+2.3 No Benefits. Contractor acknowledges that as an independent contractor, Contractor is not entitled to any employment benefits, including but not limited to: health insurance, retirement plans, paid time off, disability coverage, or unemployment insurance.
+
+2.4 Taxes. Contractor is solely responsible for all federal, state, and local taxes on compensation received under this Agreement, including self-employment taxes. Company will issue a Form 1099 for all payments made during the calendar year.
+
+3. TERM AND TERMINATION
+
+3.1 This Agreement commences on March 1, 2024 and continues until December 31, 2024, unless earlier terminated pursuant to this Section 3.
+
+3.2 Either party may terminate this Agreement for any reason or no reason upon fourteen (14) days written notice.
+
+3.3 Company may terminate this Agreement immediately, without notice or payment, if Contractor: (a) breaches any provision of this Agreement; (b) engages in conduct that Company reasonably determines to be detrimental to Company's business or reputation; or (c) fails to meet any project milestone specified in Exhibit A.
+
+3.4 Upon any termination, Company shall pay Contractor only for work satisfactorily completed and accepted by Company prior to the termination date. Work in progress that has not been accepted shall not be compensated.
+
+4. INTELLECTUAL PROPERTY
+
+4.1 Work for Hire. All work product, inventions, developments, software, code, documentation, and other materials created by Contractor in the course of performing the Services (collectively, "Work Product") shall be considered "work made for hire" under applicable copyright law and shall be the sole and exclusive property of Company.
+
+4.2 Assignment. To the extent any Work Product does not qualify as work made for hire, Contractor hereby irrevocably assigns to Company all right, title, and interest in and to such Work Product, including all intellectual property rights therein, without additional compensation.
+
+4.3 Pre-Existing IP. Contractor represents and warrants that Contractor will not incorporate any pre-existing intellectual property, proprietary tools, or third-party materials into the Work Product without Company's prior written consent.
+
+4.4 Moral Rights Waiver. Contractor hereby waives any and all moral rights in the Work Product to the fullest extent permitted by applicable law.
+
+5. CONFIDENTIALITY
+
+5.1 Contractor acknowledges that in the course of performing the Services, Contractor may have access to Company's confidential and proprietary information, including business plans, customer data, financial information, technical specifications, and trade secrets ("Confidential Information").
+
+5.2 Contractor agrees to: (a) maintain the confidentiality of all Confidential Information; (b) not disclose Confidential Information to any third party without Company's prior written consent; (c) use Confidential Information only as necessary to perform the Services; and (d) promptly notify Company of any unauthorized disclosure.
+
+5.3 Duration. Contractor's confidentiality obligations shall survive termination of this Agreement indefinitely.
+
+5.4 Non-Compete. During the term of this Agreement and for a period of twenty-four (24) months following termination, Contractor shall not, directly or indirectly, provide services to, consult for, or have any financial interest in any business that competes with Company's core products or services in the United States.
+
+5.5 Non-Solicitation. For a period of twenty-four (24) months following termination, Contractor shall not solicit, hire, or attempt to hire any employee or contractor of Company with whom Contractor had contact during the term of this Agreement.
+
+6. REPRESENTATIONS AND WARRANTIES
+
+6.1 Contractor represents and warrants that: (a) Contractor has the full right and authority to enter into this Agreement; (b) the Services will be performed in a professional manner; (c) the Work Product will not infringe the intellectual property rights of any third party; (d) Contractor is not subject to any restrictions that would prevent Contractor from performing the Services or assigning the Work Product.
+
+7. LIMITATION OF LIABILITY
+
+7.1 IN NO EVENT SHALL COMPANY BE LIABLE TO CONTRACTOR FOR ANY INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF OR RELATED TO THIS AGREEMENT.
+
+7.2 COMPANY'S TOTAL LIABILITY TO CONTRACTOR SHALL NOT EXCEED THE TOTAL AMOUNT PAID TO CONTRACTOR IN THE SIXTY (60) DAYS PRECEDING THE CLAIM.
+
+8. INDEMNIFICATION
+
+8.1 Contractor shall indemnify, defend, and hold harmless Company from any claims, damages, losses, and expenses (including reasonable attorneys' fees) arising from: (a) Contractor's breach of this Agreement; (b) Contractor's negligence or willful misconduct; or (c) any claim that the Work Product infringes any third-party intellectual property rights.
+
+9. GOVERNING LAW AND DISPUTE RESOLUTION
+
+9.1 This Agreement is governed by the laws of the State of Texas, without regard to conflict of law principles.
+
+9.2 Any dispute shall be resolved through binding arbitration in Austin, Texas, under the American Arbitration Association Commercial Arbitration Rules. The prevailing party shall be entitled to recover reasonable attorneys' fees.
+
+9.3 Contractor waives any right to bring claims as a class or collective action.
+
+10. GENERAL PROVISIONS
+
+10.1 This Agreement constitutes the entire agreement between the parties regarding its subject matter and supersedes all prior agreements.
+
+10.2 This Agreement may not be assigned by Contractor without Company's prior written consent.
+
+10.3 Company may assign this Agreement without restriction.
+
+10.4 Contractor may not subcontract any portion of the Services without Company's prior written consent.
+
+IN WITNESS WHEREOF, the parties have executed this Agreement as of the date first written above.
+
+ORBIS DIGITAL SOLUTIONS, INC.
+By: ___________________________
+Name: Sarah Morrison
+Title: VP of Engineering
+Date: March 1, 2024
+
+MARCUS CHEN (Contractor)
+Signature: ___________________________
+Date: ___________________________
+Address: ___________________________
+Tax ID / SSN (last 4): _______________
+
+EXHIBIT A - STATEMENT OF WORK NO. 1
+
+Project: Backend API Refactoring and Microservices Migration
+Duration: March 1, 2024 - December 31, 2024
+Estimated Hours: 800-1,200 hours
+Rate: $175/hour
+
+Deliverables:
+1. Audit of existing monolith architecture (April 15, 2024)
+2. Migration plan and technical specification (May 1, 2024)
+3. Core API refactoring - Phase 1 (July 31, 2024)
+4. Microservices deployment - Phase 2 (October 31, 2024)
+5. Testing, documentation, and handoff (December 31, 2024)
+
+The Company reserves the right to modify deliverables and deadlines at its sole discretion. Contractor shall accommodate reasonable requests for changes without additional compensation unless the scope materially increases.

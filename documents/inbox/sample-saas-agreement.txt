@@ -1,0 +1,94 @@
+SAAS SUBSCRIPTION AGREEMENT
+
+This SaaS Subscription Agreement ("Agreement") is entered into as of January 15, 2024 ("Effective Date") between Nexus Analytics, Inc., a Delaware corporation ("Provider"), and Meridian Ventures LLC, a California limited liability company ("Customer").
+
+1. SERVICES
+
+1.1 Provider agrees to provide Customer with access to the Nexus Analytics platform (the "Service"), a cloud-based business intelligence and data analytics solution, as described in Exhibit A attached hereto.
+
+1.2 Provider reserves the right to modify, update, or discontinue any feature of the Service at any time with or without notice to Customer. Provider shall not be liable for any such modifications, updates, or discontinuations.
+
+2. SUBSCRIPTION TERM AND FEES
+
+2.1 Initial Term. This Agreement commences on the Effective Date and continues for an initial term of twelve (12) months ("Initial Term").
+
+2.2 Subscription Fees. Customer agrees to pay Provider a monthly subscription fee of $4,500 per month (the "Subscription Fee"), billed annually in advance. The total annual fee is $54,000, due within fifteen (15) days of the Effective Date.
+
+2.3 Price Increases. Provider may increase the Subscription Fee at any time upon thirty (30) days written notice to Customer. If Customer does not cancel within the notice period, Customer is deemed to have accepted the new price.
+
+2.4 Late Payment. Any payment not received within fifteen (15) days of the due date shall accrue interest at a rate of 2% per month (24% annually) compounding monthly, plus any collection costs.
+
+2.5 No Refunds. All fees are non-refundable. Customer is not entitled to any refund or credit upon cancellation or termination of this Agreement, regardless of the circumstances.
+
+3. AUTO-RENEWAL
+
+3.1 This Agreement shall automatically renew for successive one-year periods (each a "Renewal Term") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term.
+
+3.2 Upon renewal, Provider reserves the right to increase fees by up to fifteen percent (15%) over the prior term's fees without additional notice beyond the annual invoice.
+
+4. INTELLECTUAL PROPERTY
+
+4.1 Provider retains all ownership and intellectual property rights in the Service, including all software, documentation, and related materials.
+
+4.2 Customer Data. Provider shall have a perpetual, irrevocable, royalty-free license to use, reproduce, modify, and create derivative works from any data Customer uploads to or processes through the Service, in anonymized or aggregated form, for Provider's product improvement, research, and marketing purposes.
+
+5. CONFIDENTIALITY
+
+5.1 Each party agrees to maintain the confidentiality of the other party's Confidential Information and not to disclose such information to any third party without prior written consent.
+
+5.2 Notwithstanding Section 5.1, Provider may disclose Customer's Confidential Information to its affiliates, contractors, and service providers on a need-to-know basis without Customer's consent.
+
+6. LIABILITY LIMITATIONS
+
+6.1 IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITIES, EVEN IF PROVIDER HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+6.2 PROVIDER'S TOTAL AGGREGATE LIABILITY ARISING OUT OF OR RELATED TO THIS AGREEMENT SHALL NOT EXCEED THE AMOUNT PAID BY CUSTOMER IN THE THREE (3) MONTHS PRECEDING THE CLAIM, REGARDLESS OF THE FORM OF ACTION.
+
+6.3 The Service is provided "as is" and "as available." Provider makes no warranties, express or implied, including any implied warranties of merchantability, fitness for a particular purpose, or non-infringement.
+
+7. INDEMNIFICATION
+
+7.1 Customer shall indemnify, defend, and hold harmless Provider and its officers, directors, employees, agents, and successors from and against any claims, damages, losses, and expenses (including reasonable attorneys' fees) arising out of or relating to (a) Customer's use of the Service; (b) Customer's breach of this Agreement; or (c) any third-party claim related to Customer Data.
+
+7.2 Provider's indemnification obligations are limited to claims arising from Provider's willful misconduct or gross negligence.
+
+8. TERMINATION
+
+8.1 Either party may terminate this Agreement for material breach upon sixty (60) days written notice if the breach is not cured within such period.
+
+8.2 Provider may terminate this Agreement immediately upon written notice if Customer fails to pay any fees when due, or if Customer violates any usage restrictions.
+
+8.3 Upon termination, Customer shall immediately cease using the Service and destroy all copies of any Provider materials. Customer's data will be deleted within thirty (30) days of termination without notice.
+
+9. GOVERNING LAW AND DISPUTE RESOLUTION
+
+9.1 This Agreement is governed by the laws of the State of Delaware, without regard to conflict of law principles.
+
+9.2 Any dispute arising under this Agreement shall be resolved by binding arbitration administered by JAMS under its Streamlined Arbitration Rules, with the arbitration seat in Wilmington, Delaware.
+
+9.3 CUSTOMER WAIVES ANY RIGHT TO A JURY TRIAL AND ANY RIGHT TO PARTICIPATE IN A CLASS ACTION LAWSUIT OR CLASS-WIDE ARBITRATION.
+
+10. GENERAL PROVISIONS
+
+10.1 This Agreement constitutes the entire agreement between the parties and supersedes all prior negotiations, representations, or agreements.
+
+10.2 Any modification to this Agreement must be in writing and signed by both parties, except that Provider may modify this Agreement by posting an updated version on its website, and Customer's continued use of the Service constitutes acceptance.
+
+10.3 If any provision of this Agreement is found to be unenforceable, the remaining provisions shall continue in full force.
+
+IN WITNESS WHEREOF, the parties have executed this Agreement as of the Effective Date.
+
+NEXUS ANALYTICS, INC.
+By: ___________________________
+Name: James Hartwell
+Title: Chief Executive Officer
+Date: January 15, 2024
+
+MERIDIAN VENTURES LLC
+By: ___________________________
+Name: ___________________________
+Title: ___________________________
+Date: ___________________________
+
+EXHIBIT A - SERVICE DESCRIPTION
+The Nexus Analytics platform provides: business intelligence dashboards, data pipeline integration, automated reporting, and up to 5 user seats. Additional seats are available at $800 per seat per month.

@@ -1,0 +1,45 @@
+{
+  "documentTitle": "SAAS SUBSCRIPTION AGREEMENT",
+  "revisionSummary": "This revision packet identifies key areas of \"SAAS SUBSCRIPTION AGREEMENT\" that warrant negotiation or revision. Generated in mock mode — document-specific language requires real AI analysis. All suggested language is for review by a qualified professional only.",
+  "priorityChanges": [
+    "Negotiate mutual written amendment requirement",
+    "Increase liability cap or add carve-outs",
+    "Reduce or eliminate auto-renewal notice window",
+    "Clarify data rights and usage restrictions",
+    "Add force majeure provision"
+  ],
+  "clauseRevisions": [
+    {
+      "section": "Liability Limitation",
+      "originalLanguage": "See document — mock mode active",
+      "issue": "Liability cap may be significantly below potential damages",
+      "suggestedReplacementLanguage": "[SUGGESTED FOR PROFESSIONAL REVIEW] Consider negotiating a higher cap, or carve-outs for willful misconduct, gross negligence, and data breach scenarios.",
+      "whyItMatters": "Low liability caps leave you with no meaningful recourse for serious failures.",
+      "severity": "High",
+      "supportingQuote": "See document — run with AI provider for document-specific quotes."
+    },
+    {
+      "section": "Auto-Renewal",
+      "originalLanguage": "See document — mock mode active",
+      "issue": "Auto-renewal with potentially short cancellation window",
+      "suggestedReplacementLanguage": "[SUGGESTED FOR PROFESSIONAL REVIEW] Negotiate a shorter notice window (e.g., 30 days) and require affirmative renewal consent.",
+      "whyItMatters": "Missing the cancellation window locks you into another full-term commitment.",
+      "severity": "Medium",
+      "supportingQuote": "See document — mock mode active."
+    }
+  ],
+  "negotiationNotes": [
+    "Start with the highest-severity items first",
+    "Document all verbal agreements in writing",
+    "Request a redline of any counter-proposals",
+    "Consider requesting a 30-day review period before signing"
+  ],
+  "lawyerQuestions": [
+    "Is the arbitration clause enforceable in our jurisdiction?",
+    "What are our rights if the other party breaches?",
+    "How should we handle data security requirements?",
+    "Are there any jurisdiction-specific requirements we need to address?"
+  ],
+  "revisionDisclaimer": "Suggested revisions are not legal advice. They are suggested replacement language for review by a qualified professional. Consult an attorney before using any suggested language.",
+  "generatedAt": "2026-05-12T10:09:04.376Z"
+}

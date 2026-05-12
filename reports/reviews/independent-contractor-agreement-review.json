@@ -1,0 +1,82 @@
+{
+  "documentTitle": "INDEPENDENT CONTRACTOR AGREEMENT",
+  "documentType": "Contractor Agreement",
+  "parties": [
+    "Orbis Digital Solutions",
+    "a Texas corporation (\"Company\")"
+  ],
+  "executiveSummary": "This Contractor Agreement has been reviewed by Synth in mock mode. The document contains several clauses that warrant attention, including payment terms, termination provisions, and liability limitations. This is a demonstration analysis using mock data — no actual AI analysis was performed. Review all findings with a qualified professional.",
+  "keyDates": [
+    {
+      "label": "Effective Date",
+      "date": "See document"
+    },
+    {
+      "label": "Initial Term End",
+      "date": "See document"
+    }
+  ],
+  "paymentTerms": "See document — payment terms detected but mock mode is active. Run with an AI provider for full extraction.",
+  "renewalTerms": "Auto-renewal terms detected. See document for specific notice periods.",
+  "terminationTerms": "Termination provisions present. See document for cure periods and notice requirements.",
+  "liabilityIssues": "Liability cap clauses detected. Caps may be significantly below potential damages. Verify with counsel.",
+  "indemnificationIssues": "Indemnification provisions present. Review scope and carve-outs with legal counsel.",
+  "confidentialityTerms": "Confidentiality obligations present. Duration and scope require review.",
+  "governingLaw": "See document for governing law and dispute resolution provisions.",
+  "missingClauses": [
+    "Force majeure clause (not clearly present)",
+    "Data processing agreement / GDPR addendum",
+    "SLA / uptime guarantees"
+  ],
+  "unusualClauses": [
+    "Unilateral modification rights may allow changes without consent",
+    "Review auto-renewal notice window carefully"
+  ],
+  "riskScore": 65,
+  "riskLevel": "High",
+  "topRisks": [
+    {
+      "title": "Unilateral Modification Rights",
+      "severity": "High",
+      "explanation": "Provider may be able to modify terms without customer consent.",
+      "whyItMatters": "Material terms could change after signing without recourse.",
+      "suggestedNextStep": "Request a mutual written amendment requirement.",
+      "supportingQuote": "See document for specific language — mock mode active.",
+      "location": "General Provisions"
+    },
+    {
+      "title": "Limited Liability Cap",
+      "severity": "High",
+      "explanation": "Liability may be capped at a small fraction of potential damages.",
+      "whyItMatters": "Company may have no meaningful recourse for serious failures.",
+      "suggestedNextStep": "Negotiate a higher cap and carve-outs for willful misconduct.",
+      "supportingQuote": "See document — mock mode active.",
+      "location": "Liability"
+    },
+    {
+      "title": "Auto-Renewal with Short Notice",
+      "severity": "Medium",
+      "explanation": "Agreement auto-renews unless cancelled within a specific window.",
+      "whyItMatters": "Missing the notice window locks in another full term.",
+      "suggestedNextStep": "Calendar the cancellation deadline immediately.",
+      "supportingQuote": "See document — mock mode active.",
+      "location": "Term and Renewal"
+    }
+  ],
+  "actionItems": [
+    "Review all payment and fee terms with finance team",
+    "Calendar all notice and cancellation deadlines",
+    "Have legal counsel review liability and indemnification provisions",
+    "Request data processing agreement if applicable",
+    "Verify governing law is acceptable for your jurisdiction"
+  ],
+  "citations": [
+    {
+      "section": "Mock Mode Notice",
+      "quote": "This analysis was generated in mock mode. No AI provider was used.",
+      "relevance": "All findings are illustrative only. Run with a real provider for document-specific analysis."
+    }
+  ],
+  "generatedAt": "2026-05-12T10:10:11.218Z",
+  "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions."
+}

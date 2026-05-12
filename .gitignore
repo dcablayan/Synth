@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js
+.next/
+out/
+
+# Environment variables (never commit API keys)
+.env
+.env.local
+.env.production.local
+.env.development.local
+
+# Generated reports (optional — comment out if you want to commit demo outputs)
+# reports/reviews/
+# reports/memos/
+# reports/financials/
+# reports/revisions/
+# reports/html/
+# reports/pdfs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Playwright
+/test-results/
+/playwright-report/

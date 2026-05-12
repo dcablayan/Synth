@@ -1,0 +1,111 @@
+TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING
+
+This Term Sheet summarizes the principal terms of a proposed Series A Preferred Stock financing of Luminary Health Technologies, Inc. (the "Company"). This term sheet is non-binding except for the sections titled "Exclusivity" and "Expenses."
+
+Date: February 20, 2024
+
+ISSUER: Luminary Health Technologies, Inc., a Delaware corporation
+
+INVESTORS:
+- Lead Investor: Cascade Venture Partners III, L.P. ("Lead Investor")
+- Participating Investors: To be identified during syndication
+
+AMOUNT OF FINANCING: $8,500,000 (the "Series A Investment Amount")
+
+PRE-MONEY VALUATION: $28,000,000
+
+POST-MONEY VALUATION: $36,500,000
+
+SECURITIES OFFERED: Series A Preferred Stock ("Series A Preferred")
+
+PRICE PER SHARE: $2.85 per share (the "Original Issue Price")
+
+1. CAPITALIZATION
+
+The Company's fully-diluted capitalization prior to this financing is approximately 9,824,561 shares. Upon closing, the Series A Preferred shares will represent approximately 23.3% of the fully-diluted capitalization of the Company.
+
+2. DIVIDENDS
+
+Holders of Series A Preferred shall be entitled to receive cumulative dividends at the rate of 8% per annum of the Original Issue Price, payable in preference to any dividends on Common Stock. Dividends shall accrue and compound annually whether or not declared.
+
+3. LIQUIDATION PREFERENCE
+
+3.1 Series A Preferred shall have a 2x non-participating liquidation preference, meaning holders shall receive 2x their Original Issue Price ($5.70 per share) before any distributions to Common stockholders.
+
+3.2 After the liquidation preference is satisfied, Series A holders shall not participate further in distributions.
+
+3.3 A merger, acquisition, or sale of substantially all assets shall be deemed a liquidation event unless holders of at least 60% of Series A Preferred vote otherwise.
+
+4. CONVERSION
+
+4.1 Voluntary Conversion. Each share of Series A Preferred is convertible, at the option of the holder, into shares of Common Stock at a 1:1 ratio, subject to adjustment for anti-dilution provisions.
+
+4.2 Automatic Conversion. Each share of Series A Preferred shall automatically convert into Common Stock upon: (a) a qualifying IPO with a pre-money valuation of at least $150,000,000 and gross proceeds of at least $50,000,000; or (b) vote of holders of at least 60% of Series A Preferred.
+
+5. ANTI-DILUTION
+
+Weighted average anti-dilution protection (broad-based), subject to customary exceptions including: issuances under the Company's equity incentive plan (up to 20% of fully-diluted capitalization), strategic partnerships, and other exceptions to be agreed.
+
+6. VOTING RIGHTS
+
+6.1 Series A Preferred shall vote on an as-converted basis on all matters.
+
+6.2 Protective Provisions. Company shall not, without the approval of holders of at least 60% of Series A Preferred: (a) alter the rights of Series A Preferred; (b) authorize or issue senior or pari passu securities; (c) increase or decrease the size of the Board; (d) consummate a liquidation event; (e) incur debt in excess of $500,000; or (f) amend the Certificate of Incorporation or Bylaws in a manner adverse to Series A.
+
+7. BOARD OF DIRECTORS
+
+The Board shall consist of five (5) members: two designated by Lead Investor, two designated by Common stockholders (founders), and one independent director mutually agreed upon by Lead Investor and founders.
+
+8. INFORMATION RIGHTS
+
+So long as Lead Investor holds at least 5% of the outstanding shares, the Company shall provide: monthly financial statements within 15 days of month-end, quarterly board packages within 30 days, annual audited financials within 90 days, and prompt notice of any material adverse events.
+
+9. PRO-RATA RIGHTS
+
+Lead Investor shall have the right to participate in future financing rounds on a pro-rata basis up to its then-current ownership percentage, for a period of three years following the closing of this financing.
+
+10. RIGHT OF FIRST REFUSAL AND CO-SALE
+
+The Company and Lead Investor shall have a right of first refusal on any proposed transfer of shares by founders. Lead Investor shall have co-sale rights to participate in any founder share sale on a pro-rata basis.
+
+11. EMPLOYEE STOCK OPTION POOL
+
+Prior to the closing, the Company shall increase the employee option pool to 15% of the post-financing fully-diluted capitalization. This pool expansion shall be included in the pre-money valuation calculation (i.e., the pool expansion is dilutive to founders, not investors).
+
+12. REPRESENTATIONS AND WARRANTIES
+
+Standard representations and warranties for a Series A financing, including but not limited to: capitalization, authorization, financial statements, material contracts, intellectual property ownership, no undisclosed liabilities, and compliance with applicable law.
+
+13. CLOSING CONDITIONS
+
+Closing shall be conditioned upon: satisfactory completion of legal, financial, and technical due diligence; execution of definitive agreements; no material adverse change in the Company's business or financial condition; and receipt of all required consents.
+
+Estimated closing date: Within 45 days of signing this term sheet, subject to due diligence and documentation.
+
+14. EXCLUSIVITY (BINDING)
+
+From the date of signing this term sheet until the earlier of (a) 60 days or (b) the termination of negotiations by Lead Investor, the Company agrees not to solicit, negotiate, or enter into discussions with any other potential investor regarding a financing transaction without Lead Investor's prior written consent.
+
+15. EXPENSES (BINDING)
+
+Whether or not the financing closes, the Company agrees to reimburse Lead Investor for its reasonable legal fees and due diligence expenses, up to a maximum of $35,000.
+
+16. NO-SHOP; GOVERNING LAW
+
+This term sheet is governed by Delaware law. The parties agree to use good faith efforts to negotiate and execute definitive agreements promptly.
+
+DISCLAIMER: This term sheet does not constitute a binding commitment to invest. A binding commitment will only arise upon execution of definitive agreements by all parties.
+
+AGREED AND ACCEPTED:
+
+CASCADE VENTURE PARTNERS III, L.P.
+By: ___________________________
+Name: Victoria Ashford
+Title: General Partner
+Date: February 20, 2024
+
+LUMINARY HEALTH TECHNOLOGIES, INC.
+By: ___________________________
+Name: ___________________________
+Title: ___________________________
+Date: ___________________________
