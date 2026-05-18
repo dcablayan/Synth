@@ -1,427 +1,233 @@
 import Link from 'next/link';
 import demoReview from '@/data/demo/demo-review.json';
-import demoFinancial from '@/data/demo/demo-financial.json';
-import demoMemo from '@/data/demo/demo-memo.json';
-import demoRevision from '@/data/demo/demo-revision.json';
+import demoDataRoom from '@/data/demo/demo-dataroom.json';
 import demoIssueLog from '@/data/demo/demo-issue-log.json';
 import type { Review } from '@/schemas/review.schema';
-import type { Financial } from '@/schemas/financial.schema';
-import type { Memo } from '@/schemas/memo.schema';
-import type { Revision } from '@/schemas/revision.schema';
+import type { DataRoomSummary } from '@/schemas/spreadsheet.schema';
 import type { IssueLog } from '@/schemas/issue.schema';
 
 const review = demoReview as Review;
-const financial = demoFinancial as Financial;
-const memo = demoMemo as Memo;
-const revision = demoRevision as Revision;
+const dataRoom = demoDataRoom as DataRoomSummary;
 const issueLog = demoIssueLog as IssueLog;
 
-function getRiskColor(level: string) {
+const artifactLinks = [
+  ['Full packet', '/demo-artifacts/demo-full-packet.html', 'HTML'],
+  ['PDF review', '/demo-artifacts/demo-review.pdf', 'PDF'],
+  ['Issue log', '/demo-artifacts/demo-issue-log.json', 'JSON'],
+  ['Evidence ledger', '/demo-artifacts/demo-evidence.json', 'JSON'],
+  ['Issues export', '/demo-artifacts/issues.csv', 'CSV'],
+  ['Evidence export', '/demo-artifacts/evidence.csv', 'CSV'],
+  ['Data room workbook', '/demo-artifacts/dataroom-summary.xlsx', 'XLSX'],
+  ['Compare report', '/demo-artifacts/demo-compare.json', 'JSON'],
+];
+
+function badgeClass(level: string): string {
   switch (level) {
-    case 'Critical': return 'text-red-400 bg-red-950 border-red-800';
-    case 'High':     return 'text-orange-400 bg-orange-950 border-orange-800';
-    case 'Medium':   return 'text-yellow-400 bg-yellow-950 border-yellow-800';
-    case 'Low':      return 'text-green-400 bg-green-950 border-green-800';
-    default:         return 'text-slate-400 bg-slate-800 border-slate-700';
+    case 'Critical':
+      return 'border-red-800 bg-red-950 text-red-300';
+    case 'High':
+      return 'border-orange-800 bg-orange-950 text-orange-300';
+    case 'Medium':
+      return 'border-yellow-800 bg-yellow-950 text-yellow-300';
+    case 'Low':
+      return 'border-green-800 bg-green-950 text-green-300';
+    default:
+      return 'border-slate-700 bg-slate-800 text-slate-300';
   }
 }
 
 export default function DemoPage() {
+  const verifiedEvidence = issueLog.evidence.filter((item) => item.isVerified);
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
-      {/* Nav */}
-      <nav className="border-b border-slate-800 px-6 py-4 sticky top-0 bg-slate-950/90 backdrop-blur z-10">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <nav className="border-b border-slate-800 bg-slate-950/90 px-6 py-4 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-6">
           <div className="flex items-center gap-4">
-            <Link href="/" className="text-blue-400 font-mono font-bold text-lg">&#9123; Synth</Link>
+            <Link href="/" className="font-mono text-lg font-bold text-blue-400">
+              &#9123; Synth
+            </Link>
             <span className="text-slate-600">/</span>
-            <span className="text-slate-300 text-sm">Demo</span>
+            <span className="text-sm text-slate-300">Demo</span>
           </div>
-          <div className="flex items-center gap-3">
-            <Link href="/dashboard" className="text-slate-400 hover:text-slate-100 text-sm transition-colors">Dashboard</Link>
-            <Link href="/artifacts" className="text-slate-400 hover:text-slate-100 text-sm transition-colors">Artifacts</Link>
-            <Link href="/case-study" className="text-slate-400 hover:text-slate-100 text-sm transition-colors">Case Study</Link>
-            <a href="https://github.com/dylancablayan/synth" className="bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-1.5 rounded transition-colors">GitHub</a>
+          <div className="flex flex-wrap items-center justify-end gap-3">
+            <Link href="/artifacts" className="text-sm text-slate-400 transition-colors hover:text-slate-100">
+              Artifacts
+            </Link>
+            <Link href="/case-study" className="text-sm text-slate-400 transition-colors hover:text-slate-100">
+              Case Study
+            </Link>
+            <Link href="/dashboard" className="text-sm text-slate-400 transition-colors hover:text-slate-100">
+              Dashboard
+            </Link>
+            <a
+              href="https://github.com/dylancablayan/synth"
+              className="rounded-md bg-blue-600 px-3 py-1.5 text-xs text-white transition-colors hover:bg-blue-500"
+            >
+              GitHub
+            </a>
           </div>
         </div>
       </nav>
 
-      {/* Disclaimer */}
-      <div className="bg-yellow-950/40 border-b border-yellow-800/30 px-6 py-2">
-        <div className="max-w-7xl mx-auto text-yellow-200/70 text-xs text-center">
-          &#9888; Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.
+      <div className="border-b border-yellow-800/30 bg-yellow-950/40 px-6 py-2">
+        <div className="mx-auto max-w-7xl text-center text-xs text-yellow-200/75">
+          Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.
         </div>
       </div>
 
-      {/* Demo banner */}
-      <div className="bg-blue-950/40 border-b border-blue-800/30 px-6 py-3">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <span className="text-blue-400 text-sm font-medium">Demo Mode</span>
-            <span className="text-slate-500 text-xs">Static fixture data — no API key or local reports needed</span>
+      <main className="mx-auto max-w-7xl px-6 py-10">
+        <section className="mb-8">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-800 bg-blue-950 px-3 py-1 text-xs text-blue-300">
+            Static mock fixture · no API key required
           </div>
-          <div className="flex items-center gap-3">
-            <Link href="/artifacts" className="text-blue-400 hover:text-blue-300 text-xs border border-blue-800 px-3 py-1 rounded transition-colors">
-              Download Artifacts
-            </Link>
-            <Link href="/case-study" className="text-slate-400 hover:text-slate-100 text-xs border border-slate-700 px-3 py-1 rounded transition-colors">
-              Read Case Study
-            </Link>
-            <a href="https://github.com/dylancablayan/synth" className="text-slate-400 hover:text-slate-100 text-xs border border-slate-700 px-3 py-1 rounded transition-colors">
-              View Local Workflow
-            </a>
-          </div>
-        </div>
-      </div>
+          <h1 className="max-w-4xl text-3xl font-bold leading-tight text-white sm:text-5xl">
+            Evidence-backed diligence for a mixed legal and financial packet.
+          </h1>
+          <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-400">
+            This demo shows the portfolio path: a SaaS agreement, payment schedule, vendor invoices, and cap table become
+            a structured data room summary, issue log, evidence ledger, CSV/XLSX exports, and comparison report.
+          </p>
+        </section>
 
-      <main className="max-w-7xl mx-auto px-6 py-8">
-        {/* Header stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+        <section className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
           {[
-            { label: 'Risk Score', value: `${review.riskScore}/100` },
-            { label: 'Risks Identified', value: review.topRisks.length },
-            { label: 'Issues Logged', value: issueLog.totalIssues },
-            { label: 'Action Items', value: review.actionItems.length },
-          ].map((stat) => (
-            <div key={stat.label} className="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-white">{stat.value}</div>
-              <div className="text-slate-500 text-xs mt-1">{stat.label}</div>
+            ['Files in packet', dataRoom.fileCount],
+            ['Issues logged', issueLog.totalIssues],
+            ['Evidence items', issueLog.evidence.length],
+            ['Risk score', `${review.riskScore}/100`],
+          ].map(([label, value]) => (
+            <div key={label} className="rounded-lg border border-slate-800 bg-slate-900 p-4">
+              <div className="text-2xl font-bold text-white">{value}</div>
+              <div className="mt-1 text-xs text-slate-500">{label}</div>
             </div>
           ))}
-        </div>
+        </section>
 
-        {/* v5: Issue Log Preview */}
-        <div className="bg-slate-900 border border-purple-900/40 rounded-xl p-6 mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-purple-400 uppercase tracking-wider">Issue Log — v5</h2>
-            <div className="flex gap-2">
-              <span className="text-xs bg-red-950 border border-red-800 text-red-400 px-2 py-0.5 rounded">{issueLog.criticalCount} Critical</span>
-              <span className="text-xs bg-orange-950 border border-orange-800 text-orange-400 px-2 py-0.5 rounded">{issueLog.highCount} High</span>
-              <span className="text-xs bg-slate-800 border border-slate-700 text-slate-400 px-2 py-0.5 rounded">{issueLog.totalIssues} Total</span>
+        <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
+          <section className="space-y-6">
+            <div className="rounded-lg border border-slate-800 bg-slate-900 p-5">
+              <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-400">Input Packet</h2>
+              <div className="space-y-3">
+                {dataRoom.documents.map((document) => (
+                  <div key={document.filename} className="rounded-md border border-slate-800 bg-slate-950 p-3">
+                    <div className="font-mono text-xs text-blue-300">{document.filename}</div>
+                    <div className="mt-1 text-xs text-slate-500">
+                      {document.category} ·{' '}
+                      {document.characterCount !== undefined
+                        ? `${document.characterCount.toLocaleString()} chars`
+                        : document.rowCount !== undefined
+                          ? `${document.rowCount.toLocaleString()} rows`
+                          : 'n/a'}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-          <div className="space-y-3">
-            {issueLog.issues.slice(0, 5).map((issue) => (
-              <div key={issue.id} className="flex items-start gap-3 border-b border-slate-800 pb-3 last:border-0 last:pb-0">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2 mb-1">
-                    <span className="text-sm text-white font-medium">{issue.title}</span>
-                    <span className={`text-xs px-1.5 py-0.5 rounded border whitespace-nowrap flex-shrink-0 ${getRiskColor(issue.severity)}`}>
-                      {issue.severity}
-                    </span>
+
+            <div className="rounded-lg border border-slate-800 bg-slate-900 p-5">
+              <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-400">Data Room Findings</h2>
+              <div className="space-y-3 text-xs text-slate-400">
+                {dataRoom.crossDocumentFindings.map((finding) => (
+                  <div key={finding.title} className="rounded-md border border-slate-800 bg-slate-950 p-3">
+                    <div className="mb-1 flex items-start justify-between gap-3">
+                      <span className="font-medium text-white">{finding.title}</span>
+                      <span className={`rounded border px-2 py-0.5 ${badgeClass(finding.severity)}`}>{finding.severity}</span>
+                    </div>
+                    <p>{finding.description}</p>
+                    <p className="mt-2 text-slate-600">
+                      {finding.sourceA} + {finding.sourceB}
+                    </p>
                   </div>
-                  <div className="flex flex-wrap gap-1.5 mb-1">
-                    <span className="text-xs bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">{issue.category}</span>
-                    <span className="text-xs text-slate-600">{issue.sourceFiles[0]}</span>
-                  </div>
-                  {issue.evidenceQuotes.length > 0 && (
-                    <blockquote className="border-l-2 border-blue-800 pl-2 text-blue-300 text-xs italic mt-1">
-                      &ldquo;{issue.evidenceQuotes[0].slice(0, 90)}&hellip;&rdquo;
-                    </blockquote>
-                  )}
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-slate-800 bg-slate-900 p-5">
+              <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-400">Exports</h2>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {artifactLinks.map(([label, href, format]) => (
+                  <a
+                    key={href}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between rounded-md border border-slate-800 bg-slate-950 px-3 py-2 text-xs transition-colors hover:border-slate-600"
+                  >
+                    <span className="text-slate-300">{label}</span>
+                    <span className="font-mono text-blue-400">{format}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="space-y-6">
+            <div className="rounded-lg border border-purple-900/50 bg-slate-900 p-5">
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-purple-300">Issue Log</h2>
+                <div className="flex gap-2 text-xs">
+                  <span className="rounded border border-red-800 bg-red-950 px-2 py-0.5 text-red-300">
+                    {issueLog.criticalCount} critical
+                  </span>
+                  <span className="rounded border border-orange-800 bg-orange-950 px-2 py-0.5 text-orange-300">
+                    {issueLog.highCount} high
+                  </span>
                 </div>
               </div>
-            ))}
-          </div>
-          <div className="mt-4 pt-3 border-t border-slate-800">
-            <p className="text-slate-600 text-xs">
-              Static fixture · Run{' '}
-              <code className="bg-slate-800 text-blue-400 px-1 rounded">npm run triage</code> on real reports to generate live issue log.
-            </p>
-          </div>
-        </div>
-
-        {/* v5: Evidence Ledger Preview */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-6">
-          <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Evidence Ledger — v5</h2>
-          <div className="space-y-2">
-            {issueLog.evidence.filter((e) => e.isVerified).slice(0, 4).map((e) => (
-              <div key={e.evidenceId} className="flex items-start gap-3 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2">
-                <code className="text-blue-400 text-xs font-mono whitespace-nowrap mt-0.5">{e.evidenceId}</code>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <span className="text-green-400 text-xs">✓ Verified</span>
-                    <code className="text-slate-500 text-xs">{e.sourceFilename}</code>
-                    {e.fieldName && <span className="text-slate-600 text-xs">{e.fieldName}</span>}
-                  </div>
-                  {e.documentQuote && (
-                    <p className="text-blue-200/70 text-xs italic">&ldquo;{e.documentQuote.slice(0, 100)}&hellip;&rdquo;</p>
-                  )}
-                  {e.spreadsheetRow && !e.documentQuote && (
-                    <p className="text-slate-400 text-xs font-mono">{e.spreadsheetRow}</p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Source metadata */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 mb-6 flex flex-wrap items-center gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-slate-500 text-xs">Source</span>
-            <code className="text-blue-300 text-xs bg-slate-800 px-2 py-0.5 rounded">{review.sourceFilename}</code>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-slate-500 text-xs">Type</span>
-            <span className="text-slate-300 text-xs">{review.documentType}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-slate-500 text-xs">Characters parsed</span>
-            <span className="text-slate-300 text-xs">{(review.parsedCharacterCount ?? 0).toLocaleString()}</span>
-          </div>
-          <span className="text-xs px-2 py-0.5 rounded border text-yellow-400 bg-yellow-950 border-yellow-800">mock mode</span>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left: summary sidebar */}
-          <div className="lg:col-span-1 space-y-4">
-            {/* Document card */}
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-              <h3 className="text-sm font-medium text-white mb-1">{review.documentTitle}</h3>
-              <div className="flex flex-wrap items-center gap-2 mb-3">
-                <span className={`text-xs px-2 py-0.5 rounded-full border ${getRiskColor(review.riskLevel)}`}>
-                  {review.riskLevel} Risk — {review.riskScore}/100
-                </span>
-              </div>
-              <div className="text-xs text-slate-500">{review.parties.join(' · ')}</div>
-            </div>
-
-            {/* Key dates */}
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-              <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Key Dates</h3>
-              <div className="space-y-2">
-                {review.keyDates.map((d, i) => (
-                  <div key={i} className="flex items-start justify-between gap-2">
-                    <span className="text-xs text-slate-400">{d.label}</span>
-                    <span className="text-xs text-white font-mono">{d.date}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Missing clauses */}
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-              <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Missing Clauses</h3>
-              <ul className="space-y-1.5">
-                {review.missingClauses.map((c, i) => (
-                  <li key={i} className="text-xs text-slate-400 flex items-start gap-2">
-                    <span className="text-red-500 mt-0.5">&#10005;</span>
-                    {c}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Action items */}
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-              <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Action Items</h3>
-              <ol className="space-y-2">
-                {review.actionItems.map((item, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs">
-                    <span className="text-blue-500 font-mono min-w-[16px]">{i + 1}.</span>
-                    <span className="text-slate-300">{item}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
-
-          {/* Right: main content */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Executive Summary */}
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-              <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Executive Summary</h2>
-              <p className="text-slate-300 text-sm leading-relaxed">{review.executiveSummary}</p>
-            </div>
-
-            {/* Risk Matrix */}
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-              <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Risk Matrix</h2>
-              <div className="space-y-4">
-                {review.topRisks.map((risk, i) => (
-                  <div key={i} className="border border-slate-800 rounded-lg p-4">
-                    <div className="flex items-start justify-between gap-3 mb-2">
-                      <h4 className="text-sm font-medium text-white">{risk.title}</h4>
-                      <span className={`text-xs px-2 py-0.5 rounded-full border whitespace-nowrap ${getRiskColor(risk.severity)}`}>
-                        {risk.severity}
+              <div className="space-y-3">
+                {issueLog.issues.slice(0, 6).map((issue) => (
+                  <div key={issue.id} className="rounded-md border border-slate-800 bg-slate-950 p-4">
+                    <div className="mb-2 flex items-start justify-between gap-3">
+                      <div>
+                        <div className="text-sm font-medium text-white">{issue.title}</div>
+                        <div className="mt-1 text-xs text-slate-500">
+                          {issue.category} · {issue.sourceFiles.join(', ')}
+                        </div>
+                      </div>
+                      <span className={`shrink-0 rounded border px-2 py-0.5 text-xs ${badgeClass(issue.severity)}`}>
+                        {issue.severity}
                       </span>
                     </div>
-                    <p className="text-slate-400 text-xs mb-2 leading-relaxed">{risk.explanation}</p>
-                    {risk.supportingQuote && (
-                      <blockquote className="border-l-2 border-blue-700 pl-3 text-blue-300 text-xs italic mb-2">
-                        &ldquo;{risk.supportingQuote}&rdquo;
+                    {issue.evidenceQuotes[0] && (
+                      <blockquote className="border-l-2 border-blue-800 pl-3 text-xs italic leading-5 text-blue-200/80">
+                        {issue.evidenceQuotes[0]}
                       </blockquote>
                     )}
-                    <p className="text-slate-500 text-xs">
-                      <span className="text-slate-600">Next:</span> {risk.suggestedNextStep}
+                    <p className="mt-2 text-xs leading-5 text-slate-400">{issue.recommendation}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-slate-800 bg-slate-900 p-5">
+              <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-400">Evidence Ledger</h2>
+              <div className="space-y-3">
+                {verifiedEvidence.slice(0, 5).map((evidence) => (
+                  <div key={evidence.evidenceId} className="rounded-md border border-slate-800 bg-slate-950 p-3">
+                    <div className="mb-1 flex flex-wrap items-center gap-2">
+                      <code className="rounded bg-slate-800 px-1.5 py-0.5 text-xs text-blue-300">{evidence.evidenceId}</code>
+                      <span className="text-xs text-green-300">verified</span>
+                      <span className="text-xs text-slate-600">{evidence.sourceFilename}</span>
+                    </div>
+                    <p className="text-xs leading-5 text-slate-400">
+                      {evidence.documentQuote ?? evidence.spreadsheetRow ?? evidence.verificationNote}
                     </p>
-                    {risk.location && (
-                      <p className="text-slate-600 text-xs mt-1">{risk.location}</p>
-                    )}
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Financial Terms */}
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-              <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Financial Terms</h2>
-              <div className="overflow-x-auto mb-4">
-                <table className="w-full text-sm">
-                  <tbody>
-                    {[
-                      ['Total Value', financial.totalContractValue],
-                      ['Recurring Fees', financial.recurringFees],
-                      ['Payment Schedule', financial.paymentSchedule],
-                      ['Late Fees', financial.lateFees],
-                      ['Refund Terms', financial.refundTerms],
-                      ['Renewal Cost Changes', financial.renewalCostChanges],
-                    ].map(([label, value]) => (
-                      <tr key={label} className="border-b border-slate-800 last:border-0">
-                        <td className="py-2 pr-4 text-slate-500 whitespace-nowrap text-xs w-36">{label}</td>
-                        <td className="py-2 text-slate-300 text-xs">{value}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              {financial.financialRedFlags.length > 0 && (
-                <>
-                  <h3 className="text-xs font-semibold text-red-400 uppercase tracking-wider mb-2">Financial Red Flags</h3>
-                  <div className="space-y-3">
-                    {financial.financialRedFlags.map((flag, i) => (
-                      <div key={i} className="border border-red-900/40 bg-red-950/20 rounded-lg p-3">
-                        <div className="flex items-start justify-between gap-2 mb-1">
-                          <span className="text-xs font-medium text-red-300">{flag.issue}</span>
-                          <span className={`text-xs px-1.5 py-0.5 rounded border ${getRiskColor(flag.severity)}`}>{flag.severity}</span>
-                        </div>
-                        <p className="text-xs text-slate-400">{flag.explanation}</p>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              )}
+            <div className="rounded-lg border border-slate-800 bg-slate-900 p-5">
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-400">Limitations Visible in the Demo</h2>
+              <ul className="space-y-2 text-xs leading-5 text-slate-400">
+                <li>Mock mode is illustrative and uses fixture data; live AI mode requires an OpenAI-compatible API key.</li>
+                <li>Findings are review aids, not legal or financial conclusions.</li>
+                <li>PDF generation depends on Playwright Chromium being installed locally.</li>
+                <li>Spreadsheet parsing targets standard CSV/XLSX tables, not complex workbook layouts.</li>
+              </ul>
             </div>
-
-            {/* Key Contract Terms */}
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-              <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Key Contract Terms</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {[
-                  ['Payment Terms', review.paymentTerms],
-                  ['Renewal', review.renewalTerms],
-                  ['Termination', review.terminationTerms],
-                  ['Governing Law', review.governingLaw],
-                  ['Liability', review.liabilityIssues],
-                  ['Confidentiality', review.confidentialityTerms],
-                ].map(([label, value]) => (
-                  <div key={label} className="bg-slate-950 border border-slate-800 rounded-lg p-3">
-                    <div className="text-xs text-slate-500 mb-1">{label}</div>
-                    <div className="text-xs text-slate-300 leading-relaxed">{value}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Citations */}
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-              <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Document Citations</h2>
-              <div className="space-y-3">
-                {review.citations.filter((c) => c.section !== 'Mock Mode Notice').map((citation, i) => (
-                  <div key={i} className="border border-slate-800 rounded-lg p-3">
-                    <div className="text-xs font-medium text-slate-300 mb-1">{citation.section}</div>
-                    <blockquote className="border-l-2 border-slate-700 pl-3 text-slate-400 text-xs italic mb-1">
-                      &ldquo;{citation.quote}&rdquo;
-                    </blockquote>
-                    <p className="text-xs text-slate-500">{citation.relevance}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Executive Memo */}
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-              <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Executive Memo</h2>
-              <p className="text-slate-300 text-sm leading-relaxed mb-4">{memo.executiveSummary}</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <div className="text-xs text-slate-500 mb-2 font-semibold">Biggest Risks</div>
-                  <div className="space-y-2">
-                    {memo.biggestRisks.map((r, i) => (
-                      <div key={i} className="flex items-start gap-2">
-                        <span className={`text-xs px-1.5 py-0.5 rounded border whitespace-nowrap mt-0.5 ${getRiskColor(r.severity)}`}>{r.severity}</span>
-                        <span className="text-xs text-slate-300">{r.risk}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-xs text-slate-500 mb-2 font-semibold">Questions for Lawyer</div>
-                  <ul className="space-y-1">
-                    {memo.questionsForLawyer.slice(0, 4).map((q, i) => (
-                      <li key={i} className="text-xs text-slate-400 flex items-start gap-1.5">
-                        <span className="text-slate-600 mt-0.5">›</span>
-                        {q}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* Revision Packet Preview */}
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-2">
-                <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Revision Packet</h2>
-                <span className="text-xs text-slate-600">{revision.clauseRevisions.length} clause(s)</span>
-              </div>
-              <p className="text-xs text-yellow-400/70 mb-4 bg-yellow-950/30 border border-yellow-800/30 rounded p-2">
-                &#9888; {revision.revisionDisclaimer}
-              </p>
-              <div className="space-y-3">
-                {revision.clauseRevisions.map((c, i) => (
-                  <div key={i} className="border border-slate-800 rounded-lg p-4">
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <span className="text-xs font-medium text-white">{c.section}</span>
-                      <span className={`text-xs px-1.5 py-0.5 rounded border ${getRiskColor(c.severity)}`}>{c.severity}</span>
-                    </div>
-                    <p className="text-xs text-slate-400 mb-2">{c.issue}</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                      <div className="bg-red-950/20 border border-red-900/30 rounded p-2">
-                        <div className="text-red-400 text-xs mb-1">Original</div>
-                        <p className="text-slate-400 italic">&ldquo;{c.originalLanguage.slice(0, 120)}{c.originalLanguage.length > 120 ? '…' : ''}&rdquo;</p>
-                      </div>
-                      <div className="bg-green-950/20 border border-green-900/30 rounded p-2">
-                        <div className="text-green-400 text-xs mb-1">Suggested (for review)</div>
-                        <p className="text-slate-400">{c.suggestedReplacementLanguage.slice(0, 120)}{c.suggestedReplacementLanguage.length > 120 ? '…' : ''}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* CTA row */}
-            <div className="bg-blue-950/30 border border-blue-800/30 rounded-xl p-6">
-              <h2 className="text-sm font-semibold text-blue-400 mb-3">See the full local workflow</h2>
-              <p className="text-slate-400 text-xs leading-relaxed mb-4">
-                This demo uses static fixture data. Clone the repo to run the pipeline on real documents:
-                review, financial analysis, memos, revision packets, and polished PDFs — all from the CLI.
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <Link href="/artifacts" className="bg-blue-600 hover:bg-blue-500 text-white text-xs px-4 py-2 rounded transition-colors">
-                  Download Sample Artifacts
-                </Link>
-                <Link href="/case-study" className="border border-slate-700 hover:border-slate-500 text-slate-300 text-xs px-4 py-2 rounded transition-colors">
-                  Read Case Study
-                </Link>
-                <a href="https://github.com/dylancablayan/synth" className="border border-slate-700 hover:border-slate-500 text-slate-300 text-xs px-4 py-2 rounded transition-colors">
-                  View on GitHub
-                </a>
-              </div>
-            </div>
-          </div>
+          </section>
         </div>
       </main>
     </div>

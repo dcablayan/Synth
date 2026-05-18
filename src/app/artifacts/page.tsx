@@ -4,7 +4,7 @@ const artifacts = [
   {
     title: 'Full Review Packet',
     description:
-      'Complete review packet combining contract review, financial analysis, executive memo, and revision suggestions for the sample SaaS agreement.',
+      'Complete HTML packet combining contract review, financial extraction, executive memo, and suggested revision language for the sample SaaS agreement.',
     format: 'HTML',
     size: 'Multi-section',
     href: '/demo-artifacts/demo-full-packet.html',
@@ -13,9 +13,20 @@ const artifacts = [
     badge: 'Full Packet',
   },
   {
+    title: 'PDF Review Report',
+    description:
+      'Sample rendered PDF report from the contract review pipeline. Local PDF generation requires Playwright Chromium.',
+    format: 'PDF',
+    size: 'Review report',
+    href: '/demo-artifacts/demo-review.pdf',
+    icon: 'PDF',
+    mono: true,
+    badge: 'PDF',
+  },
+  {
     title: 'Contract Review',
     description:
-      'Risk matrix, executive summary, key terms, citations, and action items. Demonstrates clause-by-clause extraction with severity scoring.',
+      'Risk matrix, executive summary, key terms, citations, and action items with direct evidence quotes.',
     format: 'HTML',
     size: '5 risks identified',
     href: '/demo-artifacts/demo-review.html',
@@ -38,6 +49,72 @@ const artifacts = [
     size: 'Single-page memo',
     href: '/demo-artifacts/demo-memo.html',
     icon: '📋',
+  },
+  {
+    title: 'Issue Log',
+    description:
+      'Unified diligence issue log generated from review, spreadsheet, and data room findings. Each issue links to evidence IDs.',
+    format: 'JSON',
+    size: 'v5 · Issues',
+    href: '/demo-artifacts/demo-issue-log.json',
+    icon: 'ISS',
+    mono: true,
+    badge: 'v5',
+  },
+  {
+    title: 'Evidence Ledger',
+    description:
+      'Machine-readable ledger of document quotes, spreadsheet rows, and verification notes backing the issue log.',
+    format: 'JSON',
+    size: 'v5 · Evidence',
+    href: '/demo-artifacts/demo-evidence.json',
+    icon: 'EV',
+    mono: true,
+    badge: 'v5',
+  },
+  {
+    title: 'Issues CSV Export',
+    description:
+      'Flat CSV export of the issue log for spreadsheet review, filtering, or handoff to a diligence tracker.',
+    format: 'CSV',
+    size: 'v5 · Export',
+    href: '/demo-artifacts/issues.csv',
+    icon: 'CSV',
+    mono: true,
+    badge: 'v5',
+  },
+  {
+    title: 'Evidence CSV Export',
+    description:
+      'Flat CSV export of the evidence ledger, including source filename, quote, row metadata, and verification status.',
+    format: 'CSV',
+    size: 'v5 · Export',
+    href: '/demo-artifacts/evidence.csv',
+    icon: 'CSV',
+    mono: true,
+    badge: 'v5',
+  },
+  {
+    title: 'Data Room Workbook',
+    description:
+      'Multi-sheet XLSX export with Issues, Evidence, Payments, Cap Table, and Summary tabs.',
+    format: 'XLSX',
+    size: '5 sheets',
+    href: '/demo-artifacts/dataroom-summary.xlsx',
+    icon: 'XLS',
+    mono: true,
+    badge: 'v5',
+  },
+  {
+    title: 'Run Compare Report',
+    description:
+      'Structured comparison report showing added, removed, and changed issues plus payment and cap table deltas.',
+    format: 'JSON',
+    size: 'v5 · Compare',
+    href: '/demo-artifacts/demo-compare.json',
+    icon: 'DIFF',
+    mono: true,
+    badge: 'v5',
   },
   {
     title: 'Data Room Summary',
@@ -115,12 +192,13 @@ export default function ArtifactsPage() {
         <div className="mb-10">
           <div className="inline-flex items-center gap-2 bg-blue-950 border border-blue-800 text-blue-300 text-xs px-3 py-1.5 rounded-full mb-6">
             <span className="w-1.5 h-1.5 bg-blue-400 rounded-full" />
-            v4 · Contracts + Spreadsheets + Data Room Review
+            v5 · Evidence-backed diligence artifacts
           </div>
           <h1 className="text-3xl font-bold text-white mb-3">Artifact Gallery</h1>
           <p className="text-slate-400 text-sm max-w-2xl leading-relaxed">
-            Sample outputs from running the Synth v4 pipeline in mock mode — contracts, spreadsheets, cap tables, and
-            cross-document data room analysis. Clone the repo to generate AI-powered outputs from your own documents.
+            Stable sample outputs from running Synth in mock mode: contract review, data room analysis, issue log,
+            evidence ledger, CSV/XLSX exports, PDF report, and run comparison. Clone the repo to generate outputs from
+            your own documents.
           </p>
         </div>
 
@@ -134,11 +212,11 @@ export default function ArtifactsPage() {
             </div>
             <div>
               <div className="text-slate-300 font-medium mb-1">Mixed-document data room (v4)</div>
-              Synth v4 analyzes contracts and spreadsheets together — extracting cap table rows, payment schedules, vendor invoices, and cross-document mismatches.
+              Synth analyzes contracts and spreadsheets together — extracting cap table rows, payment schedules, vendor invoices, and cross-document mismatches.
             </div>
             <div>
-              <div className="text-slate-300 font-medium mb-1">Local-first design</div>
-              All processing happens on your machine. No data leaves your environment unless you configure an AI provider explicitly.
+              <div className="text-slate-300 font-medium mb-1">Evidence-backed handoff</div>
+              The issue log, evidence ledger, CSV exports, XLSX workbook, and compare report are generated from the same structured data.
             </div>
           </div>
         </div>
@@ -186,8 +264,8 @@ export default function ArtifactsPage() {
         <div className="mt-10 bg-slate-900 border border-slate-800 rounded-xl p-8">
           <h2 className="text-lg font-bold text-white mb-3">Run the pipeline locally</h2>
           <p className="text-slate-400 text-sm mb-6 leading-relaxed">
-            These are static demo artifacts. To generate real AI-powered outputs from your own contracts,
-            clone the repo and run the CLI pipeline.
+            These are static demo artifacts. To generate local outputs from your own contracts and spreadsheets,
+            clone the repo and run the CLI pipeline in mock mode or with an OpenAI-compatible provider.
           </p>
           <div className="bg-slate-950 border border-slate-800 rounded-lg p-4 font-mono text-sm text-slate-300 mb-6">
             <div className="text-slate-500 mb-2">$ # Clone and set up</div>
@@ -202,8 +280,8 @@ export default function ArtifactsPage() {
             <div>npm run spreadsheet</div>
             <div className="mt-2 text-slate-500"># v4: full data room analysis</div>
             <div>npm run dataroom</div>
-            <div className="mt-2 text-slate-500"># Regenerate demo artifacts</div>
-            <div>npm run seed-demo</div>
+            <div className="mt-2 text-slate-500"># v5: issue log, evidence, exports, and compare</div>
+            <div>npm run triage &amp;&amp; npm run export &amp;&amp; npm run compare</div>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link href="/demo" className="bg-blue-600 hover:bg-blue-500 text-white text-xs px-4 py-2 rounded transition-colors">

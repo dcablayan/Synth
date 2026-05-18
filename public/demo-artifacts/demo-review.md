@@ -7,7 +7,7 @@
 **Document Type:** SaaS Agreement  
 **Parties:** Nexus Analytics · a Delaware corporation ("Provider")  
 **Risk Score:** 65/100 — **HIGH**  
-**Generated:** 5/12/2026 · Mock Mode  
+**Generated:** 5/18/2026 · Mock Mode  
 **Source File:** sample-saas-agreement.txt
 
 ---

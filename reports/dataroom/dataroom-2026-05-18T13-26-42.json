@@ -1,0 +1,215 @@
+{
+  "title": "Data Room Review Summary",
+  "generatedAt": "2026-05-18T13:26:42.562Z",
+  "fileCount": 6,
+  "fileTypes": [
+    {
+      "ext": ".txt",
+      "count": 3
+    },
+    {
+      "ext": ".csv",
+      "count": 3
+    }
+  ],
+  "documents": [
+    {
+      "filename": "sample-contractor-agreement.txt",
+      "type": "contract",
+      "category": "contract",
+      "characterCount": 8089
+    },
+    {
+      "filename": "sample-saas-agreement.txt",
+      "type": "contract",
+      "category": "contract",
+      "characterCount": 6491
+    },
+    {
+      "filename": "sample-term-sheet.txt",
+      "type": "contract",
+      "category": "contract",
+      "characterCount": 6423
+    },
+    {
+      "filename": "sample-cap-table.csv",
+      "type": "spreadsheet",
+      "category": "spreadsheet",
+      "rowCount": 15
+    },
+    {
+      "filename": "sample-payment-schedule.csv",
+      "type": "spreadsheet",
+      "category": "spreadsheet",
+      "rowCount": 15
+    },
+    {
+      "filename": "sample-vendor-invoices.csv",
+      "type": "spreadsheet",
+      "category": "spreadsheet",
+      "rowCount": 12
+    }
+  ],
+  "crossDocumentFindings": [
+    {
+      "findingType": "payment-mismatch",
+      "severity": "High",
+      "title": "Overdue Payments Detected",
+      "description": "1 overdue payment row(s) in sample-payment-schedule.csv. Contract payment terms may not be followed.",
+      "sourceA": "sample-contractor-agreement.txt",
+      "sourceB": "sample-payment-schedule.csv",
+      "valueA": "Contract payment terms (see contract)",
+      "valueB": "Overdue: DataStream Inc",
+      "recommendation": "Review overdue invoices against contract payment terms and resolve outstanding amounts."
+    },
+    {
+      "findingType": "payment-mismatch",
+      "severity": "High",
+      "title": "Overdue Payments Detected",
+      "description": "1 overdue payment row(s) in sample-vendor-invoices.csv. Contract payment terms may not be followed.",
+      "sourceA": "sample-contractor-agreement.txt",
+      "sourceB": "sample-vendor-invoices.csv",
+      "valueA": "Contract payment terms (see contract)",
+      "valueB": "Overdue: 2024-03-05",
+      "recommendation": "Review overdue invoices against contract payment terms and resolve outstanding amounts."
+    }
+  ],
+  "paymentScheduleFindings": [
+    {
+      "vendor": "Acme Corp",
+      "amount": "$12500.00",
+      "dueDate": "2024-02-15",
+      "status": "Paid",
+      "sourceFile": "sample-payment-schedule.csv"
+    },
+    {
+      "vendor": "DataStream Inc",
+      "amount": "$8750.00",
+      "dueDate": "2024-02-28",
+      "status": "Paid",
+      "sourceFile": "sample-payment-schedule.csv"
+    },
+    {
+      "vendor": "Acme Corp",
+      "amount": "$12500.00",
+      "dueDate": "2024-03-15",
+      "status": "Paid",
+      "sourceFile": "sample-payment-schedule.csv"
+    },
+    {
+      "vendor": "LegalDocs Ltd",
+      "amount": "$3200.00",
+      "dueDate": "2024-03-20",
+      "status": "Paid",
+      "sourceFile": "sample-payment-schedule.csv"
+    },
+    {
+      "vendor": "DataStream Inc",
+      "amount": "$9100.00",
+      "dueDate": "2024-03-31",
+      "status": "Overdue",
+      "sourceFile": "sample-payment-schedule.csv"
+    },
+    {
+      "vendor": "Acme Corp",
+      "amount": "$12500.00",
+      "dueDate": "2024-04-15",
+      "status": "Pending",
+      "sourceFile": "sample-payment-schedule.csv"
+    },
+    {
+      "vendor": "TechVendors LLC",
+      "amount": "$5500.00",
+      "dueDate": "2024-04-20",
+      "status": "Pending",
+      "sourceFile": "sample-payment-schedule.csv"
+    },
+    {
+      "vendor": "LegalDocs Ltd",
+      "amount": "$3200.00",
+      "dueDate": "2024-04-25",
+      "status": "Pending",
+      "sourceFile": "sample-payment-schedule.csv"
+    },
+    {
+      "vendor": "CloudHosting Pro",
+      "amount": "$45000.00",
+      "dueDate": "2024-01-05",
+      "status": "Paid",
+      "sourceFile": "sample-vendor-invoices.csv"
+    },
+    {
+      "vendor": "Stripe Inc",
+      "amount": "$1250.00",
+      "dueDate": "2024-01-12",
+      "status": "Paid",
+      "sourceFile": "sample-vendor-invoices.csv"
+    }
+  ],
+  "capTableFindings": [
+    {
+      "investor": "Founders",
+      "shareClass": "Common",
+      "shares": "4000000",
+      "ownershipPct": "40.00%",
+      "sourceFile": "sample-cap-table.csv"
+    },
+    {
+      "investor": "Option Pool",
+      "shareClass": "Common",
+      "shares": "1500000",
+      "ownershipPct": "15.00%",
+      "sourceFile": "sample-cap-table.csv"
+    },
+    {
+      "investor": "Sequoia Capital",
+      "shareClass": "Series A Preferred",
+      "shares": "1500000",
+      "ownershipPct": "15.00%",
+      "sourceFile": "sample-cap-table.csv"
+    },
+    {
+      "investor": "Accel Partners",
+      "shareClass": "Series A Preferred",
+      "shares": "1000000",
+      "ownershipPct": "10.00%",
+      "sourceFile": "sample-cap-table.csv"
+    },
+    {
+      "investor": "Y Combinator",
+      "shareClass": "SAFE",
+      "shares": "300000",
+      "ownershipPct": "3.00%",
+      "sourceFile": "sample-cap-table.csv"
+    },
+    {
+      "investor": "Angel Investors",
+      "shareClass": "Common",
+      "shares": "200000",
+      "ownershipPct": "2.00%",
+      "sourceFile": "sample-cap-table.csv"
+    },
+    {
+      "investor": "Conversion Pool",
+      "shareClass": "Series A Preferred",
+      "shares": "500000",
+      "ownershipPct": "5.00%",
+      "sourceFile": "sample-cap-table.csv"
+    },
+    {
+      "investor": "Reserved",
+      "shareClass": "Unissued",
+      "shares": "1000000",
+      "ownershipPct": "10.00%",
+      "sourceFile": "sample-cap-table.csv"
+    }
+  ],
+  "dataQualityWarnings": [
+    "High blank cell rate: 40% of cells are empty",
+    "1 row(s) marked as overdue"
+  ],
+  "executiveSummary": "This data room contains 6 document(s): 3 contract(s) and 3 spreadsheet(s). Overdue payments were detected in payment schedules — immediate attention recommended. Cap table data was extracted with 8 investor row(s). 2 cross-document finding(s) require review. This summary was generated in mock mode — set OPENAI_API_KEY for AI-powered analysis. This is not legal or financial advice.",
+  "providerMode": "mock",
+  "fallbackUsed": false,
+  "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions."
+}

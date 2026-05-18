@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Synth — AI Contract Review',
-  description: 'AI contract review for legal and financial documents. Local-first, CLI-driven, agent-native.',
+  title: 'Synth - Evidence-Backed AI Diligence',
+  description: 'Evidence-backed AI diligence for mixed legal and financial document packets. Local-first, CLI-driven, and mock by default.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

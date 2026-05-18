@@ -3,33 +3,33 @@ import Link from 'next/link';
 const features = [
   {
     icon: '⚖️',
-    title: 'Contract Risk Review',
-    description: 'Full clause-by-clause risk analysis with severity scoring, explanations, and direct document quotes.',
+    title: 'Evidence-Backed Issues',
+    description: 'Converts risks and data room findings into structured issues linked to document quotes, rows, or verification notes.',
   },
   {
-    icon: '🔍',
-    title: 'Clause Extraction',
-    description: 'Extracts payment, renewal, termination, liability, confidentiality, and governing law provisions.',
+    icon: '🗂️',
+    title: 'Mixed-Packet Review',
+    description: 'Reviews contracts alongside cap tables, payment schedules, and vendor invoices in one local workflow.',
   },
   {
     icon: '📊',
-    title: 'Financial Term Analysis',
-    description: 'Surfaces fees, penalties, equity terms, revenue share, refund conditions, and renewal cost changes.',
+    title: 'CSV/XLSX Handoff',
+    description: 'Exports issues, evidence, payments, cap table rows, and a multi-sheet data room workbook.',
   },
   {
-    icon: '✏️',
-    title: 'Revision Packets',
-    description: 'Clause-by-clause suggested edits with original language, issue, and safer replacement language.',
+    icon: '🔁',
+    title: 'Run Comparison',
+    description: 'Diffs data room runs to show added, removed, and changed issues plus payment and cap table deltas.',
   },
   {
     icon: '📄',
-    title: 'PDF Reports',
-    description: 'Professional PDFs for review, financial analysis, memos, and full revision packets via Playwright.',
+    title: 'Reports and PDFs',
+    description: 'Writes JSON, Markdown, HTML, and PDF reports when Playwright Chromium is installed.',
   },
   {
     icon: '🤖',
-    title: 'Agent-Native Workflow',
-    description: 'Full CLAUDE.md and CODEX.md docs so AI agents can operate, improve, and extend the system.',
+    title: 'Mock by Default',
+    description: 'Runs without an API key for demos and evals, with live AI mode available through an OpenAI-compatible provider.',
   },
 ];
 
@@ -41,7 +41,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="text-blue-400 font-mono text-lg font-bold">&#9123; Synth</span>
-            <span className="text-slate-500 text-sm hidden sm:block">AI Contract Review</span>
+            <span className="text-slate-500 text-sm hidden sm:block">Evidence-backed diligence</span>
           </div>
           <div className="flex items-center gap-4">
             <Link href="/demo" className="text-slate-400 hover:text-slate-100 text-sm transition-colors">
@@ -70,18 +70,18 @@ export default function HomePage() {
       <section className="max-w-6xl mx-auto px-6 pt-20 pb-16 text-center">
         <div className="inline-flex items-center gap-2 bg-blue-950 border border-blue-800 text-blue-300 text-xs px-3 py-1.5 rounded-full mb-8">
           <span className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse" />
-          Local-first · CLI-driven · Agent-native · v3
+          Local-first · CLI-driven · Mock mode by default
         </div>
 
         <h1 className="text-5xl sm:text-6xl font-bold text-white mb-6 leading-tight">
-          AI contract review for<br />
-          <span className="text-blue-400">legal and financial documents.</span>
+          Evidence-backed AI diligence for<br />
+          <span className="text-blue-400">mixed document packets.</span>
         </h1>
 
         <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
-          Synth is a local-first AI operations repo. Drop contracts into{' '}
+          Synth is a local-first portfolio repo. Drop contracts, cap tables, payment schedules, or invoices into{' '}
           <code className="bg-slate-800 text-blue-300 px-1.5 py-0.5 rounded text-sm">/documents/inbox</code>,
-          run CLI commands, and receive structured reviews, financial analysis, revision packets, and polished PDFs.
+          run CLI commands, and receive structured reports, an issue log, an evidence ledger, exports, and compare reports.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
@@ -143,15 +143,21 @@ $ npm run doctor
 $ npm run demo
 
   📄 sample-saas-agreement.txt
-     → Review...    ✅ Risk: High (72)
+     → Review...    ✅ Risk: High (65)
      → Financial... ✅
      → Memo...      ✅
      → Revision...  ✅
-     → PDFs...      ✅
+     → PDFs...      ⚠️ install Playwright Chromium
+
+$ npm run dataroom && npm run triage && npm run export
+
+  ✅ Data room report
+  ✅ Issue log + evidence ledger
+  ✅ issues.csv, evidence.csv, dataroom-summary.xlsx
 
 $ npm run eval
 
-  ✅ File parses (8,742 chars)
+  ✅ File parses
   ✅ Document type detected: SaaS Agreement
   ✅ Risk quotes are specific
   ✅ NOT_FOUND sentinels are honest
@@ -183,9 +189,9 @@ $ npm run dashboard`}</pre>
 
       {/* Features */}
       <section className="max-w-6xl mx-auto px-6 pb-20">
-        <h2 className="text-2xl font-bold text-white text-center mb-3">Built for serious document work.</h2>
+        <h2 className="text-2xl font-bold text-white text-center mb-3">Built for traceable document work.</h2>
         <p className="text-slate-400 text-center mb-12 text-sm">
-          Not a chat interface. A repo-based AI operations system for contract review.
+          Not a chat-only demo. A repo-based workflow for traceable diligence outputs.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((f) => (
@@ -211,9 +217,11 @@ $ npm run dashboard`}</pre>
               ['Install PDF engine', 'npx playwright install chromium'],
               ['Check setup', 'npm run doctor'],
               ['Run demo', 'npm run demo'],
-              ['Seed demo data', 'npm run seed-demo'],
+              ['Analyze data room', 'npm run dataroom'],
+              ['Build issue log', 'npm run triage'],
+              ['Export handoff', 'npm run export'],
+              ['Compare runs', 'npm run compare'],
               ['Run eval', 'npm run eval'],
-              ['Full packet', 'npm run packet'],
               ['Open dashboard', 'npm run dashboard'],
             ].map(([label, cmd]) => (
               <div key={label} className="flex items-start gap-4">
@@ -232,7 +240,7 @@ $ npm run dashboard`}</pre>
         <div className="max-w-6xl mx-auto text-center">
           <div className="text-blue-400 font-mono font-bold text-lg mb-2">&#9123; Synth</div>
           <p className="text-slate-500 text-sm mb-4">
-            AI contract review for legal and financial documents.
+            Evidence-backed AI diligence for mixed legal and financial document packets.
           </p>
           <div className="flex items-center justify-center gap-6 mb-4 text-sm text-slate-500">
             <Link href="/demo" className="hover:text-slate-300 transition-colors">Demo</Link>

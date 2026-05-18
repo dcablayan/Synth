@@ -1,0 +1,14 @@
+{
+  "reportId": "compare-2026-05-18T13-32-00",
+  "generatedAt": "2026-05-18T13:32:00.211Z",
+  "sourceA": "demo-baseline-dataroom.json",
+  "sourceB": "demo-current-dataroom.json",
+  "addedIssues": [],
+  "removedIssues": [],
+  "changedIssues": [],
+  "paymentChanges": [],
+  "capTableChanges": [],
+  "newWarnings": [],
+  "resolvedWarnings": [],
+  "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions."
+}

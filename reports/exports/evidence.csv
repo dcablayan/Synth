@@ -1,23 +1,23 @@
 evidenceId,issueId,sourceFilename,documentQuote,spreadsheetRow,sheetName,rowNumber,fieldName,isVerified,verificationNote
-ev-2026-05-12T17-27-46-001,iss-2026-05-12T17-27-46-001,INDEPENDENT CONTRACTOR AGREEMENT,Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions.,,,,General Provisions,true,
-ev-2026-05-12T17-27-46-002,iss-2026-05-12T17-27-46-002,INDEPENDENT CONTRACTOR AGREEMENT,"IN NO EVENT SHALL COMPANY BE LIABLE TO CONTRACTOR FOR ANY INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF OR RELATED TO THIS AGREEMENT",,,,Liability,true,
-ev-2026-05-12T17-27-46-003,iss-2026-05-12T17-27-46-003,INDEPENDENT CONTRACTOR AGREEMENT,Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions.,,,,Term and Renewal,true,
-ev-2026-05-12T17-27-46-004,iss-2026-05-12T17-27-46-004,INDEPENDENT CONTRACTOR AGREEMENT,Unilateral modification rights may allow changes without consent,,,,,true,
-ev-2026-05-12T17-27-46-005,iss-2026-05-12T17-27-46-005,INDEPENDENT CONTRACTOR AGREEMENT,Review auto-renewal notice window carefully,,,,,true,
-ev-2026-05-12T17-27-46-006,iss-2026-05-12T17-27-46-006,SAAS SUBSCRIPTION AGREEMENT,"automatically renew for successive one-year periods (each a ""Renewal Term"") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",,,,General Provisions,true,
-ev-2026-05-12T17-27-46-007,iss-2026-05-12T17-27-46-007,SAAS SUBSCRIPTION AGREEMENT,"IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITIES, EVEN IF PROVIDER HAS BEEN ADVISED OF THE POS",,,,Liability,true,
-ev-2026-05-12T17-27-46-008,iss-2026-05-12T17-27-46-008,SAAS SUBSCRIPTION AGREEMENT,"automatically renew for successive one-year periods (each a ""Renewal Term"") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",,,,Term and Renewal,true,
-ev-2026-05-12T17-27-46-009,iss-2026-05-12T17-27-46-009,SAAS SUBSCRIPTION AGREEMENT,Unilateral modification rights may allow changes without consent,,,,,true,
-ev-2026-05-12T17-27-46-010,iss-2026-05-12T17-27-46-010,SAAS SUBSCRIPTION AGREEMENT,Review auto-renewal notice window carefully,,,,,true,
-ev-2026-05-12T17-27-46-011,iss-2026-05-12T17-27-46-011,TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING,Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions.,,,,General Provisions,true,
-ev-2026-05-12T17-27-46-012,iss-2026-05-12T17-27-46-012,TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING,Liability limitation clause not identified in parsed text. Review document for liability cap provisions.,,,,Liability,true,
-ev-2026-05-12T17-27-46-013,iss-2026-05-12T17-27-46-013,TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING,Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions.,,,,Term and Renewal,true,
-ev-2026-05-12T17-27-46-014,iss-2026-05-12T17-27-46-014,TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING,Unilateral modification rights may allow changes without consent,,,,,true,
-ev-2026-05-12T17-27-46-015,iss-2026-05-12T17-27-46-015,TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING,Review auto-renewal notice window carefully,,,,,true,
-ev-2026-05-12T17-27-46-016,iss-2026-05-12T17-27-46-016,sample-contractor-agreement.txt,Contract payment terms (see contract) vs. Overdue: DataStream Inc,,,,,true,
-ev-2026-05-12T17-27-46-017,iss-2026-05-12T17-27-46-017,sample-contractor-agreement.txt,Contract payment terms (see contract) vs. Overdue: 2024-03-05,,,,,true,
-ev-2026-05-12T17-27-46-018,iss-2026-05-12T17-27-46-018,sample-payment-schedule.csv,,Vendor: DataStream Inc | Amount: $9100.00 | Due: 2024-03-31,,,,true,
-ev-2026-05-12T17-27-46-019,iss-2026-05-12T17-27-46-019,sample-contractor-agreement.txt,,,,,,false,Auto-detected from spreadsheet structure analysis.
-ev-2026-05-12T17-27-46-020,iss-2026-05-12T17-27-46-020,sample-contractor-agreement.txt,,,,,,false,Auto-detected from spreadsheet structure analysis.
-ev-2026-05-12T17-27-46-021,iss-2026-05-12T17-27-46-021,sample-cap-table.csv,,,,,,false,Auto-detected from spreadsheet structure analysis.
-ev-2026-05-12T17-27-46-022,iss-2026-05-12T17-27-46-022,sample-payment-schedule.csv,,,,,,false,Auto-detected from spreadsheet structure analysis.
+ev-2026-05-18T13-26-44-001,iss-2026-05-18T13-26-44-001,INDEPENDENT CONTRACTOR AGREEMENT,Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions.,,,,General Provisions,true,
+ev-2026-05-18T13-26-44-002,iss-2026-05-18T13-26-44-002,INDEPENDENT CONTRACTOR AGREEMENT,"IN NO EVENT SHALL COMPANY BE LIABLE TO CONTRACTOR FOR ANY INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF OR RELATED TO THIS AGREEMENT",,,,Liability,true,
+ev-2026-05-18T13-26-44-003,iss-2026-05-18T13-26-44-003,INDEPENDENT CONTRACTOR AGREEMENT,Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions.,,,,Term and Renewal,true,
+ev-2026-05-18T13-26-44-004,iss-2026-05-18T13-26-44-004,INDEPENDENT CONTRACTOR AGREEMENT,Unilateral modification rights may allow changes without consent,,,,,true,
+ev-2026-05-18T13-26-44-005,iss-2026-05-18T13-26-44-005,INDEPENDENT CONTRACTOR AGREEMENT,Review auto-renewal notice window carefully,,,,,true,
+ev-2026-05-18T13-26-44-006,iss-2026-05-18T13-26-44-006,SAAS SUBSCRIPTION AGREEMENT,"automatically renew for successive one-year periods (each a ""Renewal Term"") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",,,,General Provisions,true,
+ev-2026-05-18T13-26-44-007,iss-2026-05-18T13-26-44-007,SAAS SUBSCRIPTION AGREEMENT,"IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITIES, EVEN IF PROVIDER HAS BEEN ADVISED OF THE POS",,,,Liability,true,
+ev-2026-05-18T13-26-44-008,iss-2026-05-18T13-26-44-008,SAAS SUBSCRIPTION AGREEMENT,"automatically renew for successive one-year periods (each a ""Renewal Term"") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",,,,Term and Renewal,true,
+ev-2026-05-18T13-26-44-009,iss-2026-05-18T13-26-44-009,SAAS SUBSCRIPTION AGREEMENT,Unilateral modification rights may allow changes without consent,,,,,true,
+ev-2026-05-18T13-26-44-010,iss-2026-05-18T13-26-44-010,SAAS SUBSCRIPTION AGREEMENT,Review auto-renewal notice window carefully,,,,,true,
+ev-2026-05-18T13-26-44-011,iss-2026-05-18T13-26-44-011,TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING,Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions.,,,,General Provisions,true,
+ev-2026-05-18T13-26-44-012,iss-2026-05-18T13-26-44-012,TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING,Liability limitation clause not identified in parsed text. Review document for liability cap provisions.,,,,Liability,true,
+ev-2026-05-18T13-26-44-013,iss-2026-05-18T13-26-44-013,TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING,Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions.,,,,Term and Renewal,true,
+ev-2026-05-18T13-26-44-014,iss-2026-05-18T13-26-44-014,TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING,Unilateral modification rights may allow changes without consent,,,,,true,
+ev-2026-05-18T13-26-44-015,iss-2026-05-18T13-26-44-015,TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING,Review auto-renewal notice window carefully,,,,,true,
+ev-2026-05-18T13-26-44-016,iss-2026-05-18T13-26-44-016,sample-contractor-agreement.txt,Contract payment terms (see contract) vs. Overdue: DataStream Inc,,,,,true,
+ev-2026-05-18T13-26-44-017,iss-2026-05-18T13-26-44-017,sample-contractor-agreement.txt,Contract payment terms (see contract) vs. Overdue: 2024-03-05,,,,,true,
+ev-2026-05-18T13-26-44-018,iss-2026-05-18T13-26-44-018,sample-payment-schedule.csv,,Vendor: DataStream Inc | Amount: $9100.00 | Due: 2024-03-31,,,,true,
+ev-2026-05-18T13-26-44-019,iss-2026-05-18T13-26-44-019,sample-contractor-agreement.txt,,,,,,false,Auto-detected from spreadsheet structure analysis.
+ev-2026-05-18T13-26-44-020,iss-2026-05-18T13-26-44-020,sample-contractor-agreement.txt,,,,,,false,Auto-detected from spreadsheet structure analysis.
+ev-2026-05-18T13-26-44-021,iss-2026-05-18T13-26-44-021,sample-cap-table.csv,,,,,,false,Auto-detected from spreadsheet structure analysis.
+ev-2026-05-18T13-26-44-022,iss-2026-05-18T13-26-44-022,sample-payment-schedule.csv,,,,,,false,Auto-detected from spreadsheet structure analysis.
