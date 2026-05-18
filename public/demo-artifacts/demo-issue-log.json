@@ -1,189 +1,356 @@
 {
-  "logId": "issuelog-demo-v5",
+  "logId": "issuelog-2026-05-18T13-32-00",
   "title": "Issue Log",
-  "generatedAt": "2026-05-12T00:00:00.000Z",
-  "sourceReports": ["reviews/demo-review.json", "tables/demo-spreadsheet.json", "dataroom/demo-dataroom.json"],
-  "totalIssues": 8,
-  "openCount": 8,
-  "criticalCount": 1,
-  "highCount": 3,
-  "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.",
+  "generatedAt": "2026-05-18T13:32:00.147Z",
+  "sourceReports": [
+    "reviews/demo-review.json",
+    "dataroom/demo-dataroom.json"
+  ],
   "issues": [
     {
-      "id": "iss-demo-001",
-      "title": "Uncapped Liability Exposure",
-      "severity": "Critical",
-      "category": "legal",
+      "id": "iss-2026-05-18T13-32-00-001",
+      "title": "Unilateral Modification Rights",
+      "severity": "High",
+      "category": "other",
       "status": "open",
-      "sourceFiles": ["sample-saas-agreement.txt"],
-      "evidenceQuotes": ["In no event shall either party's aggregate liability exceed the amounts paid in the twelve (12) months preceding the claim"],
+      "sourceFiles": [
+        "sample-saas-agreement.txt"
+      ],
+      "evidenceQuotes": [
+        "automatically renew for successive one-year periods (each a \"Renewal Term\") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term"
+      ],
       "affectedRows": [],
-      "recommendation": "Negotiate a higher liability cap or mutual limitation. Review indemnification scope with counsel.",
-      "createdAt": "2026-05-12T00:00:00.000Z",
-      "updatedAt": "2026-05-12T00:00:00.000Z",
-      "evidenceIds": ["ev-demo-001"]
+      "recommendation": "Request a mutual written amendment requirement.",
+      "createdAt": "2026-05-18T13:32:00.147Z",
+      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "evidenceIds": [
+        "ev-2026-05-18T13-32-00-001"
+      ]
     },
     {
-      "id": "iss-demo-002",
-      "title": "Auto-Renewal Without Notice Obligation",
+      "id": "iss-2026-05-18T13-32-00-002",
+      "title": "Limited Liability Cap",
       "severity": "High",
+      "category": "legal",
+      "status": "open",
+      "sourceFiles": [
+        "sample-saas-agreement.txt"
+      ],
+      "evidenceQuotes": [
+        "IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITIES, EVEN IF PROVIDER HAS BEEN ADVISED OF THE POS"
+      ],
+      "affectedRows": [],
+      "recommendation": "Negotiate a higher cap and carve-outs for willful misconduct.",
+      "createdAt": "2026-05-18T13:32:00.147Z",
+      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "evidenceIds": [
+        "ev-2026-05-18T13-32-00-002"
+      ]
+    },
+    {
+      "id": "iss-2026-05-18T13-32-00-006",
+      "title": "Overdue Payments Detected",
+      "severity": "High",
+      "category": "payment",
+      "status": "open",
+      "sourceFiles": [
+        "sample-saas-agreement.txt",
+        "sample-payment-schedule.csv"
+      ],
+      "evidenceQuotes": [
+        "Contract payment terms (see contract) vs. Overdue: DataStream Inc"
+      ],
+      "affectedRows": [],
+      "recommendation": "Review overdue invoices against contract payment terms and resolve outstanding amounts.",
+      "createdAt": "2026-05-18T13:32:00.147Z",
+      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "evidenceIds": [
+        "ev-2026-05-18T13-32-00-006"
+      ]
+    },
+    {
+      "id": "iss-2026-05-18T13-32-00-007",
+      "title": "Overdue Payments Detected",
+      "severity": "High",
+      "category": "payment",
+      "status": "open",
+      "sourceFiles": [
+        "sample-saas-agreement.txt",
+        "sample-vendor-invoices.csv"
+      ],
+      "evidenceQuotes": [
+        "Contract payment terms (see contract) vs. Overdue: 2024-03-05"
+      ],
+      "affectedRows": [],
+      "recommendation": "Review overdue invoices against contract payment terms and resolve outstanding amounts.",
+      "createdAt": "2026-05-18T13:32:00.147Z",
+      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "evidenceIds": [
+        "ev-2026-05-18T13-32-00-007"
+      ]
+    },
+    {
+      "id": "iss-2026-05-18T13-32-00-008",
+      "title": "Overdue Payment: DataStream Inc ($9100.00)",
+      "severity": "High",
+      "category": "payment",
+      "status": "open",
+      "sourceFiles": [
+        "sample-payment-schedule.csv"
+      ],
+      "evidenceQuotes": [],
+      "affectedRows": [
+        "Vendor: DataStream Inc | Amount: $9100.00 | Due: 2024-03-31"
+      ],
+      "recommendation": "Resolve overdue payment of $9100.00 to DataStream Inc. Due: 2024-03-31.",
+      "createdAt": "2026-05-18T13:32:00.147Z",
+      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "evidenceIds": [
+        "ev-2026-05-18T13-32-00-008"
+      ]
+    },
+    {
+      "id": "iss-2026-05-18T13-32-00-003",
+      "title": "Auto-Renewal with Short Notice",
+      "severity": "Medium",
       "category": "renewal",
       "status": "open",
-      "sourceFiles": ["sample-saas-agreement.txt"],
-      "evidenceQuotes": ["This Agreement shall automatically renew for successive one-year terms unless either party provides written notice of non-renewal at least 30 days prior"],
+      "sourceFiles": [
+        "sample-saas-agreement.txt"
+      ],
+      "evidenceQuotes": [
+        "automatically renew for successive one-year periods (each a \"Renewal Term\") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term"
+      ],
       "affectedRows": [],
-      "recommendation": "Add calendar reminder 60 days before renewal. Negotiate mutual 30-day notice requirement or opt-out window.",
-      "createdAt": "2026-05-12T00:00:00.000Z",
-      "updatedAt": "2026-05-12T00:00:00.000Z",
-      "evidenceIds": ["ev-demo-002"]
+      "recommendation": "Calendar the cancellation deadline immediately.",
+      "createdAt": "2026-05-18T13:32:00.147Z",
+      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "evidenceIds": [
+        "ev-2026-05-18T13-32-00-003"
+      ]
     },
     {
-      "id": "iss-demo-003",
-      "title": "Overdue Payment: Acme Corp ($12,500.00)",
-      "severity": "High",
-      "category": "payment",
-      "status": "open",
-      "sourceFiles": ["sample-payment-schedule.csv"],
-      "evidenceQuotes": [],
-      "affectedRows": ["Vendor: Acme Corp | Amount: $12,500.00 | Due: 2025-01-15"],
-      "recommendation": "Resolve overdue payment of $12,500.00 to Acme Corp. Due: 2025-01-15.",
-      "createdAt": "2026-05-12T00:00:00.000Z",
-      "updatedAt": "2026-05-12T00:00:00.000Z",
-      "evidenceIds": ["ev-demo-003"]
-    },
-    {
-      "id": "iss-demo-004",
-      "title": "Overdue Payment: Global Supplies Ltd ($8,750.00)",
-      "severity": "High",
-      "category": "payment",
-      "status": "open",
-      "sourceFiles": ["sample-payment-schedule.csv"],
-      "evidenceQuotes": [],
-      "affectedRows": ["Vendor: Global Supplies Ltd | Amount: $8,750.00 | Due: 2025-02-01"],
-      "recommendation": "Resolve overdue payment of $8,750.00 to Global Supplies Ltd. Due: 2025-02-01.",
-      "createdAt": "2026-05-12T00:00:00.000Z",
-      "updatedAt": "2026-05-12T00:00:00.000Z",
-      "evidenceIds": ["ev-demo-004"]
-    },
-    {
-      "id": "iss-demo-005",
-      "title": "Preferred Stock in Term Sheet Not Reflected in Cap Table",
-      "severity": "High",
-      "category": "cap-table",
-      "status": "open",
-      "sourceFiles": ["sample-term-sheet.txt", "sample-cap-table.csv"],
-      "evidenceQuotes": ["Preferred stock / liquidation preference terms present vs. Cap table may not reflect post-closing terms"],
-      "affectedRows": [],
-      "recommendation": "Reconcile cap table with term sheet preferred stock terms after closing.",
-      "createdAt": "2026-05-12T00:00:00.000Z",
-      "updatedAt": "2026-05-12T00:00:00.000Z",
-      "evidenceIds": ["ev-demo-005"]
-    },
-    {
-      "id": "iss-demo-006",
-      "title": "Broad IP Assignment Without Carveout",
-      "severity": "Medium",
+      "id": "iss-2026-05-18T13-32-00-004",
+      "title": "Unusual Clause: Unilateral modification rights may allow changes without consent",
+      "severity": "Low",
       "category": "legal",
       "status": "open",
-      "sourceFiles": ["sample-contractor-agreement.txt"],
-      "evidenceQuotes": ["Contractor assigns to Company all right, title, and interest in and to all Work Product"],
+      "sourceFiles": [
+        "sample-saas-agreement.txt"
+      ],
+      "evidenceQuotes": [
+        "Unilateral modification rights may allow changes without consent"
+      ],
       "affectedRows": [],
-      "recommendation": "Negotiate a carveout for pre-existing IP or work performed outside contract scope.",
-      "createdAt": "2026-05-12T00:00:00.000Z",
-      "updatedAt": "2026-05-12T00:00:00.000Z",
-      "evidenceIds": ["ev-demo-006"]
+      "recommendation": "Review this clause with legal counsel to assess acceptability.",
+      "createdAt": "2026-05-18T13:32:00.147Z",
+      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "evidenceIds": [
+        "ev-2026-05-18T13-32-00-004"
+      ]
     },
     {
-      "id": "iss-demo-007",
-      "title": "Repeated Vendor Names in Payment Schedule",
-      "severity": "Medium",
-      "category": "payment",
+      "id": "iss-2026-05-18T13-32-00-005",
+      "title": "Unusual Clause: Review auto-renewal notice window carefully",
+      "severity": "Low",
+      "category": "legal",
       "status": "open",
-      "sourceFiles": ["sample-payment-schedule.csv"],
-      "evidenceQuotes": ["Acme Corp vs. Multiple rows"],
+      "sourceFiles": [
+        "sample-saas-agreement.txt"
+      ],
+      "evidenceQuotes": [
+        "Review auto-renewal notice window carefully"
+      ],
       "affectedRows": [],
-      "recommendation": "Verify these are separate invoices and not duplicate billing entries.",
-      "createdAt": "2026-05-12T00:00:00.000Z",
-      "updatedAt": "2026-05-12T00:00:00.000Z",
-      "evidenceIds": ["ev-demo-007"]
+      "recommendation": "Review this clause with legal counsel to assess acceptability.",
+      "createdAt": "2026-05-18T13:32:00.147Z",
+      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "evidenceIds": [
+        "ev-2026-05-18T13-32-00-005"
+      ]
     },
     {
-      "id": "iss-demo-008",
-      "title": "Data Quality: Blank cells detected in required columns",
+      "id": "iss-2026-05-18T13-32-00-009",
+      "title": "Data Quality: High blank cell rate: 40% of cells are empty",
       "severity": "Low",
       "category": "data-quality",
       "status": "open",
-      "sourceFiles": ["sample-vendor-invoices.csv"],
+      "sourceFiles": [
+        "sample-saas-agreement.txt",
+        "sample-cap-table.csv",
+        "sample-payment-schedule.csv"
+      ],
       "evidenceQuotes": [],
-      "affectedRows": ["Blank cells detected in required columns"],
+      "affectedRows": [
+        "High blank cell rate: 40% of cells are empty"
+      ],
       "recommendation": "Review spreadsheet data for completeness and accuracy.",
-      "createdAt": "2026-05-12T00:00:00.000Z",
-      "updatedAt": "2026-05-12T00:00:00.000Z",
-      "evidenceIds": ["ev-demo-008"]
+      "createdAt": "2026-05-18T13:32:00.147Z",
+      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "evidenceIds": [
+        "ev-2026-05-18T13-32-00-009"
+      ]
+    },
+    {
+      "id": "iss-2026-05-18T13-32-00-010",
+      "title": "Data Quality: 1 row(s) marked as overdue",
+      "severity": "Low",
+      "category": "data-quality",
+      "status": "open",
+      "sourceFiles": [
+        "sample-saas-agreement.txt",
+        "sample-cap-table.csv",
+        "sample-payment-schedule.csv"
+      ],
+      "evidenceQuotes": [],
+      "affectedRows": [
+        "1 row(s) marked as overdue"
+      ],
+      "recommendation": "Review spreadsheet data for completeness and accuracy.",
+      "createdAt": "2026-05-18T13:32:00.147Z",
+      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "evidenceIds": [
+        "ev-2026-05-18T13-32-00-010"
+      ]
+    },
+    {
+      "id": "iss-2026-05-18T13-32-00-011",
+      "title": "Spreadsheet Warning: High blank cell rate: 40% of cells are empty",
+      "severity": "Low",
+      "category": "data-quality",
+      "status": "open",
+      "sourceFiles": [
+        "sample-cap-table.csv"
+      ],
+      "evidenceQuotes": [],
+      "affectedRows": [
+        "High blank cell rate: 40% of cells are empty"
+      ],
+      "recommendation": "Review spreadsheet for completeness.",
+      "createdAt": "2026-05-18T13:32:00.147Z",
+      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "evidenceIds": [
+        "ev-2026-05-18T13-32-00-011"
+      ]
+    },
+    {
+      "id": "iss-2026-05-18T13-32-00-012",
+      "title": "Spreadsheet Warning: 1 row(s) marked as overdue",
+      "severity": "Low",
+      "category": "data-quality",
+      "status": "open",
+      "sourceFiles": [
+        "sample-payment-schedule.csv"
+      ],
+      "evidenceQuotes": [],
+      "affectedRows": [
+        "1 row(s) marked as overdue"
+      ],
+      "recommendation": "Review spreadsheet for completeness.",
+      "createdAt": "2026-05-18T13:32:00.147Z",
+      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "evidenceIds": [
+        "ev-2026-05-18T13-32-00-012"
+      ]
     }
   ],
   "evidence": [
     {
-      "evidenceId": "ev-demo-001",
-      "issueId": "iss-demo-001",
-      "documentQuote": "In no event shall either party's aggregate liability exceed the amounts paid in the twelve (12) months preceding the claim",
+      "evidenceId": "ev-2026-05-18T13-32-00-001",
+      "issueId": "iss-2026-05-18T13-32-00-001",
+      "documentQuote": "automatically renew for successive one-year periods (each a \"Renewal Term\") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",
       "sourceFilename": "sample-saas-agreement.txt",
-      "fieldName": "Limitation of Liability",
+      "fieldName": "General Provisions",
       "isVerified": true
     },
     {
-      "evidenceId": "ev-demo-002",
-      "issueId": "iss-demo-002",
-      "documentQuote": "This Agreement shall automatically renew for successive one-year terms unless either party provides written notice of non-renewal at least 30 days prior",
+      "evidenceId": "ev-2026-05-18T13-32-00-002",
+      "issueId": "iss-2026-05-18T13-32-00-002",
+      "documentQuote": "IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITIES, EVEN IF PROVIDER HAS BEEN ADVISED OF THE POS",
+      "sourceFilename": "sample-saas-agreement.txt",
+      "fieldName": "Liability",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-32-00-003",
+      "issueId": "iss-2026-05-18T13-32-00-003",
+      "documentQuote": "automatically renew for successive one-year periods (each a \"Renewal Term\") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",
       "sourceFilename": "sample-saas-agreement.txt",
       "fieldName": "Term and Renewal",
       "isVerified": true
     },
     {
-      "evidenceId": "ev-demo-003",
-      "issueId": "iss-demo-003",
+      "evidenceId": "ev-2026-05-18T13-32-00-004",
+      "issueId": "iss-2026-05-18T13-32-00-004",
+      "documentQuote": "Unilateral modification rights may allow changes without consent",
+      "sourceFilename": "sample-saas-agreement.txt",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-32-00-005",
+      "issueId": "iss-2026-05-18T13-32-00-005",
+      "documentQuote": "Review auto-renewal notice window carefully",
+      "sourceFilename": "sample-saas-agreement.txt",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-32-00-006",
+      "issueId": "iss-2026-05-18T13-32-00-006",
+      "documentQuote": "Contract payment terms (see contract) vs. Overdue: DataStream Inc",
+      "sourceFilename": "sample-saas-agreement.txt",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-32-00-007",
+      "issueId": "iss-2026-05-18T13-32-00-007",
+      "documentQuote": "Contract payment terms (see contract) vs. Overdue: 2024-03-05",
+      "sourceFilename": "sample-saas-agreement.txt",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-32-00-008",
+      "issueId": "iss-2026-05-18T13-32-00-008",
       "documentQuote": "",
-      "spreadsheetRow": "Vendor: Acme Corp | Amount: $12,500.00 | Due: 2025-01-15",
+      "spreadsheetRow": "Vendor: DataStream Inc | Amount: $9100.00 | Due: 2024-03-31",
       "sourceFilename": "sample-payment-schedule.csv",
       "isVerified": true
     },
     {
-      "evidenceId": "ev-demo-004",
-      "issueId": "iss-demo-004",
+      "evidenceId": "ev-2026-05-18T13-32-00-009",
+      "issueId": "iss-2026-05-18T13-32-00-009",
       "documentQuote": "",
-      "spreadsheetRow": "Vendor: Global Supplies Ltd | Amount: $8,750.00 | Due: 2025-02-01",
-      "sourceFilename": "sample-payment-schedule.csv",
-      "isVerified": true
+      "sourceFilename": "sample-saas-agreement.txt",
+      "isVerified": false,
+      "verificationNote": "Auto-detected from spreadsheet structure analysis."
     },
     {
-      "evidenceId": "ev-demo-005",
-      "issueId": "iss-demo-005",
-      "documentQuote": "Preferred stock / liquidation preference terms present vs. Cap table may not reflect post-closing terms",
-      "sourceFilename": "sample-term-sheet.txt",
-      "isVerified": true
-    },
-    {
-      "evidenceId": "ev-demo-006",
-      "issueId": "iss-demo-006",
-      "documentQuote": "Contractor assigns to Company all right, title, and interest in and to all Work Product",
-      "sourceFilename": "sample-contractor-agreement.txt",
-      "fieldName": "IP Assignment",
-      "isVerified": true
-    },
-    {
-      "evidenceId": "ev-demo-007",
-      "issueId": "iss-demo-007",
-      "documentQuote": "Acme Corp vs. Multiple rows",
-      "sourceFilename": "sample-payment-schedule.csv",
-      "isVerified": true
-    },
-    {
-      "evidenceId": "ev-demo-008",
-      "issueId": "iss-demo-008",
+      "evidenceId": "ev-2026-05-18T13-32-00-010",
+      "issueId": "iss-2026-05-18T13-32-00-010",
       "documentQuote": "",
-      "sourceFilename": "sample-vendor-invoices.csv",
+      "sourceFilename": "sample-saas-agreement.txt",
+      "isVerified": false,
+      "verificationNote": "Auto-detected from spreadsheet structure analysis."
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-32-00-011",
+      "issueId": "iss-2026-05-18T13-32-00-011",
+      "documentQuote": "",
+      "sourceFilename": "sample-cap-table.csv",
+      "isVerified": false,
+      "verificationNote": "Auto-detected from spreadsheet structure analysis."
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-32-00-012",
+      "issueId": "iss-2026-05-18T13-32-00-012",
+      "documentQuote": "",
+      "sourceFilename": "sample-payment-schedule.csv",
       "isVerified": false,
       "verificationNote": "Auto-detected from spreadsheet structure analysis."
     }
-  ]
+  ],
+  "totalIssues": 12,
+  "openCount": 12,
+  "criticalCount": 0,
+  "highCount": 5,
+  "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions."
 }

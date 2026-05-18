@@ -1,6 +1,6 @@
 {
   "documentTitle": "SAAS SUBSCRIPTION AGREEMENT",
-  "memoDate": "2026-05-12",
+  "memoDate": "2026-05-18",
   "executiveSummary": "This memo summarizes key findings from the Synth review of \"SAAS SUBSCRIPTION AGREEMENT\". The document presents High risk (score: 65/100). Several provisions require immediate attention, including liability limitations, renewal terms, and modification rights. This memo was generated in mock mode — run with a real AI provider for document-specific analysis.",
   "biggestRisks": [
     {
@@ -49,7 +49,7 @@
     "Verify governing law is acceptable for your jurisdiction"
   ],
   "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.",
-  "generatedAt": "2026-05-12T11:22:59.884Z",
+  "generatedAt": "2026-05-18T13:32:00.126Z",
   "sourceFilename": "sample-saas-agreement.txt",
   "sourceExtension": ".txt",
   "parsedCharacterCount": 6491,

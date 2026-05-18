@@ -4,7 +4,7 @@
 
 **Document Type:** SaaS Agreement
 **Risk Score:** 65/100 — **High**
-**Generated:** 2026-05-12T11:06:54.476Z
+**Generated:** 2026-05-18T13:26:40.271Z
 **Parties:** Nexus Analytics, a Delaware corporation ("Provider")
 
 ---

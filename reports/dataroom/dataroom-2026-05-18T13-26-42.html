@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Data Room Review — Data Room Review Summary</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #0f172a; color: #e2e8f0; margin: 0; padding: 24px; }
+  .container { max-width: 960px; margin: 0 auto; }
+  h1 { color: #38bdf8; font-size: 1.5rem; }
+  h2 { color: #94a3b8; font-size: 1rem; text-transform: uppercase; letter-spacing: .05em; margin-top: 28px; margin-bottom: 12px; }
+  h4 { color: #e2e8f0; font-size: 0.9rem; margin: 6px 0; }
+  .disclaimer { background: #422006; border: 1px solid #92400e; border-radius: 8px; padding: 10px 14px; font-size: 0.78rem; color: #fde68a; margin-bottom: 20px; }
+  .badge { display: inline-block; background: #1d4ed8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.72rem; margin-bottom: 12px; }
+  .summary { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; margin-bottom: 20px; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stat { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 14px; text-align: center; }
+  .stat-val { font-size: 1.6rem; font-weight: bold; color: white; }
+  .stat-lbl { font-size: 0.72rem; color: #64748b; margin-top: 4px; }
+  .finding-card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 14px; margin-bottom: 12px; }
+  .finding-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .finding-type { color: #64748b; font-size: 0.75rem; text-transform: uppercase; }
+  .severity { font-size: 0.78rem; font-weight: bold; }
+  .diff-table { width: 100%; font-size: 0.78rem; border-collapse: collapse; margin: 8px 0; }
+  .diff-table th { background: #0f172a; color: #64748b; padding: 4px 8px; text-align: left; }
+  .diff-table td { padding: 4px 8px; color: #94a3b8; border-bottom: 1px solid #1e293b; }
+  .recommendation { color: #38bdf8; font-size: 0.82rem; }
+  .overdue { color: #ef4444; font-weight: bold; }
+  .warning-list { background: #1e293b; border: 1px solid #d97706; border-radius: 8px; padding: 12px 16px; }
+  .warning-list li { color: #fbbf24; font-size: 0.82rem; margin: 4px 0; }
+  table.main { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  table.main th { background: #0f172a; color: #64748b; padding: 6px 10px; text-align: left; }
+  table.main td { padding: 6px 10px; border-bottom: 1px solid #1e293b; color: #cbd5e1; }
+  code { background: #0f172a; color: #38bdf8; padding: 1px 4px; border-radius: 3px; }
+  .section { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+  .meta { color: #64748b; font-size: 0.78rem; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Data Room Review Summary</h1>
+  <span class="badge">Contracts + Spreadsheets + Data Room Review</span>
+  <p class="meta">Generated: 2026-05-18T13:26:42.562Z · 6 files · Mock Mode</p>
+  <div class="disclaimer">⚠ Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.</div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val">6</div><div class="stat-lbl">Files</div></div>
+    <div class="stat"><div class="stat-val">2</div><div class="stat-lbl">Cross-Doc Findings</div></div>
+    <div class="stat"><div class="stat-val">10</div><div class="stat-lbl">Payment Items</div></div>
+    <div class="stat"><div class="stat-val">8</div><div class="stat-lbl">Cap Table Rows</div></div>
+  </div>
+
+  <div class="summary">
+    <h2>Executive Summary</h2>
+    <p>This data room contains 6 document(s): 3 contract(s) and 3 spreadsheet(s). Overdue payments were detected in payment schedules — immediate attention recommended. Cap table data was extracted with 8 investor row(s). 2 cross-document finding(s) require review. This summary was generated in mock mode — set OPENAI_API_KEY for AI-powered analysis. This is not legal or financial advice.</p>
+  </div>
+
+  <h2>File Breakdown</h2>
+  <div class="section">
+    <table class="main">
+      <thead><tr><th>Filename</th><th>Category</th><th>Size</th></tr></thead>
+      <tbody><tr><td>sample-contractor-agreement.txt</td><td>contract</td><td>8089</td></tr><tr><td>sample-saas-agreement.txt</td><td>contract</td><td>6491</td></tr><tr><td>sample-term-sheet.txt</td><td>contract</td><td>6423</td></tr><tr><td>sample-cap-table.csv</td><td>spreadsheet</td><td>15</td></tr><tr><td>sample-payment-schedule.csv</td><td>spreadsheet</td><td>15</td></tr><tr><td>sample-vendor-invoices.csv</td><td>spreadsheet</td><td>12</td></tr></tbody>
+    </table>
+    <table class="main" style="margin-top:12px">
+      <thead><tr><th>Extension</th><th>Count</th></tr></thead>
+      <tbody><tr><td><code>.txt</code></td><td>3</td></tr><tr><td><code>.csv</code></td><td>3</td></tr></tbody>
+    </table>
+  </div>
+
+  
+  <h2>Cross-Document Findings</h2>
+  
+    <div class="finding-card">
+      <div class="finding-header">
+        <span class="finding-type">payment mismatch</span>
+        <span class="severity" style="color:#f97316">High</span>
+      </div>
+      <h4>Overdue Payments Detected</h4>
+      <p>1 overdue payment row(s) in sample-payment-schedule.csv. Contract payment terms may not be followed.</p>
+      <table class="diff-table">
+        <tr><th>sample-contractor-agreement.txt</th><th>sample-payment-schedule.csv</th></tr>
+        <tr><td>Contract payment terms (see contract)</td><td>Overdue: DataStream Inc</td></tr>
+      </table>
+      <p class="recommendation">→ Review overdue invoices against contract payment terms and resolve outstanding amounts.</p>
+    </div>
+    <div class="finding-card">
+      <div class="finding-header">
+        <span class="finding-type">payment mismatch</span>
+        <span class="severity" style="color:#f97316">High</span>
+      </div>
+      <h4>Overdue Payments Detected</h4>
+      <p>1 overdue payment row(s) in sample-vendor-invoices.csv. Contract payment terms may not be followed.</p>
+      <table class="diff-table">
+        <tr><th>sample-contractor-agreement.txt</th><th>sample-vendor-invoices.csv</th></tr>
+        <tr><td>Contract payment terms (see contract)</td><td>Overdue: 2024-03-05</td></tr>
+      </table>
+      <p class="recommendation">→ Review overdue invoices against contract payment terms and resolve outstanding amounts.</p>
+    </div>
+
+  
+  <h2>Payment Schedule</h2>
+  <div class="section">
+    <table class="main">
+      <thead><tr><th>Vendor</th><th>Amount</th><th>Due Date</th><th>Status</th><th>Source</th></tr></thead>
+      <tbody><tr>
+      <td>Acme Corp</td>
+      <td><strong>$12500.00</strong></td>
+      <td>2024-02-15</td>
+      <td><span class="">Paid</span></td>
+      <td>sample-payment-schedule.csv</td>
+    </tr><tr>
+      <td>DataStream Inc</td>
+      <td><strong>$8750.00</strong></td>
+      <td>2024-02-28</td>
+      <td><span class="">Paid</span></td>
+      <td>sample-payment-schedule.csv</td>
+    </tr><tr>
+      <td>Acme Corp</td>
+      <td><strong>$12500.00</strong></td>
+      <td>2024-03-15</td>
+      <td><span class="">Paid</span></td>
+      <td>sample-payment-schedule.csv</td>
+    </tr><tr>
+      <td>LegalDocs Ltd</td>
+      <td><strong>$3200.00</strong></td>
+      <td>2024-03-20</td>
+      <td><span class="">Paid</span></td>
+      <td>sample-payment-schedule.csv</td>
+    </tr><tr>
+      <td>DataStream Inc</td>
+      <td><strong>$9100.00</strong></td>
+      <td>2024-03-31</td>
+      <td><span class="overdue">Overdue</span></td>
+      <td>sample-payment-schedule.csv</td>
+    </tr><tr>
+      <td>Acme Corp</td>
+      <td><strong>$12500.00</strong></td>
+      <td>2024-04-15</td>
+      <td><span class="">Pending</span></td>
+      <td>sample-payment-schedule.csv</td>
+    </tr><tr>
+      <td>TechVendors LLC</td>
+      <td><strong>$5500.00</strong></td>
+      <td>2024-04-20</td>
+      <td><span class="">Pending</span></td>
+      <td>sample-payment-schedule.csv</td>
+    </tr><tr>
+      <td>LegalDocs Ltd</td>
+      <td><strong>$3200.00</strong></td>
+      <td>2024-04-25</td>
+      <td><span class="">Pending</span></td>
+      <td>sample-payment-schedule.csv</td>
+    </tr><tr>
+      <td>CloudHosting Pro</td>
+      <td><strong>$45000.00</strong></td>
+      <td>2024-01-05</td>
+      <td><span class="">Paid</span></td>
+      <td>sample-vendor-invoices.csv</td>
+    </tr><tr>
+      <td>Stripe Inc</td>
+      <td><strong>$1250.00</strong></td>
+      <td>2024-01-12</td>
+      <td><span class="">Paid</span></td>
+      <td>sample-vendor-invoices.csv</td>
+    </tr></tbody>
+    </table>
+  </div>
+
+  
+  <h2>Cap Table</h2>
+  <div class="section">
+    <table class="main">
+      <thead><tr><th>Investor</th><th>Share Class</th><th>Shares</th><th>Ownership %</th><th>Source</th></tr></thead>
+      <tbody><tr>
+      <td>Founders</td>
+      <td>Common</td>
+      <td>4000000</td>
+      <td>40.00%</td>
+      <td>sample-cap-table.csv</td>
+    </tr><tr>
+      <td>Option Pool</td>
+      <td>Common</td>
+      <td>1500000</td>
+      <td>15.00%</td>
+      <td>sample-cap-table.csv</td>
+    </tr><tr>
+      <td>Sequoia Capital</td>
+      <td>Series A Preferred</td>
+      <td>1500000</td>
+      <td>15.00%</td>
+      <td>sample-cap-table.csv</td>
+    </tr><tr>
+      <td>Accel Partners</td>
+      <td>Series A Preferred</td>
+      <td>1000000</td>
+      <td>10.00%</td>
+      <td>sample-cap-table.csv</td>
+    </tr><tr>
+      <td>Y Combinator</td>
+      <td>SAFE</td>
+      <td>300000</td>
+      <td>3.00%</td>
+      <td>sample-cap-table.csv</td>
+    </tr><tr>
+      <td>Angel Investors</td>
+      <td>Common</td>
+      <td>200000</td>
+      <td>2.00%</td>
+      <td>sample-cap-table.csv</td>
+    </tr><tr>
+      <td>Conversion Pool</td>
+      <td>Series A Preferred</td>
+      <td>500000</td>
+      <td>5.00%</td>
+      <td>sample-cap-table.csv</td>
+    </tr><tr>
+      <td>Reserved</td>
+      <td>Unissued</td>
+      <td>1000000</td>
+      <td>10.00%</td>
+      <td>sample-cap-table.csv</td>
+    </tr></tbody>
+    </table>
+  </div>
+
+  
+  <h2>Data Quality Warnings</h2>
+  <div class="warning-list">
+    <ul><li>High blank cell rate: 40% of cells are empty</li><li>1 row(s) marked as overdue</li></ul>
+  </div>
+</div>
+</body>
+</html>

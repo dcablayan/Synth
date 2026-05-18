@@ -1,0 +1,13 @@
+evidenceId,issueId,sourceFilename,documentQuote,spreadsheetRow,sheetName,rowNumber,fieldName,isVerified,verificationNote
+ev-2026-05-18T13-32-00-001,iss-2026-05-18T13-32-00-001,sample-saas-agreement.txt,"automatically renew for successive one-year periods (each a ""Renewal Term"") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",,,,General Provisions,true,
+ev-2026-05-18T13-32-00-002,iss-2026-05-18T13-32-00-002,sample-saas-agreement.txt,"IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITIES, EVEN IF PROVIDER HAS BEEN ADVISED OF THE POS",,,,Liability,true,
+ev-2026-05-18T13-32-00-003,iss-2026-05-18T13-32-00-003,sample-saas-agreement.txt,"automatically renew for successive one-year periods (each a ""Renewal Term"") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",,,,Term and Renewal,true,
+ev-2026-05-18T13-32-00-004,iss-2026-05-18T13-32-00-004,sample-saas-agreement.txt,Unilateral modification rights may allow changes without consent,,,,,true,
+ev-2026-05-18T13-32-00-005,iss-2026-05-18T13-32-00-005,sample-saas-agreement.txt,Review auto-renewal notice window carefully,,,,,true,
+ev-2026-05-18T13-32-00-006,iss-2026-05-18T13-32-00-006,sample-saas-agreement.txt,Contract payment terms (see contract) vs. Overdue: DataStream Inc,,,,,true,
+ev-2026-05-18T13-32-00-007,iss-2026-05-18T13-32-00-007,sample-saas-agreement.txt,Contract payment terms (see contract) vs. Overdue: 2024-03-05,,,,,true,
+ev-2026-05-18T13-32-00-008,iss-2026-05-18T13-32-00-008,sample-payment-schedule.csv,,Vendor: DataStream Inc | Amount: $9100.00 | Due: 2024-03-31,,,,true,
+ev-2026-05-18T13-32-00-009,iss-2026-05-18T13-32-00-009,sample-saas-agreement.txt,,,,,,false,Auto-detected from spreadsheet structure analysis.
+ev-2026-05-18T13-32-00-010,iss-2026-05-18T13-32-00-010,sample-saas-agreement.txt,,,,,,false,Auto-detected from spreadsheet structure analysis.
+ev-2026-05-18T13-32-00-011,iss-2026-05-18T13-32-00-011,sample-cap-table.csv,,,,,,false,Auto-detected from spreadsheet structure analysis.
+ev-2026-05-18T13-32-00-012,iss-2026-05-18T13-32-00-012,sample-payment-schedule.csv,,,,,,false,Auto-detected from spreadsheet structure analysis.

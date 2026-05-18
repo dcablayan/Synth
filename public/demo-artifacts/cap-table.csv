@@ -1,0 +1,9 @@
+investor,shareClass,shares,ownershipPct,sourceFile,termSheetMatch,discrepancy
+Founders,Common,4000000,40.00%,sample-cap-table.csv,,
+Option Pool,Common,1500000,15.00%,sample-cap-table.csv,,
+Sequoia Capital,Series A Preferred,1500000,15.00%,sample-cap-table.csv,,
+Accel Partners,Series A Preferred,1000000,10.00%,sample-cap-table.csv,,
+Y Combinator,SAFE,300000,3.00%,sample-cap-table.csv,,
+Angel Investors,Common,200000,2.00%,sample-cap-table.csv,,
+Conversion Pool,Series A Preferred,500000,5.00%,sample-cap-table.csv,,
+Reserved,Unissued,1000000,10.00%,sample-cap-table.csv,,

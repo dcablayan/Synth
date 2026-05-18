@@ -4,6 +4,8 @@ import path from 'path';
 import { chunkText, extractDocumentTitle } from '../lib/parser';
 import { runContractReview, runFinancialAnalysis, runMemoGeneration, runRevisionGeneration } from '../lib/ai-provider';
 import { renderReviewHTML, renderFinancialHTML, renderMemoHTML, renderRevisionHTML, renderFullPacketHTML } from '../lib/html-renderer';
+import type { IssueLog } from '../schemas/issue.schema';
+import type { DataRoomSummary } from '../schemas/spreadsheet.schema';
 
 const CWD = process.cwd();
 const INBOX = path.join(CWD, 'documents', 'inbox');
@@ -118,6 +120,8 @@ async function main() {
   const ext = path.extname(SOURCE_FILE);
   const fileSlug = SOURCE_FILE.replace(ext, '');
   const meta = { sourceFilename: SOURCE_FILE, sourceExtension: ext, parsedCharacterCount: text.length };
+  let seededDataRoom: DataRoomSummary | null = null;
+  let seededIssueLog: IssueLog | null = null;
 
   process.stdout.write('  → Running review...');
   const review = await runContractReview(text, title, meta);
@@ -199,6 +203,7 @@ async function main() {
       return { filename, sheets, profiles };
     });
     const dataRoomSummary = DataRoomSummarySchema.parse(generateMockDataRoomSummary(contractDocs, csvDocs, []));
+    seededDataRoom = dataRoomSummary;
     writeFile(
       path.join(DEMO_DATA, 'demo-dataroom.json'),
       JSON.stringify(dataRoomSummary, null, 2),
@@ -245,9 +250,68 @@ async function main() {
 
     writeFile(path.join(DEMO_DATA, 'demo-issue-log.json'), JSON.stringify(issueLog, null, 2), 'demo-issue-log.json');
     writeFile(path.join(DEMO_ARTIFACTS, 'demo-issue-log.json'), JSON.stringify(issueLog, null, 2), 'demo-issue-log.json (public)');
+    writeFile(
+      path.join(DEMO_ARTIFACTS, 'demo-evidence.json'),
+      JSON.stringify(
+        {
+          logId: issueLog.logId,
+          generatedAt: issueLog.generatedAt,
+          disclaimer: issueLog.disclaimer,
+          evidence: issueLog.evidence,
+        },
+        null,
+        2,
+      ),
+      'demo-evidence.json (public)'
+    );
+    seededIssueLog = issueLog;
     console.log(`     Issues: ${issueLog.totalIssues} (Critical: ${issueLog.criticalCount}, High: ${issueLog.highCount})`);
   } catch (err) {
     console.warn(`  ⚠️ v5 issue log seeding failed: ${err instanceof Error ? err.message : String(err)}`);
+  }
+
+  if (seededIssueLog && seededDataRoom) {
+    console.log('\n  Seeding export, compare, and PDF demo artifacts...\n');
+    try {
+      const {
+        writeIssuesCSV,
+        writeEvidenceCSV,
+        writePaymentsCSV,
+        writeCapTableCSV,
+        writeDataRoomXLSX,
+      } = await import('../lib/export-engine');
+      const { buildCompareReport } = await import('../lib/compare-engine');
+
+      writeIssuesCSV(seededIssueLog, DEMO_ARTIFACTS);
+      console.log('  ✅ issues.csv');
+      writeEvidenceCSV(seededIssueLog, DEMO_ARTIFACTS);
+      console.log('  ✅ evidence.csv');
+      writePaymentsCSV(seededDataRoom, DEMO_ARTIFACTS);
+      console.log('  ✅ payments.csv');
+      writeCapTableCSV(seededDataRoom, DEMO_ARTIFACTS);
+      console.log('  ✅ cap-table.csv');
+      writeDataRoomXLSX(seededIssueLog, seededDataRoom, DEMO_ARTIFACTS);
+      console.log('  ✅ dataroom-summary.xlsx');
+
+      const compareReport = buildCompareReport(
+        'demo-baseline-dataroom.json',
+        'demo-current-dataroom.json',
+        seededIssueLog,
+        seededIssueLog,
+        seededDataRoom,
+        seededDataRoom,
+      );
+      writeFile(path.join(DEMO_ARTIFACTS, 'demo-compare.json'), JSON.stringify(compareReport, null, 2), 'demo-compare.json');
+
+      const pdfSource = path.join(CWD, 'reports', 'pdfs', 'sample-saas-agreement-review.pdf');
+      if (fs.existsSync(pdfSource)) {
+        copyFile(pdfSource, path.join(DEMO_ARTIFACTS, 'demo-review.pdf'), 'demo-review.pdf');
+      } else {
+        console.warn('  ⚠️ demo-review.pdf skipped: run npm run demo after installing Playwright Chromium to regenerate PDFs.');
+      }
+    } catch (err) {
+      console.warn(`  ⚠️ Export artifact seeding failed: ${err instanceof Error ? err.message : String(err)}`);
+    }
   }
 
   // Write manifest
@@ -274,8 +338,16 @@ async function main() {
       memoHtml: '/demo-artifacts/demo-memo.html',
       reviewMarkdown: '/demo-artifacts/demo-review.md',
       reviewJson: '/demo-artifacts/demo-review.json',
+      reviewPdf: '/demo-artifacts/demo-review.pdf',
       dataroomJson: '/demo-artifacts/demo-dataroom.json',
       issueLogJson: '/demo-artifacts/demo-issue-log.json',
+      evidenceLedgerJson: '/demo-artifacts/demo-evidence.json',
+      issuesCsv: '/demo-artifacts/issues.csv',
+      evidenceCsv: '/demo-artifacts/evidence.csv',
+      paymentsCsv: '/demo-artifacts/payments.csv',
+      capTableCsv: '/demo-artifacts/cap-table.csv',
+      dataroomWorkbook: '/demo-artifacts/dataroom-summary.xlsx',
+      compareJson: '/demo-artifacts/demo-compare.json',
     },
   };
   writeFile(path.join(DEMO_DATA, 'demo-manifest.json'), JSON.stringify(manifest, null, 2), 'demo-manifest.json');

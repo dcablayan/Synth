@@ -2,7 +2,7 @@
 
 > **Disclaimer:** Suggested revisions are not legal advice. They are suggested replacement language for review by a qualified professional. Consult an attorney before using any suggested language.
 
-**Generated:** 2026-05-12T11:06:54.490Z
+**Generated:** 2026-05-18T13:26:40.286Z
 
 ---
 

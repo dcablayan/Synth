@@ -1,0 +1,174 @@
+{
+  "generatedAt": "2026-05-18T13:26:44.837Z",
+  "issueLogId": "issuelog-2026-05-18T13-26-44",
+  "evidence": [
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-001",
+      "issueId": "iss-2026-05-18T13-26-44-001",
+      "documentQuote": "Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions.",
+      "sourceFilename": "INDEPENDENT CONTRACTOR AGREEMENT",
+      "fieldName": "General Provisions",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-002",
+      "issueId": "iss-2026-05-18T13-26-44-002",
+      "documentQuote": "IN NO EVENT SHALL COMPANY BE LIABLE TO CONTRACTOR FOR ANY INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF OR RELATED TO THIS AGREEMENT",
+      "sourceFilename": "INDEPENDENT CONTRACTOR AGREEMENT",
+      "fieldName": "Liability",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-003",
+      "issueId": "iss-2026-05-18T13-26-44-003",
+      "documentQuote": "Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions.",
+      "sourceFilename": "INDEPENDENT CONTRACTOR AGREEMENT",
+      "fieldName": "Term and Renewal",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-004",
+      "issueId": "iss-2026-05-18T13-26-44-004",
+      "documentQuote": "Unilateral modification rights may allow changes without consent",
+      "sourceFilename": "INDEPENDENT CONTRACTOR AGREEMENT",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-005",
+      "issueId": "iss-2026-05-18T13-26-44-005",
+      "documentQuote": "Review auto-renewal notice window carefully",
+      "sourceFilename": "INDEPENDENT CONTRACTOR AGREEMENT",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-006",
+      "issueId": "iss-2026-05-18T13-26-44-006",
+      "documentQuote": "automatically renew for successive one-year periods (each a \"Renewal Term\") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",
+      "sourceFilename": "SAAS SUBSCRIPTION AGREEMENT",
+      "fieldName": "General Provisions",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-007",
+      "issueId": "iss-2026-05-18T13-26-44-007",
+      "documentQuote": "IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITIES, EVEN IF PROVIDER HAS BEEN ADVISED OF THE POS",
+      "sourceFilename": "SAAS SUBSCRIPTION AGREEMENT",
+      "fieldName": "Liability",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-008",
+      "issueId": "iss-2026-05-18T13-26-44-008",
+      "documentQuote": "automatically renew for successive one-year periods (each a \"Renewal Term\") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",
+      "sourceFilename": "SAAS SUBSCRIPTION AGREEMENT",
+      "fieldName": "Term and Renewal",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-009",
+      "issueId": "iss-2026-05-18T13-26-44-009",
+      "documentQuote": "Unilateral modification rights may allow changes without consent",
+      "sourceFilename": "SAAS SUBSCRIPTION AGREEMENT",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-010",
+      "issueId": "iss-2026-05-18T13-26-44-010",
+      "documentQuote": "Review auto-renewal notice window carefully",
+      "sourceFilename": "SAAS SUBSCRIPTION AGREEMENT",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-011",
+      "issueId": "iss-2026-05-18T13-26-44-011",
+      "documentQuote": "Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions.",
+      "sourceFilename": "TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING",
+      "fieldName": "General Provisions",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-012",
+      "issueId": "iss-2026-05-18T13-26-44-012",
+      "documentQuote": "Liability limitation clause not identified in parsed text. Review document for liability cap provisions.",
+      "sourceFilename": "TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING",
+      "fieldName": "Liability",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-013",
+      "issueId": "iss-2026-05-18T13-26-44-013",
+      "documentQuote": "Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions.",
+      "sourceFilename": "TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING",
+      "fieldName": "Term and Renewal",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-014",
+      "issueId": "iss-2026-05-18T13-26-44-014",
+      "documentQuote": "Unilateral modification rights may allow changes without consent",
+      "sourceFilename": "TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-015",
+      "issueId": "iss-2026-05-18T13-26-44-015",
+      "documentQuote": "Review auto-renewal notice window carefully",
+      "sourceFilename": "TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-016",
+      "issueId": "iss-2026-05-18T13-26-44-016",
+      "documentQuote": "Contract payment terms (see contract) vs. Overdue: DataStream Inc",
+      "sourceFilename": "sample-contractor-agreement.txt",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-017",
+      "issueId": "iss-2026-05-18T13-26-44-017",
+      "documentQuote": "Contract payment terms (see contract) vs. Overdue: 2024-03-05",
+      "sourceFilename": "sample-contractor-agreement.txt",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-018",
+      "issueId": "iss-2026-05-18T13-26-44-018",
+      "documentQuote": "",
+      "spreadsheetRow": "Vendor: DataStream Inc | Amount: $9100.00 | Due: 2024-03-31",
+      "sourceFilename": "sample-payment-schedule.csv",
+      "isVerified": true
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-019",
+      "issueId": "iss-2026-05-18T13-26-44-019",
+      "documentQuote": "",
+      "sourceFilename": "sample-contractor-agreement.txt",
+      "isVerified": false,
+      "verificationNote": "Auto-detected from spreadsheet structure analysis."
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-020",
+      "issueId": "iss-2026-05-18T13-26-44-020",
+      "documentQuote": "",
+      "sourceFilename": "sample-contractor-agreement.txt",
+      "isVerified": false,
+      "verificationNote": "Auto-detected from spreadsheet structure analysis."
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-021",
+      "issueId": "iss-2026-05-18T13-26-44-021",
+      "documentQuote": "",
+      "sourceFilename": "sample-cap-table.csv",
+      "isVerified": false,
+      "verificationNote": "Auto-detected from spreadsheet structure analysis."
+    },
+    {
+      "evidenceId": "ev-2026-05-18T13-26-44-022",
+      "issueId": "iss-2026-05-18T13-26-44-022",
+      "documentQuote": "",
+      "sourceFilename": "sample-payment-schedule.csv",
+      "isVerified": false,
+      "verificationNote": "Auto-detected from spreadsheet structure analysis."
+    }
+  ]
+}

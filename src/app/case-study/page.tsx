@@ -24,12 +24,12 @@ export default function CaseStudyPage() {
         <div className="mb-12">
           <div className="text-blue-400 text-xs uppercase tracking-widest font-semibold mb-4">Case Study</div>
           <h1 className="text-4xl font-bold text-white mb-4 leading-tight">
-            Building Synth v5: Local AI Diligence Cockpit
+            Building Synth v5: Evidence-Backed Diligence for Mixed Document Packets
           </h1>
           <p className="text-slate-400 text-lg leading-relaxed">
-            How I built a local-first, CLI-driven document review system that turns contracts, spreadsheets, cap tables,
-            and cross-document data room reports into a structured analyst workflow — with an issue log, evidence ledger,
-            CSV/XLSX exports, and run comparison baked in.
+            How I built a local-first, CLI-driven document review aid that turns contracts, spreadsheets, cap tables,
+            and data room reports into a structured analyst workflow with an issue log, evidence ledger, CSV/XLSX exports,
+            and run comparison.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-slate-500">
             <span>Solo build · 2026</span>
@@ -57,9 +57,8 @@ export default function CaseStudyPage() {
               <li>No way to track which issues are open, resolved, or waived across documents</li>
             </ul>
             <p>
-              Founders, analysts, and early-career professionals often need to review contracts, term sheets, and financial
-              schedules quickly — without immediate access to legal counsel. They need structured analysis they can act on,
-              not a chat box.
+              Founders, analysts, and early-career professionals often need to organize contracts, term sheets, and financial
+              schedules before professional review. They need structured findings they can verify and hand off, not a chat box.
             </p>
           </Section>
 
@@ -286,7 +285,7 @@ export default function CaseStudyPage() {
             </p>
             <div className="space-y-3">
               {[
-                { title: 'Disclaimer everywhere', desc: 'The "not legal advice" disclaimer appears on every page, every PDF, every CLI output, and every report artifact — including the issue log and export files. It cannot be turned off.' },
+                { title: 'Visible disclaimer', desc: 'The "not legal advice" disclaimer appears across the primary pages, CLI output, reports, PDFs, issue logs, and workbook summary so the portfolio framing stays clear.' },
                 { title: 'Required document quotes', desc: 'Every risk finding must include a direct quote from the document. The eval harness checks that mock mode does not use generic "See document" placeholders when a real quote exists.' },
                 { title: '"Not found in the document."', desc: 'When a field cannot be extracted, the system outputs this exact sentinel — not an empty string, not a hallucinated value. The eval harness checks this contract.' },
                 { title: 'No issue without evidence', desc: 'Every issue in the v5 issue log is linked to at least one EvidenceItem. If direct evidence is unavailable (e.g., in mock mode), a verificationNote explains why. The eval harness enforces this invariant.' },
@@ -318,7 +317,7 @@ export default function CaseStudyPage() {
             <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
               <ul className="space-y-2 list-none p-0">
                 {[
-                  'Built a local-first AI diligence cockpit end-to-end in TypeScript: CLI pipeline, schema validation (Zod), HTML/PDF rendering (Playwright), and Next.js dashboard',
+                  'Built a local-first evidence-backed AI diligence workflow end-to-end in TypeScript: CLI pipeline, schema validation (Zod), HTML/PDF rendering (Playwright), and Next.js dashboard',
                   'Designed AI output validation layer with safe JSON parsing, Zod schema enforcement, error logging, and graceful mock fallback — preventing silent failures in structured AI outputs',
                   'Implemented multi-format document ingestion (.txt, .md, .pdf, .docx, .csv, .xlsx) with an abstracted AI provider layer supporting both live (OpenAI-compatible) and mock modes',
                   'Built spreadsheet analysis engine for CSV/XLSX: column profiling, currency/date/entity extraction, payment schedule and cap table detection, repeated vendor detection',
@@ -342,7 +341,7 @@ export default function CaseStudyPage() {
           {/* Closing */}
           <div className="border-t border-slate-800 pt-8 mt-8">
             <p className="text-slate-400 text-sm leading-relaxed mb-4">
-              Synth v5 is a solo-built prototype demonstrating what a serious, repo-first AI document operations system looks like —
+              Synth v5 is a solo-built prototype demonstrating what a traceable, repo-first AI document operations system looks like —
               one that handles contracts, spreadsheets, cap tables, cross-document analysis, issue tracking, evidence ledgers,
               CSV/XLSX exports, and run comparison. It can be cloned, run locally, operated by another AI agent, and extended
               without touching a UI. It is not production legal software.

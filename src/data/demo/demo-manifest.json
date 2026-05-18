@@ -1,6 +1,6 @@
 {
-  "version": "4",
-  "generatedAt": "2026-05-12T11:22:59.904Z",
+  "version": "5",
+  "generatedAt": "2026-05-18T13:32:00.213Z",
   "sourceDocument": "sample-saas-agreement.txt",
   "description": "Demo fixture data for the Synth /demo route. Generated from sample-saas-agreement.txt in mock mode.",
   "providerMode": "mock",
@@ -11,7 +11,8 @@
     "financial": "demo-financial.json",
     "memo": "demo-memo.json",
     "revision": "demo-revision.json",
-    "dataroom": "demo-dataroom.json"
+    "dataroom": "demo-dataroom.json",
+    "issueLog": "demo-issue-log.json"
   },
   "artifacts": {
     "fullPacketHtml": "/demo-artifacts/demo-full-packet.html",
@@ -20,6 +21,15 @@
     "memoHtml": "/demo-artifacts/demo-memo.html",
     "reviewMarkdown": "/demo-artifacts/demo-review.md",
     "reviewJson": "/demo-artifacts/demo-review.json",
-    "dataroomJson": "/demo-artifacts/demo-dataroom.json"
+    "reviewPdf": "/demo-artifacts/demo-review.pdf",
+    "dataroomJson": "/demo-artifacts/demo-dataroom.json",
+    "issueLogJson": "/demo-artifacts/demo-issue-log.json",
+    "evidenceLedgerJson": "/demo-artifacts/demo-evidence.json",
+    "issuesCsv": "/demo-artifacts/issues.csv",
+    "evidenceCsv": "/demo-artifacts/evidence.csv",
+    "paymentsCsv": "/demo-artifacts/payments.csv",
+    "capTableCsv": "/demo-artifacts/cap-table.csv",
+    "dataroomWorkbook": "/demo-artifacts/dataroom-summary.xlsx",
+    "compareJson": "/demo-artifacts/demo-compare.json"
   }
 }

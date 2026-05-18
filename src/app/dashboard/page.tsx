@@ -752,7 +752,7 @@ function EmptyState() {
           {[
             { icon: '⌨️', title: 'CLI-driven pipeline', desc: 'Every output is produced by composable CLI commands, not a GUI. The pipeline is scriptable and automatable.' },
             { icon: '✅', title: 'Schema validation', desc: 'All AI outputs are validated with Zod schemas. Bad output fails loudly — not silently corrupting downstream reports.' },
-            { icon: '📄', title: 'PDF pipeline', desc: 'Reports are rendered to HTML first, then to PDF via Playwright — not a simple text dump. Consistent layout guaranteed.' },
+            { icon: '📄', title: 'PDF pipeline', desc: 'Reports are rendered to HTML first, then to PDF via Playwright when Chromium is installed.' },
             { icon: '🔒', title: 'Local-first by default', desc: 'No data leaves your machine unless you explicitly set OPENAI_API_KEY. Mock mode works out of the box.' },
             { icon: '🔁', title: 'Graceful AI fallback', desc: 'If the AI provider fails or returns unparseable output, Synth saves the raw error and falls back to mock mode automatically.' },
             { icon: '🤖', title: 'Agent-native design', desc: 'Full CLAUDE.md and CODEX.md agent docs are included so AI agents can operate, extend, and improve the system.' },
