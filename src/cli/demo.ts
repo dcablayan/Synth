@@ -6,6 +6,7 @@ import { runContractReview, runFinancialAnalysis, runMemoGeneration, runRevision
 import { saveReviewJSON, saveReviewMarkdown, saveFinancialJSON, saveMemoJSON, saveMemoMarkdown, saveRevisionJSON, saveRevisionMarkdown } from '../lib/report-writer';
 import { renderReviewHTML, renderFinancialHTML, renderMemoHTML, renderRevisionHTML } from '../lib/html-renderer';
 import { saveHTML, generatePDFFromHTML } from '../lib/pdf-writer';
+import { resolveRegularFileInside, safeFileStem } from '../lib/path-safety';
 
 const INBOX = path.join(process.cwd(), 'documents', 'inbox');
 const SAMPLES = [
@@ -15,15 +16,17 @@ const SAMPLES = [
 ];
 
 async function processSample(filename: string) {
-  const filepath = path.join(INBOX, filename);
-  if (!fs.existsSync(filepath)) {
+  let filepath: string;
+  try {
+    filepath = resolveRegularFileInside(INBOX, filename, 'demo sample');
+  } catch {
     console.log(`  ⚠️  Sample not found: ${filename}`);
     return;
   }
 
   const text = chunkText(fs.readFileSync(filepath, 'utf-8'));
   const title = extractDocumentTitle(text, filename);
-  const slug = filename.replace('.txt', '').replace('.md', '');
+  const slug = safeFileStem(filename);
 
   console.log(`\n  📄 ${filename}`);
   console.log(`     Title: ${title}`);

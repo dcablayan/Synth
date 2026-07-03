@@ -7,6 +7,7 @@ import type { Memo } from '@/schemas/memo.schema';
 import type { Revision } from '@/schemas/revision.schema';
 import type { DataRoomSummary, SpreadsheetAnalysis } from '@/schemas/spreadsheet.schema';
 import type { IssueLog, CompareReport } from '@/schemas/issue.schema';
+import { listRegularFiles, resolveRegularFileInside } from '@/lib/path-safety';
 
 function getRiskColor(level: string): string {
   switch (level) {
@@ -26,11 +27,10 @@ function isMockModeData(review: Review): boolean {
 function loadReports<T>(dir: string, suffix: string): T[] {
   const fullDir = path.join(process.cwd(), 'reports', dir);
   if (!fs.existsSync(fullDir)) return [];
-  return fs.readdirSync(fullDir)
-    .filter((f) => f.endsWith(suffix))
+  return listRegularFiles(fullDir, (f) => f.endsWith(suffix))
     .map((f) => {
       try {
-        return JSON.parse(fs.readFileSync(path.join(fullDir, f), 'utf-8')) as T;
+        return JSON.parse(fs.readFileSync(resolveRegularFileInside(fullDir, f, 'report file'), 'utf-8')) as T;
       } catch {
         return null;
       }
@@ -41,10 +41,9 @@ function loadReports<T>(dir: string, suffix: string): T[] {
 function loadDataRoomReports(): DataRoomSummary[] {
   const dir = path.join(process.cwd(), 'reports', 'dataroom');
   if (!fs.existsSync(dir)) return [];
-  return fs.readdirSync(dir)
-    .filter((f) => f.endsWith('.json'))
+  return listRegularFiles(dir, (f) => f.endsWith('.json'))
     .map((f) => {
-      try { return JSON.parse(fs.readFileSync(path.join(dir, f), 'utf-8')) as DataRoomSummary; } catch { return null; }
+      try { return JSON.parse(fs.readFileSync(resolveRegularFileInside(dir, f, 'dataroom report'), 'utf-8')) as DataRoomSummary; } catch { return null; }
     })
     .filter(Boolean) as DataRoomSummary[];
 }
@@ -52,10 +51,9 @@ function loadDataRoomReports(): DataRoomSummary[] {
 function loadSpreadsheetReports(): SpreadsheetAnalysis[] {
   const dir = path.join(process.cwd(), 'reports', 'tables');
   if (!fs.existsSync(dir)) return [];
-  return fs.readdirSync(dir)
-    .filter((f) => f.endsWith('-spreadsheet.json'))
+  return listRegularFiles(dir, (f) => f.endsWith('-spreadsheet.json'))
     .map((f) => {
-      try { return JSON.parse(fs.readFileSync(path.join(dir, f), 'utf-8')) as SpreadsheetAnalysis; } catch { return null; }
+      try { return JSON.parse(fs.readFileSync(resolveRegularFileInside(dir, f, 'spreadsheet report'), 'utf-8')) as SpreadsheetAnalysis; } catch { return null; }
     })
     .filter(Boolean) as SpreadsheetAnalysis[];
 }
@@ -63,23 +61,23 @@ function loadSpreadsheetReports(): SpreadsheetAnalysis[] {
 function loadLatestIssueLog(): IssueLog | null {
   const dir = path.join(process.cwd(), 'reports', 'issues');
   if (!fs.existsSync(dir)) return null;
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith('.json')).sort();
+  const files = listRegularFiles(dir, (f) => f.endsWith('.json')).sort();
   if (files.length === 0) return null;
-  try { return JSON.parse(fs.readFileSync(path.join(dir, files[files.length - 1]), 'utf-8')) as IssueLog; } catch { return null; }
+  try { return JSON.parse(fs.readFileSync(resolveRegularFileInside(dir, files[files.length - 1], 'issue log'), 'utf-8')) as IssueLog; } catch { return null; }
 }
 
 function loadLatestCompare(): CompareReport | null {
   const dir = path.join(process.cwd(), 'reports', 'compare');
   if (!fs.existsSync(dir)) return null;
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith('.json')).sort();
+  const files = listRegularFiles(dir, (f) => f.endsWith('.json')).sort();
   if (files.length === 0) return null;
-  try { return JSON.parse(fs.readFileSync(path.join(dir, files[files.length - 1]), 'utf-8')) as CompareReport; } catch { return null; }
+  try { return JSON.parse(fs.readFileSync(resolveRegularFileInside(dir, files[files.length - 1], 'compare report'), 'utf-8')) as CompareReport; } catch { return null; }
 }
 
 function loadExportFiles(): string[] {
   const dir = path.join(process.cwd(), 'reports', 'exports');
   if (!fs.existsSync(dir)) return [];
-  return fs.readdirSync(dir).filter((f) => f.endsWith('.csv') || f.endsWith('.xlsx'));
+  return listRegularFiles(dir, (f) => f.endsWith('.csv') || f.endsWith('.xlsx'));
 }
 
 export const dynamic = 'force-dynamic';
@@ -106,7 +104,7 @@ export default function DashboardPage() {
   const latestFinancial = financials[0];
 
   const pdfDir = path.join(process.cwd(), 'reports', 'pdfs');
-  const pdfs = fs.existsSync(pdfDir) ? fs.readdirSync(pdfDir).filter((f) => f.endsWith('.pdf')) : [];
+  const pdfs = fs.existsSync(pdfDir) ? listRegularFiles(pdfDir, (f) => f.endsWith('.pdf')) : [];
   const fullPacketPDFs = pdfs.filter((f) => f.includes('-full-packet'));
   const otherPDFs = pdfs.filter((f) => !f.includes('-full-packet'));
 

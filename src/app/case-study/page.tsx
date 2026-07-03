@@ -34,7 +34,7 @@ export default function CaseStudyPage() {
           <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-slate-500">
             <span>Solo build · 2026</span>
             <span>·</span>
-            <span>TypeScript · Next.js · Playwright · Zod · xlsx</span>
+            <span>TypeScript · Next.js · Playwright · Zod · XLSX readers/writers</span>
             <span>·</span>
             <span>v5</span>
           </div>

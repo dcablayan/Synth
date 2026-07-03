@@ -1,10 +1,13 @@
 #!/usr/bin/env tsx
 import fs from 'fs';
 import path from 'path';
+import { pathToFileURL } from 'url';
 import type { Review } from '../schemas/review.schema';
 import type { SpreadsheetAnalysis, DataRoomSummary } from '../schemas/spreadsheet.schema';
 import type { IssueLog } from '../schemas/issue.schema';
 import { buildIssueLogFromReports } from '../lib/issue-engine';
+import { escapeHtml } from '../lib/output-safety';
+import { listRegularFiles, resolveInside, resolveRegularFileInside } from '../lib/path-safety';
 
 const CWD = process.cwd();
 const ISSUES_DIR = path.join(CWD, 'reports', 'issues');
@@ -14,11 +17,14 @@ const DISCLAIMER =
 
 function loadAllJSON<T>(dir: string, suffix: string): Array<{ data: T; filename: string }> {
   if (!fs.existsSync(dir)) return [];
-  return fs.readdirSync(dir)
-    .filter((f) => f.endsWith(suffix))
-    .sort()
+  return listRegularFiles(dir, (f) => f.endsWith(suffix))
     .map((f) => {
-      try { return { data: JSON.parse(fs.readFileSync(path.join(dir, f), 'utf-8')) as T, filename: f }; }
+      try {
+        return {
+          data: JSON.parse(fs.readFileSync(resolveRegularFileInside(dir, f, 'report file'), 'utf-8')) as T,
+          filename: f,
+        };
+      }
       catch { return null; }
     })
     .filter(Boolean) as Array<{ data: T; filename: string }>;
@@ -30,6 +36,10 @@ function loadLatestJSON<T>(dir: string, suffix: string): { data: T; filename: st
 }
 
 const SEV_ORDER: Record<string, number> = { Critical: 4, High: 3, Medium: 2, Low: 1 };
+
+function h(value: unknown): string {
+  return escapeHtml(value);
+}
 
 function sevColor(s: string): string {
   return ({ Critical: '#ef4444', High: '#f97316', Medium: '#eab308', Low: '#22c55e' } as Record<string, string>)[s] ?? '#94a3b8';
@@ -93,51 +103,51 @@ function renderMarkdown(log: IssueLog): string {
   ].join('\n');
 }
 
-function renderHtml(log: IssueLog): string {
+export function renderHtml(log: IssueLog): string {
   const top10 = [...log.issues].sort((a, b) => (SEV_ORDER[b.severity] ?? 0) - (SEV_ORDER[a.severity] ?? 0)).slice(0, 10);
 
   const badge = (s: string, color: string) =>
-    `<span style="border:1px solid ${color}40;color:${color};font-size:0.72rem;padding:2px 7px;border-radius:12px;font-weight:600">${s}</span>`;
+    `<span style="border:1px solid ${color}40;color:${color};font-size:0.72rem;padding:2px 7px;border-radius:12px;font-weight:600">${h(s)}</span>`;
 
   const top10Cards = top10.map((issue, i) => `
     <div style="background:#1e293b;border:1px solid #334155;border-radius:10px;padding:14px;margin-bottom:12px">
       <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;flex-wrap:wrap">
         <span style="background:#0f172a;color:#64748b;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:bold">${i + 1}</span>
-        <strong style="color:#e2e8f0;font-size:0.88rem;flex:1">${issue.title}</strong>
+        <strong style="color:#e2e8f0;font-size:0.88rem;flex:1">${h(issue.title)}</strong>
         ${badge(issue.severity, sevColor(issue.severity))}
-        <span style="color:${statusColor(issue.status)};font-size:0.72rem;background:#0f172a;padding:2px 7px;border-radius:4px">${issue.status}</span>
+        <span style="color:${statusColor(issue.status)};font-size:0.72rem;background:#0f172a;padding:2px 7px;border-radius:4px">${h(issue.status)}</span>
       </div>
-      <div style="font-size:0.78rem;color:#64748b;margin-bottom:8px">Category: <strong style="color:#94a3b8">${issue.category}</strong> · Sources: <code style="background:#0f172a;color:#38bdf8;padding:1px 4px;border-radius:3px;font-size:0.72rem">${issue.sourceFiles.join(', ')}</code></div>
+      <div style="font-size:0.78rem;color:#64748b;margin-bottom:8px">Category: <strong style="color:#94a3b8">${h(issue.category)}</strong> · Sources: <code style="background:#0f172a;color:#38bdf8;padding:1px 4px;border-radius:3px;font-size:0.72rem">${issue.sourceFiles.map(h).join(', ')}</code></div>
       ${issue.evidenceQuotes.length > 0
-        ? `<blockquote style="border-left:3px solid #1d4ed8;padding-left:10px;color:#93c5fd;font-style:italic;font-size:0.8rem;margin:8px 0">"${issue.evidenceQuotes[0]}"</blockquote>`
+        ? `<blockquote style="border-left:3px solid #1d4ed8;padding-left:10px;color:#93c5fd;font-style:italic;font-size:0.8rem;margin:8px 0">"${h(issue.evidenceQuotes[0])}"</blockquote>`
         : '<p style="color:#475569;font-size:0.78rem;font-style:italic">No direct quote — see evidence ledger.</p>'}
-      <p style="color:#38bdf8;font-size:0.82rem;margin-top:8px">→ ${issue.recommendation}</p>
+      <p style="color:#38bdf8;font-size:0.82rem;margin-top:8px">→ ${h(issue.recommendation)}</p>
     </div>`).join('');
 
   const allRows = log.issues.map((issue, i) => `
     <tr>
       <td style="color:#64748b">${i + 1}</td>
-      <td style="color:#e2e8f0">${issue.title}</td>
+      <td style="color:#e2e8f0">${h(issue.title)}</td>
       <td>${badge(issue.severity, sevColor(issue.severity))}</td>
-      <td style="color:#94a3b8">${issue.category}</td>
-      <td style="color:${statusColor(issue.status)}">${issue.status}</td>
-      <td><code style="background:#0f172a;color:#38bdf8;padding:1px 4px;border-radius:3px;font-size:0.75rem">${issue.sourceFiles.join('; ')}</code></td>
+      <td style="color:#94a3b8">${h(issue.category)}</td>
+      <td style="color:${statusColor(issue.status)}">${h(issue.status)}</td>
+      <td><code style="background:#0f172a;color:#38bdf8;padding:1px 4px;border-radius:3px;font-size:0.75rem">${issue.sourceFiles.map(h).join('; ')}</code></td>
     </tr>`).join('');
 
   const evRows = log.evidence.map((e) => `
     <tr>
-      <td><code style="background:#0f172a;color:#38bdf8;padding:1px 4px;border-radius:3px;font-size:0.72rem">${e.evidenceId}</code></td>
-      <td><code style="background:#0f172a;color:#94a3b8;padding:1px 4px;border-radius:3px;font-size:0.72rem">${e.issueId}</code></td>
-      <td style="color:#94a3b8"><code style="font-size:0.72rem">${e.sourceFilename}</code></td>
+      <td><code style="background:#0f172a;color:#38bdf8;padding:1px 4px;border-radius:3px;font-size:0.72rem">${h(e.evidenceId)}</code></td>
+      <td><code style="background:#0f172a;color:#94a3b8;padding:1px 4px;border-radius:3px;font-size:0.72rem">${h(e.issueId)}</code></td>
+      <td style="color:#94a3b8"><code style="font-size:0.72rem">${h(e.sourceFilename)}</code></td>
       <td style="color:${e.isVerified ? '#22c55e' : '#f97316'};font-size:0.78rem">${e.isVerified ? '✓ Verified' : 'Unverified'}</td>
-      <td style="color:#cbd5e1;font-size:0.78rem;font-style:italic">${e.documentQuote ? `"${e.documentQuote.slice(0, 80)}${e.documentQuote.length > 80 ? '…' : ''}"` : e.spreadsheetRow ? `<code style="font-style:normal">${e.spreadsheetRow}</code>` : '—'}</td>
+      <td style="color:#cbd5e1;font-size:0.78rem;font-style:italic">${e.documentQuote ? `"${h(e.documentQuote.slice(0, 80))}${e.documentQuote.length > 80 ? '…' : ''}"` : e.spreadsheetRow ? `<code style="font-style:normal">${h(e.spreadsheetRow)}</code>` : '—'}</td>
     </tr>`).join('');
 
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Issue Log — ${log.title}</title>
+<title>Issue Log — ${h(log.title)}</title>
 <style>
   body{font-family:system-ui,sans-serif;background:#0f172a;color:#e2e8f0;margin:0;padding:24px}
   .container{max-width:960px;margin:0 auto}
@@ -157,8 +167,8 @@ function renderHtml(log: IssueLog): string {
 </head>
 <body>
 <div class="container">
-  <h1>${log.title}</h1>
-  <p class="meta">Generated: ${log.generatedAt} · Log ID: ${log.logId}</p>
+  <h1>${h(log.title)}</h1>
+  <p class="meta">Generated: ${h(log.generatedAt)} · Log ID: ${h(log.logId)}</p>
   <div class="disclaimer">⚠ ${DISCLAIMER}</div>
   <div class="stats">
     <div class="stat"><div class="stat-val">${log.totalIssues}</div><div class="stat-lbl">Total Issues</div></div>
@@ -226,10 +236,10 @@ async function main() {
 
   const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
 
-  const jsonPath = path.join(ISSUES_DIR, `issue-log-${ts}.json`);
-  const mdPath = path.join(ISSUES_DIR, `issue-log-${ts}.md`);
-  const htmlPath = path.join(ISSUES_DIR, `issue-log-${ts}.html`);
-  const evPath = path.join(EVIDENCE_DIR, `evidence-${ts}.json`);
+  const jsonPath = resolveInside(ISSUES_DIR, `issue-log-${ts}.json`, 'issue log JSON output');
+  const mdPath = resolveInside(ISSUES_DIR, `issue-log-${ts}.md`, 'issue log markdown output');
+  const htmlPath = resolveInside(ISSUES_DIR, `issue-log-${ts}.html`, 'issue log HTML output');
+  const evPath = resolveInside(EVIDENCE_DIR, `evidence-${ts}.json`, 'evidence JSON output');
 
   fs.writeFileSync(jsonPath, JSON.stringify(log, null, 2));
   fs.writeFileSync(mdPath, renderMarkdown(log));
@@ -247,7 +257,9 @@ async function main() {
   console.log('    npm run compare  → compare two runs\n');
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}

@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { listRegularFiles, resolveInside, resolveRegularFileInside } from './path-safety';
 
 export interface LoadedDocument {
   filename: string;
@@ -65,7 +66,7 @@ async function extractText(filepath: string, ext: string): Promise<string> {
   if (ext === '.xlsx') {
     try {
       const { parseXlsxFile, buildTableProfile, textSummaryOfSheet } = await import('./spreadsheet-parser');
-      const sheets = parseXlsxFile(filepath);
+      const sheets = await parseXlsxFile(filepath);
       return sheets.map((s) => textSummaryOfSheet(s, buildTableProfile(s))).join('\n\n---\n\n');
     } catch (err) {
       throw new Error(
@@ -82,7 +83,7 @@ export async function loadDocumentsFromInbox(): Promise<LoadedDocument[]> {
     throw new Error(`Inbox directory not found: ${INBOX_DIR}`);
   }
 
-  const files = fs.readdirSync(INBOX_DIR).filter((f) => {
+  const files = listRegularFiles(INBOX_DIR, (f) => {
     const ext = path.extname(f).toLowerCase();
     return (SUPPORTED_EXTENSIONS.includes(ext) || SPREADSHEET_EXTENSIONS.includes(ext)) && !f.startsWith('.');
   });
@@ -95,7 +96,7 @@ export async function loadDocumentsFromInbox(): Promise<LoadedDocument[]> {
 
   const results: LoadedDocument[] = [];
   for (const filename of files) {
-    const filepath = path.join(INBOX_DIR, filename);
+    const filepath = resolveRegularFileInside(INBOX_DIR, filename, 'document filename');
     const ext = path.extname(filename).toLowerCase();
     try {
       const text = await extractText(filepath, ext);
@@ -119,7 +120,7 @@ export async function loadDocumentsFromInbox(): Promise<LoadedDocument[]> {
 }
 
 export async function loadDocumentByFilename(filename: string): Promise<LoadedDocument> {
-  const filepath = path.join(INBOX_DIR, filename);
+  const filepath = resolveRegularFileInside(INBOX_DIR, filename, 'document filename');
   if (!fs.existsSync(filepath)) {
     throw new Error(`Document not found: ${filepath}`);
   }
@@ -135,8 +136,9 @@ export async function loadDocumentByFilename(filename: string): Promise<LoadedDo
 }
 
 export function markAsProcessed(filename: string): void {
-  const src = path.join(INBOX_DIR, filename);
-  const dest = path.join(PROCESSED_DIR, filename);
+  const safeFilename = path.basename(filename);
+  const src = resolveRegularFileInside(INBOX_DIR, filename, 'document filename');
+  const dest = resolveInside(PROCESSED_DIR, safeFilename, 'processed filename');
   if (!fs.existsSync(PROCESSED_DIR)) {
     fs.mkdirSync(PROCESSED_DIR, { recursive: true });
   }

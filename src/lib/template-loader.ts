@@ -1,10 +1,11 @@
 import fs from 'fs';
 import path from 'path';
+import { listRegularFiles, resolveRegularFileInside } from './path-safety';
 
 const TEMPLATES_DIR = path.join(process.cwd(), 'templates');
 
 export function loadTemplate(name: string): string {
-  const filepath = path.join(TEMPLATES_DIR, name);
+  const filepath = resolveRegularFileInside(TEMPLATES_DIR, name, 'template name');
   if (!fs.existsSync(filepath)) {
     throw new Error(`Template not found: ${filepath}`);
   }
@@ -13,5 +14,5 @@ export function loadTemplate(name: string): string {
 
 export function listTemplates(): string[] {
   if (!fs.existsSync(TEMPLATES_DIR)) return [];
-  return fs.readdirSync(TEMPLATES_DIR).filter((f) => f.endsWith('.html'));
+  return listRegularFiles(TEMPLATES_DIR, (f) => f.endsWith('.html'));
 }

@@ -1,11 +1,13 @@
 import fs from 'fs';
-import path from 'path';
+import writeXlsxFile, { type Sheet, type SheetData } from 'write-excel-file/node';
 import type { IssueLog } from '../schemas/issue.schema';
 import type { DataRoomSummary } from '../schemas/spreadsheet.schema';
+import { spreadsheetSafeText } from './output-safety';
+import { resolveInside } from './path-safety';
 
 function esc(val: string | number | boolean | undefined | null): string {
-  const s = val === undefined || val === null ? '' : String(val);
-  if (s.includes(',') || s.includes('"') || s.includes('\n')) {
+  const s = spreadsheetSafeText(val);
+  if (s.includes(',') || s.includes('"') || s.includes('\n') || s.includes('\r')) {
     return '"' + s.replace(/"/g, '""') + '"';
   }
   return s;
@@ -28,7 +30,7 @@ export function writeIssuesCSV(issueLog: IssueLog, outputDir: string): string {
     i.evidenceIds.join('; '),
     i.createdAt,
   ]);
-  const outPath = path.join(outputDir, 'issues.csv');
+  const outPath = resolveInside(outputDir, 'issues.csv', 'issues CSV output');
   fs.writeFileSync(outPath, toCSV([header, ...rows]));
   return outPath;
 }
@@ -51,7 +53,7 @@ export function writeEvidenceCSV(issueLog: IssueLog, outputDir: string): string 
     e.isVerified ? 'true' : 'false',
     e.verificationNote ?? '',
   ]);
-  const outPath = path.join(outputDir, 'evidence.csv');
+  const outPath = resolveInside(outputDir, 'evidence.csv', 'evidence CSV output');
   fs.writeFileSync(outPath, toCSV([header, ...rows]));
   return outPath;
 }
@@ -62,7 +64,7 @@ export function writePaymentsCSV(dataroom: DataRoomSummary, outputDir: string): 
     p.vendor, p.amount, p.dueDate, p.status, p.sourceFile,
     p.contractMatch ?? '', p.mismatch ?? '',
   ]);
-  const outPath = path.join(outputDir, 'payments.csv');
+  const outPath = resolveInside(outputDir, 'payments.csv', 'payments CSV output');
   fs.writeFileSync(outPath, toCSV([header, ...rows]));
   return outPath;
 }
@@ -73,20 +75,38 @@ export function writeCapTableCSV(dataroom: DataRoomSummary, outputDir: string): 
     c.investor, c.shareClass, c.shares, c.ownershipPct, c.sourceFile,
     c.termSheetMatch ?? '', c.discrepancy ?? '',
   ]);
-  const outPath = path.join(outputDir, 'cap-table.csv');
+  const outPath = resolveInside(outputDir, 'cap-table.csv', 'cap table CSV output');
   fs.writeFileSync(outPath, toCSV([header, ...rows]));
   return outPath;
 }
 
-export function writeDataRoomXLSX(issueLog: IssueLog, dataroom: DataRoomSummary, outputDir: string): string {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const XLSX = require('xlsx') as typeof import('xlsx');
+type ExportRow = Record<string, unknown>;
 
-  const wb = XLSX.utils.book_new();
+function toSheetData(headers: string[], rows: ExportRow[]): SheetData {
+  return [
+    headers.map((value) => ({ value, type: String, fontWeight: 'bold' as const })),
+    ...rows.map((row) =>
+      headers.map((header) => ({
+        value: spreadsheetSafeText(row[header]),
+        type: String,
+      })),
+    ),
+  ];
+}
 
-  XLSX.utils.book_append_sheet(
-    wb,
-    XLSX.utils.json_to_sheet(
+function sheet(sheetName: string, headers: string[], rows: ExportRow[]): Sheet<Buffer> {
+  return {
+    sheet: sheetName,
+    data: toSheetData(headers, rows),
+  };
+}
+
+export async function writeDataRoomXLSX(issueLog: IssueLog, dataroom: DataRoomSummary, outputDir: string): Promise<string> {
+  const outPath = resolveInside(outputDir, 'dataroom-summary.xlsx', 'dataroom XLSX output');
+  const sheets: Sheet<Buffer>[] = [
+    sheet(
+      'Issues',
+      ['ID', 'Title', 'Severity', 'Category', 'Status', 'Source Files', 'Recommendation', 'Created At'],
       issueLog.issues.map((i) => ({
         ID: i.id,
         Title: i.title,
@@ -98,12 +118,9 @@ export function writeDataRoomXLSX(issueLog: IssueLog, dataroom: DataRoomSummary,
         'Created At': i.createdAt,
       })),
     ),
-    'Issues',
-  );
-
-  XLSX.utils.book_append_sheet(
-    wb,
-    XLSX.utils.json_to_sheet(
+    sheet(
+      'Evidence',
+      ['Evidence ID', 'Issue ID', 'Source File', 'Document Quote', 'Spreadsheet Row', 'Sheet Name', 'Row Number', 'Field Name', 'Verified', 'Verification Note'],
       issueLog.evidence.map((e) => ({
         'Evidence ID': e.evidenceId,
         'Issue ID': e.issueId,
@@ -117,12 +134,9 @@ export function writeDataRoomXLSX(issueLog: IssueLog, dataroom: DataRoomSummary,
         'Verification Note': e.verificationNote ?? '',
       })),
     ),
-    'Evidence',
-  );
-
-  XLSX.utils.book_append_sheet(
-    wb,
-    XLSX.utils.json_to_sheet(
+    sheet(
+      'Payments',
+      ['Vendor', 'Amount', 'Due Date', 'Status', 'Source File', 'Contract Match', 'Mismatch'],
       dataroom.paymentScheduleFindings.map((p) => ({
         Vendor: p.vendor,
         Amount: p.amount,
@@ -133,12 +147,9 @@ export function writeDataRoomXLSX(issueLog: IssueLog, dataroom: DataRoomSummary,
         Mismatch: p.mismatch ?? '',
       })),
     ),
-    'Payments',
-  );
-
-  XLSX.utils.book_append_sheet(
-    wb,
-    XLSX.utils.json_to_sheet(
+    sheet(
+      'Cap Table',
+      ['Investor', 'Share Class', 'Shares', 'Ownership %', 'Source File', 'Term Sheet Match', 'Discrepancy'],
       dataroom.capTableFindings.map((c) => ({
         Investor: c.investor,
         'Share Class': c.shareClass,
@@ -149,29 +160,26 @@ export function writeDataRoomXLSX(issueLog: IssueLog, dataroom: DataRoomSummary,
         Discrepancy: c.discrepancy ?? '',
       })),
     ),
-    'Cap Table',
-  );
+    sheet(
+      'Summary',
+      ['Field', 'Value'],
+      [
+        { Field: 'Title', Value: dataroom.title },
+        { Field: 'Generated At', Value: dataroom.generatedAt },
+        { Field: 'File Count', Value: dataroom.fileCount },
+        { Field: 'Total Issues', Value: issueLog.totalIssues },
+        { Field: 'Open Issues', Value: issueLog.openCount },
+        { Field: 'Critical Issues', Value: issueLog.criticalCount },
+        { Field: 'High Issues', Value: issueLog.highCount },
+        { Field: 'Cross-Doc Findings', Value: dataroom.crossDocumentFindings.length },
+        { Field: 'Payment Items', Value: dataroom.paymentScheduleFindings.length },
+        { Field: 'Cap Table Rows', Value: dataroom.capTableFindings.length },
+        { Field: 'Executive Summary', Value: dataroom.executiveSummary },
+        { Field: 'Disclaimer', Value: dataroom.disclaimer },
+      ],
+    ),
+  ];
 
-  XLSX.utils.book_append_sheet(
-    wb,
-    XLSX.utils.json_to_sheet([
-      { Field: 'Title', Value: dataroom.title },
-      { Field: 'Generated At', Value: dataroom.generatedAt },
-      { Field: 'File Count', Value: dataroom.fileCount },
-      { Field: 'Total Issues', Value: issueLog.totalIssues },
-      { Field: 'Open Issues', Value: issueLog.openCount },
-      { Field: 'Critical Issues', Value: issueLog.criticalCount },
-      { Field: 'High Issues', Value: issueLog.highCount },
-      { Field: 'Cross-Doc Findings', Value: dataroom.crossDocumentFindings.length },
-      { Field: 'Payment Items', Value: dataroom.paymentScheduleFindings.length },
-      { Field: 'Cap Table Rows', Value: dataroom.capTableFindings.length },
-      { Field: 'Executive Summary', Value: dataroom.executiveSummary },
-      { Field: 'Disclaimer', Value: dataroom.disclaimer },
-    ]),
-    'Summary',
-  );
-
-  const outPath = path.join(outputDir, 'dataroom-summary.xlsx');
-  XLSX.writeFile(wb, outPath);
+  await writeXlsxFile(sheets).toFile(outPath);
   return outPath;
 }

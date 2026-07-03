@@ -1,22 +1,32 @@
 #!/usr/bin/env tsx
 import fs from 'fs';
 import path from 'path';
+import { pathToFileURL } from 'url';
 import type { IssueLog, CompareReport } from '../schemas/issue.schema';
 import type { DataRoomSummary } from '../schemas/spreadsheet.schema';
 import { buildCompareReport } from '../lib/compare-engine';
+import { escapeHtml } from '../lib/output-safety';
+import { listRegularFiles, resolveInside, resolveRegularFileInside } from '../lib/path-safety';
 
 const CWD = process.cwd();
 const COMPARE_DIR = path.join(CWD, 'reports', 'compare');
 const DISCLAIMER =
   'Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.';
 
+function h(value: unknown): string {
+  return escapeHtml(value);
+}
+
 function loadSorted<T>(dir: string, suffix: string): Array<{ data: T; filename: string }> {
   if (!fs.existsSync(dir)) return [];
-  return fs.readdirSync(dir)
-    .filter((f) => f.endsWith(suffix))
-    .sort()
+  return listRegularFiles(dir, (f) => f.endsWith(suffix))
     .map((f) => {
-      try { return { data: JSON.parse(fs.readFileSync(path.join(dir, f), 'utf-8')) as T, filename: f }; }
+      try {
+        return {
+          data: JSON.parse(fs.readFileSync(resolveRegularFileInside(dir, f, 'report file'), 'utf-8')) as T,
+          filename: f,
+        };
+      }
       catch { return null; }
     })
     .filter(Boolean) as Array<{ data: T; filename: string }>;
@@ -74,26 +84,26 @@ function renderMarkdown(r: CompareReport): string {
   ].join('\n');
 }
 
-function renderHtml(r: CompareReport): string {
+export function renderHtml(r: CompareReport): string {
   const stat = (label: string, val: number, color = 'white') =>
-    `<div style="background:#1e293b;border:1px solid #334155;border-radius:10px;padding:14px;text-align:center"><div style="font-size:1.4rem;font-weight:bold;color:${color}">${val}</div><div style="font-size:0.72rem;color:#64748b;margin-top:4px">${label}</div></div>`;
+    `<div style="background:#1e293b;border:1px solid #334155;border-radius:10px;padding:14px;text-align:center"><div style="font-size:1.4rem;font-weight:bold;color:${color}">${h(val)}</div><div style="font-size:0.72rem;color:#64748b;margin-top:4px">${h(label)}</div></div>`;
 
   const changeCard = (type: string, color: string, content: string) =>
-    `<div style="background:#1e293b;border:1px solid ${color}40;border-radius:8px;padding:10px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-size:0.72rem;font-weight:600;background:${color}20;color:${color};padding:2px 7px;border-radius:4px">${type}</span>${content}</div>`;
+    `<div style="background:#1e293b;border:1px solid ${color}40;border-radius:8px;padding:10px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-size:0.72rem;font-weight:600;background:${color}20;color:${color};padding:2px 7px;border-radius:4px">${h(type)}</span>${content}</div>`;
 
   const payRows = r.paymentChanges.map((p) =>
-    `<tr><td>${p.vendor}</td><td>${p.amountA}</td><td>${p.amountB}</td><td>${p.statusA}</td><td>${p.statusB}</td><td style="font-weight:600;color:${p.change === 'added' ? '#ef4444' : p.change === 'removed' ? '#22c55e' : '#eab308'}">${p.change}</td></tr>`
+    `<tr><td>${h(p.vendor)}</td><td>${h(p.amountA)}</td><td>${h(p.amountB)}</td><td>${h(p.statusA)}</td><td>${h(p.statusB)}</td><td style="font-weight:600;color:${p.change === 'added' ? '#ef4444' : p.change === 'removed' ? '#22c55e' : '#eab308'}">${h(p.change)}</td></tr>`
   ).join('');
 
   const capRows = r.capTableChanges.map((c) =>
-    `<tr><td>${c.investor}</td><td style="color:${c.changeType === 'added' ? '#ef4444' : c.changeType === 'removed' ? '#22c55e' : '#eab308'}">${c.changeType}</td><td>${c.detail}</td></tr>`
+    `<tr><td>${h(c.investor)}</td><td style="color:${c.changeType === 'added' ? '#ef4444' : c.changeType === 'removed' ? '#22c55e' : '#eab308'}">${h(c.changeType)}</td><td>${h(c.detail)}</td></tr>`
   ).join('');
 
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Comparison Report — ${r.reportId}</title>
+<title>Comparison Report — ${h(r.reportId)}</title>
 <style>
   body{font-family:system-ui,sans-serif;background:#0f172a;color:#e2e8f0;margin:0;padding:24px}
   .container{max-width:960px;margin:0 auto}
@@ -113,11 +123,11 @@ function renderHtml(r: CompareReport): string {
 <body>
 <div class="container">
   <h1>Comparison Report</h1>
-  <p class="meta">${r.reportId} · ${r.generatedAt}</p>
+  <p class="meta">${h(r.reportId)} · ${h(r.generatedAt)}</p>
   <div class="disclaimer">⚠ ${DISCLAIMER}</div>
   <div class="sources">
-    <strong>A:</strong> <code>${r.sourceA}</code><br>
-    <strong>B:</strong> <code>${r.sourceB}</code>
+    <strong>A:</strong> <code>${h(r.sourceA)}</code><br>
+    <strong>B:</strong> <code>${h(r.sourceB)}</code>
   </div>
   <div class="stats">
     ${stat('Added Issues', r.addedIssues.length, '#ef4444')}
@@ -126,14 +136,14 @@ function renderHtml(r: CompareReport): string {
     ${stat('Payment Changes', r.paymentChanges.length, '#38bdf8')}
   </div>
 
-  ${r.addedIssues.length > 0 ? `<h2>Added Issues</h2>${r.addedIssues.map((i) => changeCard('+ Added', '#ef4444', `<strong>${i.title}</strong> <span style="color:#64748b;font-size:0.72rem">${i.severity} · ${i.category}</span>`)).join('')}` : ''}
-  ${r.removedIssues.length > 0 ? `<h2>Removed Issues</h2>${r.removedIssues.map((i) => changeCard('- Removed', '#22c55e', `<strong>${i.title}</strong>`)).join('')}` : ''}
-  ${r.changedIssues.length > 0 ? `<h2>Changed Issues</h2>${r.changedIssues.map((c) => changeCard('~ Changed', '#eab308', `<strong>${c.title}</strong>: <code>${c.field}</code> <code>${c.from}</code> → <code>${c.to}</code>`)).join('')}` : ''}
+  ${r.addedIssues.length > 0 ? `<h2>Added Issues</h2>${r.addedIssues.map((i) => changeCard('+ Added', '#ef4444', `<strong>${h(i.title)}</strong> <span style="color:#64748b;font-size:0.72rem">${h(i.severity)} · ${h(i.category)}</span>`)).join('')}` : ''}
+  ${r.removedIssues.length > 0 ? `<h2>Removed Issues</h2>${r.removedIssues.map((i) => changeCard('- Removed', '#22c55e', `<strong>${h(i.title)}</strong>`)).join('')}` : ''}
+  ${r.changedIssues.length > 0 ? `<h2>Changed Issues</h2>${r.changedIssues.map((c) => changeCard('~ Changed', '#eab308', `<strong>${h(c.title)}</strong>: <code>${h(c.field)}</code> <code>${h(c.from)}</code> → <code>${h(c.to)}</code>`)).join('')}` : ''}
 
   ${r.paymentChanges.length > 0 ? `<h2>Payment Changes</h2><div class="section"><table class="main"><thead><tr><th>Vendor</th><th>Amount A</th><th>Amount B</th><th>Status A</th><th>Status B</th><th>Change</th></tr></thead><tbody>${payRows}</tbody></table></div>` : ''}
   ${r.capTableChanges.length > 0 ? `<h2>Cap Table Changes</h2><div class="section"><table class="main"><thead><tr><th>Investor</th><th>Change</th><th>Detail</th></tr></thead><tbody>${capRows}</tbody></table></div>` : ''}
-  ${r.newWarnings.length > 0 ? `<h2>New Warnings</h2><div class="section">${r.newWarnings.map((w) => `<p style="color:#fbbf24;font-size:0.82rem">⚠ ${w}</p>`).join('')}</div>` : ''}
-  ${r.resolvedWarnings.length > 0 ? `<h2>Resolved Warnings</h2><div class="section">${r.resolvedWarnings.map((w) => `<p style="color:#22c55e;font-size:0.82rem">✓ ${w}</p>`).join('')}</div>` : ''}
+  ${r.newWarnings.length > 0 ? `<h2>New Warnings</h2><div class="section">${r.newWarnings.map((w) => `<p style="color:#fbbf24;font-size:0.82rem">⚠ ${h(w)}</p>`).join('')}</div>` : ''}
+  ${r.resolvedWarnings.length > 0 ? `<h2>Resolved Warnings</h2><div class="section">${r.resolvedWarnings.map((w) => `<p style="color:#22c55e;font-size:0.82rem">✓ ${h(w)}</p>`).join('')}</div>` : ''}
 </div>
 </body>
 </html>`;
@@ -190,9 +200,9 @@ async function main() {
   fs.mkdirSync(COMPARE_DIR, { recursive: true });
   const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
 
-  fs.writeFileSync(path.join(COMPARE_DIR, `compare-${ts}.json`), JSON.stringify(report, null, 2));
-  fs.writeFileSync(path.join(COMPARE_DIR, `compare-${ts}.md`), renderMarkdown(report));
-  fs.writeFileSync(path.join(COMPARE_DIR, `compare-${ts}.html`), renderHtml(report));
+  fs.writeFileSync(resolveInside(COMPARE_DIR, `compare-${ts}.json`, 'compare JSON output'), JSON.stringify(report, null, 2));
+  fs.writeFileSync(resolveInside(COMPARE_DIR, `compare-${ts}.md`, 'compare markdown output'), renderMarkdown(report));
+  fs.writeFileSync(resolveInside(COMPARE_DIR, `compare-${ts}.html`, 'compare HTML output'), renderHtml(report));
 
   console.log(`  ✅ JSON  → reports/compare/compare-${ts}.json`);
   console.log(`  ✅ MD    → reports/compare/compare-${ts}.md`);
@@ -201,7 +211,9 @@ async function main() {
   console.log(`  Payment changes: ${report.paymentChanges.length}  Cap table changes: ${report.capTableChanges.length}\n`);
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}

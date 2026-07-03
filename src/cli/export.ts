@@ -4,15 +4,19 @@ import path from 'path';
 import type { IssueLog } from '../schemas/issue.schema';
 import type { DataRoomSummary } from '../schemas/spreadsheet.schema';
 import { writeIssuesCSV, writeEvidenceCSV, writePaymentsCSV, writeCapTableCSV, writeDataRoomXLSX } from '../lib/export-engine';
+import { listRegularFiles, resolveRegularFileInside } from '../lib/path-safety';
 
 const CWD = process.cwd();
 const EXPORTS_DIR = path.join(CWD, 'reports', 'exports');
 
 function loadLatest<T>(dir: string, suffix: string): T | null {
   if (!fs.existsSync(dir)) return null;
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith(suffix)).sort();
+  const files = listRegularFiles(dir, (f) => f.endsWith(suffix));
   if (files.length === 0) return null;
-  try { return JSON.parse(fs.readFileSync(path.join(dir, files[files.length - 1]), 'utf-8')) as T; }
+  try {
+    const filepath = resolveRegularFileInside(dir, files[files.length - 1], 'report file');
+    return JSON.parse(fs.readFileSync(filepath, 'utf-8')) as T;
+  }
   catch { return null; }
 }
 
@@ -46,7 +50,7 @@ async function main() {
   if (dataroom) {
     console.log(`  ✅ payments.csv     → ${rel(writePaymentsCSV(dataroom, EXPORTS_DIR))}`);
     console.log(`  ✅ cap-table.csv    → ${rel(writeCapTableCSV(dataroom, EXPORTS_DIR))}`);
-    console.log(`  ✅ dataroom-summary.xlsx → ${rel(writeDataRoomXLSX(issueLog, dataroom, EXPORTS_DIR))}`);
+    console.log(`  ✅ dataroom-summary.xlsx → ${rel(await writeDataRoomXLSX(issueLog, dataroom, EXPORTS_DIR))}`);
   }
 
   console.log('\n  Export complete. Files saved to reports/exports/\n');

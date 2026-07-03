@@ -1,6 +1,9 @@
 #!/usr/bin/env tsx
 import fs from 'fs';
 import path from 'path';
+import { pathToFileURL } from 'url';
+import { escapeHtml } from '../lib/output-safety';
+import { listRegularFiles, resolveInside, resolveRegularFileInside, safeFileStem } from '../lib/path-safety';
 
 const CWD = process.cwd();
 const INBOX = path.join(CWD, 'documents', 'inbox');
@@ -9,7 +12,11 @@ const HTML_DIR = path.join(CWD, 'reports', 'html');
 
 const DISCLAIMER = 'Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.';
 
-function renderSpreadsheetHtml(analysis: import('../schemas/spreadsheet.schema').SpreadsheetAnalysis): string {
+function h(value: unknown): string {
+  return escapeHtml(value);
+}
+
+export function renderSpreadsheetHtml(analysis: import('../schemas/spreadsheet.schema').SpreadsheetAnalysis): string {
   const tables = analysis.tables.map((t) => {
     const flags = [
       t.isPaymentSchedule && '<span class="badge">Payment Schedule</span>',
@@ -20,25 +27,25 @@ function renderSpreadsheetHtml(analysis: import('../schemas/spreadsheet.schema')
 
     const cols = t.columns.map((c) => `
       <tr>
-        <td>${c.name}</td>
-        <td><code>${c.type}</code></td>
-        <td>${c.uniqueCount}</td>
-        <td>${c.blankCount}</td>
-        <td>${c.sampleValues.map((v) => `<em>${v}</em>`).join(', ')}</td>
+        <td>${h(c.name)}</td>
+        <td><code>${h(c.type)}</code></td>
+        <td>${h(c.uniqueCount)}</td>
+        <td>${h(c.blankCount)}</td>
+        <td>${c.sampleValues.map((v) => `<em>${h(v)}</em>`).join(', ')}</td>
       </tr>`).join('');
 
     return `
     <div class="sheet-card">
       <div class="sheet-header">
-        <h3>${t.sheetName} ${flags}</h3>
-        <span class="meta">${t.rowCount} rows · ${t.columnCount} columns</span>
+        <h3>${h(t.sheetName)} ${flags}</h3>
+        <span class="meta">${h(t.rowCount)} rows · ${h(t.columnCount)} columns</span>
       </div>
-      ${t.detectedEntities.length > 0 ? `<p><strong>Entities:</strong> ${t.detectedEntities.slice(0, 8).join(', ')}</p>` : ''}
-      ${t.detectedAmounts.length > 0 ? `<p><strong>Amounts:</strong> ${t.detectedAmounts.slice(0, 6).join(', ')}</p>` : ''}
-      ${t.detectedDates.length > 0 ? `<p><strong>Dates:</strong> ${t.detectedDates.slice(0, 5).join(', ')}</p>` : ''}
-      ${t.totalAmounts.length > 0 ? `<p><strong>Totals:</strong> ${t.totalAmounts.map((a) => `${a.label}: <strong>${a.amount}</strong>`).join(' · ')}</p>` : ''}
-      ${t.repeatedVendors.length > 0 ? `<p class="warning">Repeated vendors: ${t.repeatedVendors.join(', ')}</p>` : ''}
-      ${t.warnings.length > 0 ? t.warnings.map((w) => `<p class="warning">⚠ ${w}</p>`).join('') : ''}
+      ${t.detectedEntities.length > 0 ? `<p><strong>Entities:</strong> ${t.detectedEntities.slice(0, 8).map(h).join(', ')}</p>` : ''}
+      ${t.detectedAmounts.length > 0 ? `<p><strong>Amounts:</strong> ${t.detectedAmounts.slice(0, 6).map(h).join(', ')}</p>` : ''}
+      ${t.detectedDates.length > 0 ? `<p><strong>Dates:</strong> ${t.detectedDates.slice(0, 5).map(h).join(', ')}</p>` : ''}
+      ${t.totalAmounts.length > 0 ? `<p><strong>Totals:</strong> ${t.totalAmounts.map((a) => `${h(a.label)}: <strong>${h(a.amount)}</strong>`).join(' · ')}</p>` : ''}
+      ${t.repeatedVendors.length > 0 ? `<p class="warning">Repeated vendors: ${t.repeatedVendors.map(h).join(', ')}</p>` : ''}
+      ${t.warnings.length > 0 ? t.warnings.map((w) => `<p class="warning">⚠ ${h(w)}</p>`).join('') : ''}
       <table>
         <thead><tr><th>Column</th><th>Type</th><th>Unique</th><th>Blanks</th><th>Samples</th></tr></thead>
         <tbody>${cols}</tbody>
@@ -50,7 +57,7 @@ function renderSpreadsheetHtml(analysis: import('../schemas/spreadsheet.schema')
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Spreadsheet Analysis: ${analysis.documentTitle}</title>
+<title>Spreadsheet Analysis: ${h(analysis.documentTitle)}</title>
 <style>
   body { font-family: system-ui, sans-serif; background: #0f172a; color: #e2e8f0; margin: 0; padding: 24px; }
   .container { max-width: 900px; margin: 0 auto; }
@@ -79,22 +86,22 @@ function renderSpreadsheetHtml(analysis: import('../schemas/spreadsheet.schema')
 </head>
 <body>
 <div class="container">
-  <h1>${analysis.documentTitle}</h1>
-  <p class="meta">${analysis.sheetCount} sheet(s) · ${analysis.totalRows} rows · Generated ${analysis.generatedAt} · ${analysis.providerMode === 'mock' ? 'Mock Mode' : 'AI Mode'}</p>
+  <h1>${h(analysis.documentTitle)}</h1>
+  <p class="meta">${h(analysis.sheetCount)} sheet(s) · ${h(analysis.totalRows)} rows · Generated ${h(analysis.generatedAt)} · ${analysis.providerMode === 'mock' ? 'Mock Mode' : 'AI Mode'}</p>
   <div class="disclaimer">⚠ ${DISCLAIMER}</div>
   <div class="summary">
     <h3>Summary</h3>
-    <p>${analysis.summary}</p>
+    <p>${h(analysis.summary)}</p>
   </div>
   ${analysis.keyFindings.length > 0 ? `
   <div class="findings">
     <h3>Key Findings</h3>
-    <ul>${analysis.keyFindings.map((f) => `<li>${f}</li>`).join('')}</ul>
+    <ul>${analysis.keyFindings.map((f) => `<li>${h(f)}</li>`).join('')}</ul>
   </div>` : ''}
-  ${analysis.warnings.length > 0 ? `<div class="findings"><h3>Data Quality Warnings</h3><ul>${analysis.warnings.map((w) => `<li class="warning">${w}</li>`).join('')}</ul></div>` : ''}
+  ${analysis.warnings.length > 0 ? `<div class="findings"><h3>Data Quality Warnings</h3><ul>${analysis.warnings.map((w) => `<li class="warning">${h(w)}</li>`).join('')}</ul></div>` : ''}
   <h3 style="margin-top:20px">Sheet Profiles</h3>
   ${tables}
-  <div class="provider">sourceFilename: ${analysis.sourceFilename} · extension: ${analysis.sourceExtension} · providerMode: ${analysis.providerMode}</div>
+  <div class="provider">sourceFilename: ${h(analysis.sourceFilename)} · extension: ${h(analysis.sourceExtension)} · providerMode: ${h(analysis.providerMode)}</div>
 </div>
 </body>
 </html>`;
@@ -111,7 +118,7 @@ async function main() {
     process.exit(1);
   }
 
-  const files = fs.readdirSync(INBOX).filter((f) => {
+  const files = listRegularFiles(INBOX, (f) => {
     const ext = path.extname(f).toLowerCase();
     return (ext === '.csv' || ext === '.xlsx') && !f.startsWith('.');
   });
@@ -129,18 +136,18 @@ async function main() {
 
   for (const filename of files) {
     const ext = path.extname(filename).toLowerCase();
-    const filepath = path.join(INBOX, filename);
-    const slug = filename.replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9-_]/g, '-');
+    const filepath = resolveRegularFileInside(INBOX, filename, 'spreadsheet filename');
+    const slug = safeFileStem(filename);
 
     console.log(`  📊 Analyzing: ${filename}`);
 
     try {
-      const sheets = ext === '.csv' ? parseCsvFile(filepath) : parseXlsxFile(filepath);
+      const sheets = ext === '.csv' ? parseCsvFile(filepath) : await parseXlsxFile(filepath);
       const profiles = sheets.map((s) => buildTableProfile(s));
       const analysis = await runSpreadsheetAnalysis(filename, sheets, profiles);
 
       // JSON
-      const jsonPath = path.join(TABLES_DIR, `${slug}-spreadsheet.json`);
+      const jsonPath = resolveInside(TABLES_DIR, `${slug}-spreadsheet.json`, 'spreadsheet JSON output');
       fs.writeFileSync(jsonPath, JSON.stringify(analysis, null, 2));
 
       // Markdown
@@ -173,12 +180,12 @@ async function main() {
           '',
         ].filter((l) => l !== '').join('\n')),
       ].join('\n');
-      const mdPath = path.join(TABLES_DIR, `${slug}-spreadsheet.md`);
+      const mdPath = resolveInside(TABLES_DIR, `${slug}-spreadsheet.md`, 'spreadsheet markdown output');
       fs.writeFileSync(mdPath, md);
 
       // HTML
       const html = renderSpreadsheetHtml(analysis);
-      const htmlPath = path.join(HTML_DIR, `${slug}-spreadsheet.html`);
+      const htmlPath = resolveInside(HTML_DIR, `${slug}-spreadsheet.html`, 'spreadsheet HTML output');
       fs.writeFileSync(htmlPath, html);
 
       console.log(`     ✅ JSON   → reports/tables/${slug}-spreadsheet.json`);
@@ -208,7 +215,9 @@ async function main() {
   console.log('  HTML      → reports/html/\n');
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}

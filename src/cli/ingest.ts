@@ -1,6 +1,7 @@
 #!/usr/bin/env tsx
 import fs from 'fs';
 import path from 'path';
+import { listRegularFiles, resolveInside, resolveRegularFileInside, safeFileStem } from '../lib/path-safety';
 
 const CWD = process.cwd();
 const INBOX = path.join(CWD, 'documents', 'inbox');
@@ -20,7 +21,7 @@ async function main() {
     process.exit(1);
   }
 
-  const files = fs.readdirSync(INBOX).filter((f) => {
+  const files = listRegularFiles(INBOX, (f) => {
     const ext = path.extname(f).toLowerCase();
     return ALL_EXTS.includes(ext) && !f.startsWith('.');
   });
@@ -38,18 +39,18 @@ async function main() {
 
   for (const filename of files) {
     const ext = path.extname(filename).toLowerCase();
-    const filepath = path.join(INBOX, filename);
-    const slug = filename.replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9-_]/g, '-');
+    const filepath = resolveRegularFileInside(INBOX, filename, 'inbox filename');
+    const slug = safeFileStem(filename);
 
     if (SPREADSHEET_EXTS.includes(ext)) {
       try {
         console.log(`  📊 Ingesting spreadsheet: ${filename}`);
-        const sheets = ext === '.csv' ? parseCsvFile(filepath) : parseXlsxFile(filepath);
+        const sheets = ext === '.csv' ? parseCsvFile(filepath) : await parseXlsxFile(filepath);
         const profiles = sheets.map((s) => buildTableProfile(s));
         const summaryText = sheets.map((s, i) => textSummaryOfSheet(s, profiles[i])).join('\n\n---\n\n');
 
-        const outJson = path.join(TABLES_DIR, `${slug}-profile.json`);
-        const outMd = path.join(TABLES_DIR, `${slug}-profile.md`);
+        const outJson = resolveInside(TABLES_DIR, `${slug}-profile.json`, 'profile JSON output');
+        const outMd = resolveInside(TABLES_DIR, `${slug}-profile.md`, 'profile markdown output');
         fs.writeFileSync(outJson, JSON.stringify({ filename, sheets: profiles }, null, 2));
         fs.writeFileSync(outMd, `# Spreadsheet Profile: ${filename}\n\n${summaryText}`);
 

@@ -1,8 +1,27 @@
 import fs from 'fs';
-import path from 'path';
+import readXlsxFile from 'read-excel-file/node';
+import { parse as parseCsv } from 'csv-parse/sync';
 import type { TableProfile, ColumnProfile } from '../schemas/spreadsheet.schema';
 
 const NOT_FOUND = 'Not found in the document.';
+const DEFAULT_MAX_SPREADSHEET_BYTES = 10 * 1024 * 1024;
+const DEFAULT_MAX_ROWS = 10_000;
+const DEFAULT_MAX_COLUMNS = 200;
+const DEFAULT_MAX_CELL_CHARS = 20_000;
+
+function readPositiveIntEnv(name: string, fallback: number): number {
+  const raw = process.env[name];
+  if (!raw) return fallback;
+  const parsed = Number.parseInt(raw, 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+export const SPREADSHEET_LIMITS = {
+  maxBytes: readPositiveIntEnv('SYNTH_MAX_SPREADSHEET_BYTES', DEFAULT_MAX_SPREADSHEET_BYTES),
+  maxRows: readPositiveIntEnv('SYNTH_MAX_SPREADSHEET_ROWS', DEFAULT_MAX_ROWS),
+  maxColumns: readPositiveIntEnv('SYNTH_MAX_SPREADSHEET_COLUMNS', DEFAULT_MAX_COLUMNS),
+  maxCellChars: readPositiveIntEnv('SYNTH_MAX_SPREADSHEET_CELL_CHARS', DEFAULT_MAX_CELL_CHARS),
+};
 
 const CURRENCY_RE = /^\$?[\d,]+(\.\d{1,2})?$|^\(?\$?[\d,]+(\.\d{1,2})?\)?$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$|^\d{1,2}\/\d{1,2}\/\d{4}$|^[A-Z][a-z]+ \d{1,2},? \d{4}$/;
@@ -32,25 +51,49 @@ function isCurrencyString(val: string): boolean {
   return CURRENCY_RE.test(val.trim());
 }
 
-function parseCsvText(text: string): string[][] {
-  const lines = text.split('\n').filter((l) => l.trim().length > 0);
-  return lines.map((line) => {
-    const row: string[] = [];
-    let inQuote = false;
-    let cell = '';
-    for (let i = 0; i < line.length; i++) {
-      const ch = line[i];
-      if (ch === '"') {
-        inQuote = !inQuote;
-      } else if (ch === ',' && !inQuote) {
-        row.push(cell.trim());
-        cell = '';
-      } else {
-        cell += ch;
-      }
+function normalizeCell(cell: unknown): string {
+  if (cell === undefined || cell === null) return '';
+  if (cell instanceof Date) return cell.toISOString();
+  return String(cell).trim();
+}
+
+function enforceFileSize(filepath: string): void {
+  const size = fs.statSync(filepath).size;
+  if (size > SPREADSHEET_LIMITS.maxBytes) {
+    throw new Error(
+      `Spreadsheet is too large (${size.toLocaleString()} bytes). ` +
+        `Limit is ${SPREADSHEET_LIMITS.maxBytes.toLocaleString()} bytes.`
+    );
+  }
+}
+
+function normalizeRows(rows: unknown[][], sourceLabel: string): string[][] {
+  if (rows.length > SPREADSHEET_LIMITS.maxRows + 1) {
+    throw new Error(
+      `${sourceLabel} has too many rows (${rows.length.toLocaleString()}). ` +
+        `Limit is ${SPREADSHEET_LIMITS.maxRows.toLocaleString()} data rows.`
+    );
+  }
+
+  return rows.map((row, rowIndex) => {
+    if (row.length > SPREADSHEET_LIMITS.maxColumns) {
+      throw new Error(
+        `${sourceLabel} row ${rowIndex + 1} has too many columns (${row.length}). ` +
+          `Limit is ${SPREADSHEET_LIMITS.maxColumns}.`
+      );
     }
-    row.push(cell.trim());
-    return row;
+
+    return row.map((cell, colIndex) => {
+      const normalized = normalizeCell(cell);
+      if (normalized.length > SPREADSHEET_LIMITS.maxCellChars) {
+        throw new Error(
+          `${sourceLabel} cell R${rowIndex + 1}C${colIndex + 1} is too large ` +
+            `(${normalized.length.toLocaleString()} characters). ` +
+            `Limit is ${SPREADSHEET_LIMITS.maxCellChars.toLocaleString()}.`
+        );
+      }
+      return normalized;
+    });
   });
 }
 
@@ -202,24 +245,30 @@ export interface ParsedSheet {
 }
 
 export function parseCsvFile(filepath: string): ParsedSheet[] {
+  enforceFileSize(filepath);
   const text = fs.readFileSync(filepath, 'utf-8');
-  const rows = parseCsvText(text);
+  const rows = normalizeRows(
+    parseCsv(text, {
+      skip_empty_lines: true,
+      relax_column_count: true,
+      max_record_size: SPREADSHEET_LIMITS.maxCellChars * Math.min(SPREADSHEET_LIMITS.maxColumns, 20),
+    }) as unknown[][],
+    'CSV'
+  );
   if (rows.length === 0) return [];
   const headers = rows[0].map((h) => h.trim());
   const dataRows = rows.slice(1);
   return [{ sheetName: 'Sheet1', headers, rows: dataRows }];
 }
 
-export function parseXlsxFile(filepath: string): ParsedSheet[] {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const XLSX = require('xlsx') as typeof import('xlsx');
-  const wb = XLSX.readFile(filepath);
-  return wb.SheetNames.map((name) => {
-    const ws = wb.Sheets[name];
-    const data = (XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' }) as unknown) as unknown[][];
+export async function parseXlsxFile(filepath: string): Promise<ParsedSheet[]> {
+  enforceFileSize(filepath);
+  const workbook = await readXlsxFile(filepath, { trim: true });
+  return workbook.map(({ sheet: name, data }) => {
     if (data.length === 0) return { sheetName: name, headers: [], rows: [] };
-    const headers = (data[0] as unknown[]).map((h) => String(h).trim());
-    const rows = data.slice(1).map((r) => (r as unknown[]).map((c) => String(c).trim()));
+    const normalized = normalizeRows(data as unknown[][], `XLSX sheet "${name}"`);
+    const headers = normalized[0].map((h) => h.trim());
+    const rows = normalized.slice(1);
     return { sheetName: name, headers, rows };
   });
 }

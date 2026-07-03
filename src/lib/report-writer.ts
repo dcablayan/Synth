@@ -4,6 +4,7 @@ import type { Review } from '../schemas/review.schema';
 import type { Financial } from '../schemas/financial.schema';
 import type { Memo } from '../schemas/memo.schema';
 import type { Revision } from '../schemas/revision.schema';
+import { listRegularFiles, resolveInside, resolveRegularFileInside, safeFileStem } from './path-safety';
 
 const REPORTS_DIR = path.join(process.cwd(), 'reports');
 
@@ -12,18 +13,14 @@ function ensureDir(dir: string): void {
 }
 
 function slug(title: string): string {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-    .slice(0, 60);
+  return safeFileStem(title).slice(0, 60);
 }
 
 export function saveReviewJSON(review: Review): string {
   const dir = path.join(REPORTS_DIR, 'reviews');
   ensureDir(dir);
   const filename = `${slug(review.documentTitle)}-review.json`;
-  const filepath = path.join(dir, filename);
+  const filepath = resolveInside(dir, filename, 'review JSON output');
   fs.writeFileSync(filepath, JSON.stringify(review, null, 2));
   return filepath;
 }
@@ -32,7 +29,7 @@ export function saveFinancialJSON(financial: Financial): string {
   const dir = path.join(REPORTS_DIR, 'financials');
   ensureDir(dir);
   const filename = `${slug(financial.documentTitle)}-financial.json`;
-  const filepath = path.join(dir, filename);
+  const filepath = resolveInside(dir, filename, 'financial JSON output');
   fs.writeFileSync(filepath, JSON.stringify(financial, null, 2));
   return filepath;
 }
@@ -41,7 +38,7 @@ export function saveMemoJSON(memo: Memo): string {
   const dir = path.join(REPORTS_DIR, 'memos');
   ensureDir(dir);
   const filename = `${slug(memo.documentTitle)}-memo.json`;
-  const filepath = path.join(dir, filename);
+  const filepath = resolveInside(dir, filename, 'memo JSON output');
   fs.writeFileSync(filepath, JSON.stringify(memo, null, 2));
   return filepath;
 }
@@ -50,7 +47,7 @@ export function saveRevisionJSON(revision: Revision): string {
   const dir = path.join(REPORTS_DIR, 'revisions');
   ensureDir(dir);
   const filename = `${slug(revision.documentTitle)}-revision.json`;
-  const filepath = path.join(dir, filename);
+  const filepath = resolveInside(dir, filename, 'revision JSON output');
   fs.writeFileSync(filepath, JSON.stringify(revision, null, 2));
   return filepath;
 }
@@ -59,7 +56,7 @@ export function saveReviewMarkdown(review: Review): string {
   const dir = path.join(REPORTS_DIR, 'reviews');
   ensureDir(dir);
   const filename = `${slug(review.documentTitle)}-review.md`;
-  const filepath = path.join(dir, filename);
+  const filepath = resolveInside(dir, filename, 'review markdown output');
   const md = buildReviewMarkdown(review);
   fs.writeFileSync(filepath, md);
   return filepath;
@@ -69,7 +66,7 @@ export function saveMemoMarkdown(memo: Memo): string {
   const dir = path.join(REPORTS_DIR, 'memos');
   ensureDir(dir);
   const filename = `${slug(memo.documentTitle)}-memo.md`;
-  const filepath = path.join(dir, filename);
+  const filepath = resolveInside(dir, filename, 'memo markdown output');
   const md = buildMemoMarkdown(memo);
   fs.writeFileSync(filepath, md);
   return filepath;
@@ -79,7 +76,7 @@ export function saveRevisionMarkdown(revision: Revision): string {
   const dir = path.join(REPORTS_DIR, 'revisions');
   ensureDir(dir);
   const filename = `${slug(revision.documentTitle)}-revision.md`;
-  const filepath = path.join(dir, filename);
+  const filepath = resolveInside(dir, filename, 'revision markdown output');
   const md = buildRevisionMarkdown(revision);
   fs.writeFileSync(filepath, md);
   return filepath;
@@ -287,45 +284,45 @@ ${r.lawyerQuestions.map((q, i) => `${i + 1}. ${q}`).join('\n')}
 export function getLatestReview(): Review | null {
   const dir = path.join(REPORTS_DIR, 'reviews');
   if (!fs.existsSync(dir)) return null;
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith('-review.json'));
+  const files = listRegularFiles(dir, (f) => f.endsWith('-review.json'));
   if (files.length === 0) return null;
   files.sort((a, b) => {
-    const sa = fs.statSync(path.join(dir, a)).mtime.getTime();
-    const sb = fs.statSync(path.join(dir, b)).mtime.getTime();
+    const sa = fs.statSync(resolveRegularFileInside(dir, a, 'review report')).mtime.getTime();
+    const sb = fs.statSync(resolveRegularFileInside(dir, b, 'review report')).mtime.getTime();
     return sb - sa;
   });
-  return JSON.parse(fs.readFileSync(path.join(dir, files[0]), 'utf-8')) as Review;
+  return JSON.parse(fs.readFileSync(resolveRegularFileInside(dir, files[0], 'review report'), 'utf-8')) as Review;
 }
 
 export function getAllReviews(): Review[] {
   const dir = path.join(REPORTS_DIR, 'reviews');
   if (!fs.existsSync(dir)) return [];
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith('-review.json'));
-  return files.map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf-8')) as Review);
+  const files = listRegularFiles(dir, (f) => f.endsWith('-review.json'));
+  return files.map((f) => JSON.parse(fs.readFileSync(resolveRegularFileInside(dir, f, 'review report'), 'utf-8')) as Review);
 }
 
 export function getLatestRevision(): Revision | null {
   const dir = path.join(REPORTS_DIR, 'revisions');
   if (!fs.existsSync(dir)) return null;
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith('-revision.json'));
+  const files = listRegularFiles(dir, (f) => f.endsWith('-revision.json'));
   if (files.length === 0) return null;
   files.sort((a, b) => {
-    const sa = fs.statSync(path.join(dir, a)).mtime.getTime();
-    const sb = fs.statSync(path.join(dir, b)).mtime.getTime();
+    const sa = fs.statSync(resolveRegularFileInside(dir, a, 'revision report')).mtime.getTime();
+    const sb = fs.statSync(resolveRegularFileInside(dir, b, 'revision report')).mtime.getTime();
     return sb - sa;
   });
-  return JSON.parse(fs.readFileSync(path.join(dir, files[0]), 'utf-8')) as Revision;
+  return JSON.parse(fs.readFileSync(resolveRegularFileInside(dir, files[0], 'revision report'), 'utf-8')) as Revision;
 }
 
 export function getLatestMemo(): Memo | null {
   const dir = path.join(REPORTS_DIR, 'memos');
   if (!fs.existsSync(dir)) return null;
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith('-memo.json'));
+  const files = listRegularFiles(dir, (f) => f.endsWith('-memo.json'));
   if (files.length === 0) return null;
   files.sort((a, b) => {
-    const sa = fs.statSync(path.join(dir, a)).mtime.getTime();
-    const sb = fs.statSync(path.join(dir, b)).mtime.getTime();
+    const sa = fs.statSync(resolveRegularFileInside(dir, a, 'memo report')).mtime.getTime();
+    const sb = fs.statSync(resolveRegularFileInside(dir, b, 'memo report')).mtime.getTime();
     return sb - sa;
   });
-  return JSON.parse(fs.readFileSync(path.join(dir, files[0]), 'utf-8')) as Memo;
+  return JSON.parse(fs.readFileSync(resolveRegularFileInside(dir, files[0], 'memo report'), 'utf-8')) as Memo;
 }

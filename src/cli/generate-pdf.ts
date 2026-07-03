@@ -5,20 +5,21 @@ import { getLatestReview, getLatestMemo, getLatestRevision } from '../lib/report
 import { renderReviewHTML, renderFinancialHTML, renderMemoHTML, renderRevisionHTML } from '../lib/html-renderer';
 import { generatePDFFromHTML, saveHTML } from '../lib/pdf-writer';
 import type { Financial } from '../schemas/financial.schema';
+import { listRegularFiles, resolveRegularFileInside } from '../lib/path-safety';
 
 const REPORTS_DIR = path.join(process.cwd(), 'reports');
 
 function getLatestFinancial(): Financial | null {
   const dir = path.join(REPORTS_DIR, 'financials');
   if (!fs.existsSync(dir)) return null;
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith('-financial.json'));
+  const files = listRegularFiles(dir, (f) => f.endsWith('-financial.json'));
   if (files.length === 0) return null;
   files.sort((a, b) => {
-    const sa = fs.statSync(path.join(dir, a)).mtime.getTime();
-    const sb = fs.statSync(path.join(dir, b)).mtime.getTime();
+    const sa = fs.statSync(resolveRegularFileInside(dir, a, 'financial report')).mtime.getTime();
+    const sb = fs.statSync(resolveRegularFileInside(dir, b, 'financial report')).mtime.getTime();
     return sb - sa;
   });
-  return JSON.parse(fs.readFileSync(path.join(dir, files[0]), 'utf-8')) as Financial;
+  return JSON.parse(fs.readFileSync(resolveRegularFileInside(dir, files[0], 'financial report'), 'utf-8')) as Financial;
 }
 
 async function tryGeneratePDF(

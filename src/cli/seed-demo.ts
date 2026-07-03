@@ -6,6 +6,7 @@ import { runContractReview, runFinancialAnalysis, runMemoGeneration, runRevision
 import { renderReviewHTML, renderFinancialHTML, renderMemoHTML, renderRevisionHTML, renderFullPacketHTML } from '../lib/html-renderer';
 import type { IssueLog } from '../schemas/issue.schema';
 import type { DataRoomSummary } from '../schemas/spreadsheet.schema';
+import { resolveRegularFileInside, safeFileStem } from '../lib/path-safety';
 
 const CWD = process.cwd();
 const INBOX = path.join(CWD, 'documents', 'inbox');
@@ -30,7 +31,7 @@ function writeFile(dest: string, content: string, label: string): void {
 }
 
 function slug(title: string): string {
-  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
+  return safeFileStem(title).slice(0, 60);
 }
 
 function buildMarkdown(review: Awaited<ReturnType<typeof runContractReview>>): string {
@@ -103,9 +104,11 @@ async function main() {
   console.log('⚠️  Synth is not legal advice or financial advice.');
   console.log('   It is a document review aid. Consult a qualified professional.\n');
 
-  const sourceFile = path.join(INBOX, SOURCE_FILE);
-  if (!fs.existsSync(sourceFile)) {
-    console.error(`  ❌ Source file not found: ${sourceFile}`);
+  let sourceFile: string;
+  try {
+    sourceFile = resolveRegularFileInside(INBOX, SOURCE_FILE, 'demo source file');
+  } catch {
+    console.error(`  ❌ Source file not found or unsafe: ${path.join(INBOX, SOURCE_FILE)}`);
     console.error(`     Place ${SOURCE_FILE} in documents/inbox/ to run seed-demo.`);
     process.exit(1);
   }
@@ -167,28 +170,30 @@ async function main() {
     const { generateMockSpreadsheetAnalysis, generateMockDataRoomSummary } = await import('../lib/mock-spreadsheet-provider');
     const { SpreadsheetAnalysisSchema, DataRoomSummarySchema } = await import('../schemas/spreadsheet.schema');
 
-    const capTablePath = path.join(INBOX, 'sample-cap-table.csv');
-    const paymentPath = path.join(INBOX, 'sample-payment-schedule.csv');
-    const vendorPath = path.join(INBOX, 'sample-vendor-invoices.csv');
-
     const spreadsheetResults: Array<{ filename: string; analysis: ReturnType<typeof SpreadsheetAnalysisSchema.parse> }> = [];
 
-    for (const [filename, filepath] of [
-      ['sample-cap-table.csv', capTablePath],
-      ['sample-payment-schedule.csv', paymentPath],
-      ['sample-vendor-invoices.csv', vendorPath],
-    ] as Array<[string, string]>) {
-      if (fs.existsSync(filepath)) {
+    for (const filename of [
+      'sample-cap-table.csv',
+      'sample-payment-schedule.csv',
+      'sample-vendor-invoices.csv',
+    ]) {
+      let filepath: string;
+      try {
+        filepath = resolveRegularFileInside(INBOX, filename, 'demo spreadsheet');
         const sheets = parseCsvFile(filepath);
         const profiles = sheets.map((s) => buildTableProfile(s));
         const analysis = SpreadsheetAnalysisSchema.parse(generateMockSpreadsheetAnalysis(filename, sheets, profiles));
         spreadsheetResults.push({ filename, analysis });
-        const fileSlug = filename.replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9-_]/g, '-');
+        const fileSlug = safeFileStem(filename);
         writeFile(
           path.join(DEMO_ARTIFACTS, `demo-${fileSlug}-spreadsheet.json`),
           JSON.stringify(analysis, null, 2),
           `demo-${fileSlug}-spreadsheet.json`
         );
+      } catch (err) {
+        if (err instanceof Error && !/file not found/.test(err.message)) {
+          throw err;
+        }
       }
     }
 
@@ -197,7 +202,7 @@ async function main() {
       { filename: SOURCE_FILE, text: fs.readFileSync(sourceFile, 'utf-8') },
     ];
     const csvDocs = spreadsheetResults.map(({ filename }) => {
-      const filepath = path.join(INBOX, filename);
+      const filepath = resolveRegularFileInside(INBOX, filename, 'demo spreadsheet');
       const sheets = parseCsvFile(filepath);
       const profiles = sheets.map((s) => buildTableProfile(s));
       return { filename, sheets, profiles };
@@ -228,11 +233,15 @@ async function main() {
 
     const spreadsheetFiles = ['sample-cap-table.csv', 'sample-payment-schedule.csv', 'sample-vendor-invoices.csv'];
     const csvDocs = spreadsheetFiles
-      .filter((f) => fs.existsSync(path.join(INBOX, f)))
-      .map((f) => {
-        const sheets = parseCsvFile(path.join(INBOX, f));
+      .map((f) => ({ file: f, filepath: (() => {
+        try { return resolveRegularFileInside(INBOX, f, 'demo spreadsheet'); }
+        catch { return null; }
+      })() }))
+      .filter((entry): entry is { file: string; filepath: string } => entry.filepath !== null)
+      .map(({ file, filepath }) => {
+        const sheets = parseCsvFile(filepath);
         const profiles = sheets.map((s) => buildTableProfile(s));
-        return { filename: f, sheets, profiles };
+        return { filename: file, sheets, profiles };
       });
 
     const mockDataRoom = DataRoomSummarySchema.parse(
@@ -290,7 +299,7 @@ async function main() {
       console.log('  ✅ payments.csv');
       writeCapTableCSV(seededDataRoom, DEMO_ARTIFACTS);
       console.log('  ✅ cap-table.csv');
-      writeDataRoomXLSX(seededIssueLog, seededDataRoom, DEMO_ARTIFACTS);
+      await writeDataRoomXLSX(seededIssueLog, seededDataRoom, DEMO_ARTIFACTS);
       console.log('  ✅ dataroom-summary.xlsx');
 
       const compareReport = buildCompareReport(

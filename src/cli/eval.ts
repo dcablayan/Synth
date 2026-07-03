@@ -8,6 +8,7 @@ import { generateMockSpreadsheetAnalysis, generateMockDataRoomSummary } from '..
 import { SpreadsheetAnalysisSchema, DataRoomSummarySchema } from '../schemas/spreadsheet.schema';
 import { IssueLogSchema } from '../schemas/issue.schema';
 import { buildIssueLogFromReports } from '../lib/issue-engine';
+import { resolveRegularFileInside } from '../lib/path-safety';
 
 const CWD = process.cwd();
 const INBOX = path.join(CWD, 'documents', 'inbox');
@@ -15,6 +16,14 @@ const EVALS_DIR = path.join(CWD, 'reports', 'evals');
 
 const NOT_FOUND = 'Not found in the document.';
 const GENERIC_SEE_DOC = /^see document/i;
+
+function inboxFile(filename: string): string | null {
+  try {
+    return resolveRegularFileInside(INBOX, filename, 'evaluation input');
+  } catch {
+    return null;
+  }
+}
 
 interface Check {
   name: string;
@@ -38,14 +47,14 @@ function hasRealQuote(quote: string): boolean {
 }
 
 async function evalDocument(filename: string, expectedType: string): Promise<DocResult> {
-  const filepath = path.join(INBOX, filename);
+  const filepath = inboxFile(filename);
   const checks: Check[] = [];
 
   // Check 1: File exists and parses
-  if (!fs.existsSync(filepath)) {
+  if (!filepath) {
     return {
       file: filename,
-      checks: [{ name: 'File exists', pass: false, message: `File not found: ${filepath}` }],
+      checks: [{ name: 'File exists', pass: false, message: `File not found or unsafe: ${path.join(INBOX, filename)}` }],
       passed: 0,
       failed: 1,
     };
@@ -225,13 +234,13 @@ async function evalSpreadsheets(): Promise<DocResult[]> {
   const results: DocResult[] = [];
 
   for (const { file, expectedType } of SPREADSHEETS) {
-    const filepath = path.join(INBOX, file);
+    const filepath = inboxFile(file);
     const checks: Check[] = [];
 
-    if (!fs.existsSync(filepath)) {
+    if (!filepath) {
       results.push({
         file,
-        checks: [{ name: 'File exists', pass: false, message: `Not found: ${filepath}` }],
+        checks: [{ name: 'File exists', pass: false, message: `Not found or unsafe: ${path.join(INBOX, file)}` }],
         passed: 0,
         failed: 1,
       });
@@ -316,12 +325,17 @@ async function evalSpreadsheets(): Promise<DocResult[]> {
   // DataRoom summary eval
   const dataroomChecks: Check[] = [];
   try {
-    const contractText = fs.readFileSync(path.join(INBOX, 'sample-saas-agreement.txt'), 'utf-8');
+    const contractPath = inboxFile('sample-saas-agreement.txt');
+    if (!contractPath) throw new Error('sample-saas-agreement.txt not found or unsafe');
+    const contractText = fs.readFileSync(contractPath, 'utf-8');
     const contractDocs = [{ filename: 'sample-saas-agreement.txt', text: contractText }];
     const csvDocs = SPREADSHEETS
-      .filter(({ file }) => fs.existsSync(path.join(INBOX, file)))
+      .map(({ file }) => ({ file, filepath: inboxFile(file) }))
+      .filter((entry): entry is { file: string; filepath: string } => entry.filepath !== null)
       .map(({ file }) => {
-        const sheets = parseCsvFile(path.join(INBOX, file));
+        const filepath = inboxFile(file);
+        if (!filepath) throw new Error(`${file} not found or unsafe`);
+        const sheets = parseCsvFile(filepath);
         const profiles = sheets.map((s) => buildTableProfile(s));
         return { filename: file, sheets, profiles };
       });
@@ -372,15 +386,18 @@ async function evalV5(): Promise<DocResult> {
 
   // Check 1: Issue engine runs and schema validates
   try {
-    const reviewText = fs.readFileSync(path.join(INBOX, 'sample-saas-agreement.txt'), 'utf-8');
+    const reviewPath = inboxFile('sample-saas-agreement.txt');
+    if (!reviewPath) throw new Error('sample-saas-agreement.txt not found or unsafe');
+    const reviewText = fs.readFileSync(reviewPath, 'utf-8');
     const contractDocs = [{ filename: 'sample-saas-agreement.txt', text: reviewText }];
     const spreadsheetFiles = ['sample-payment-schedule.csv', 'sample-cap-table.csv'];
     const csvDocs = spreadsheetFiles
-      .filter((f) => fs.existsSync(path.join(INBOX, f)))
-      .map((f) => {
-        const sheets = parseCsvFile(path.join(INBOX, f));
+      .map((f) => ({ file: f, filepath: inboxFile(f) }))
+      .filter((entry): entry is { file: string; filepath: string } => entry.filepath !== null)
+      .map(({ file, filepath }) => {
+        const sheets = parseCsvFile(filepath);
         const profiles = sheets.map((s) => buildTableProfile(s));
-        return { filename: f, sheets, profiles };
+        return { filename: file, sheets, profiles };
       });
 
     const mockDataRoom = DataRoomSummarySchema.parse(generateMockDataRoomSummary(contractDocs, csvDocs, []));

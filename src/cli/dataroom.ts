@@ -1,7 +1,10 @@
 #!/usr/bin/env tsx
 import fs from 'fs';
 import path from 'path';
+import { pathToFileURL } from 'url';
 import type { DataRoomSummary } from '../schemas/spreadsheet.schema';
+import { escapeHtml, safeCssToken } from '../lib/output-safety';
+import { listRegularFiles, resolveInside, resolveRegularFileInside } from '../lib/path-safety';
 
 const CWD = process.cwd();
 const INBOX = path.join(CWD, 'documents', 'inbox');
@@ -10,9 +13,14 @@ const DISCLAIMER = 'Synth is not legal advice or financial advice. It is a docum
 
 const CONTRACT_EXTS = new Set(['.txt', '.md', '.pdf', '.docx']);
 const SPREADSHEET_EXTS = new Set(['.csv', '.xlsx']);
+const SEVERITIES = ['Low', 'Medium', 'High', 'Critical'] as const;
+
+function h(value: unknown): string {
+  return escapeHtml(value);
+}
 
 function getSeverityColor(s: string): string {
-  switch (s) {
+  switch (safeCssToken(s, SEVERITIES, 'Low')) {
     case 'Critical': return '#ef4444';
     case 'High': return '#f97316';
     case 'Medium': return '#eab308';
@@ -21,47 +29,47 @@ function getSeverityColor(s: string): string {
   }
 }
 
-function renderDataRoomHtml(summary: DataRoomSummary): string {
+export function renderDataRoomHtml(summary: DataRoomSummary): string {
   const fileTypeRows = summary.fileTypes.map((ft) =>
-    `<tr><td><code>${ft.ext}</code></td><td>${ft.count}</td></tr>`
+    `<tr><td><code>${h(ft.ext)}</code></td><td>${h(ft.count)}</td></tr>`
   ).join('');
 
   const docRows = summary.documents.map((d) =>
-    `<tr><td>${d.filename}</td><td>${d.category}</td><td>${d.rowCount ?? d.characterCount ?? '—'}</td></tr>`
+    `<tr><td>${h(d.filename)}</td><td>${h(d.category)}</td><td>${h(d.rowCount ?? d.characterCount ?? '—')}</td></tr>`
   ).join('');
 
   const findingCards = summary.crossDocumentFindings.map((f) => `
     <div class="finding-card">
       <div class="finding-header">
-        <span class="finding-type">${f.findingType.replace(/-/g, ' ')}</span>
-        <span class="severity" style="color:${getSeverityColor(f.severity)}">${f.severity}</span>
+        <span class="finding-type">${h(f.findingType.replace(/-/g, ' '))}</span>
+        <span class="severity" style="color:${getSeverityColor(f.severity)}">${h(safeCssToken(f.severity, SEVERITIES, 'Low'))}</span>
       </div>
-      <h4>${f.title}</h4>
-      <p>${f.description}</p>
+      <h4>${h(f.title)}</h4>
+      <p>${h(f.description)}</p>
       <table class="diff-table">
-        <tr><th>${f.sourceA}</th><th>${f.sourceB}</th></tr>
-        <tr><td>${f.valueA}</td><td>${f.valueB}</td></tr>
+        <tr><th>${h(f.sourceA)}</th><th>${h(f.sourceB)}</th></tr>
+        <tr><td>${h(f.valueA)}</td><td>${h(f.valueB)}</td></tr>
       </table>
-      <p class="recommendation">→ ${f.recommendation}</p>
+      <p class="recommendation">→ ${h(f.recommendation)}</p>
     </div>`).join('');
 
   const paymentRows = summary.paymentScheduleFindings.slice(0, 10).map((p) =>
     `<tr>
-      <td>${p.vendor}</td>
-      <td><strong>${p.amount}</strong></td>
-      <td>${p.dueDate}</td>
-      <td><span class="${p.status === 'Overdue' ? 'overdue' : ''}">${p.status}</span></td>
-      <td>${p.sourceFile}</td>
+      <td>${h(p.vendor)}</td>
+      <td><strong>${h(p.amount)}</strong></td>
+      <td>${h(p.dueDate)}</td>
+      <td><span class="${p.status === 'Overdue' ? 'overdue' : ''}">${h(p.status)}</span></td>
+      <td>${h(p.sourceFile)}</td>
     </tr>`
   ).join('');
 
   const capTableRows = summary.capTableFindings.slice(0, 12).map((c) =>
     `<tr>
-      <td>${c.investor}</td>
-      <td>${c.shareClass}</td>
-      <td>${c.shares}</td>
-      <td>${c.ownershipPct}</td>
-      <td>${c.sourceFile}</td>
+      <td>${h(c.investor)}</td>
+      <td>${h(c.shareClass)}</td>
+      <td>${h(c.shares)}</td>
+      <td>${h(c.ownershipPct)}</td>
+      <td>${h(c.sourceFile)}</td>
     </tr>`
   ).join('');
 
@@ -69,7 +77,7 @@ function renderDataRoomHtml(summary: DataRoomSummary): string {
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Data Room Review — ${summary.title}</title>
+<title>Data Room Review — ${h(summary.title)}</title>
 <style>
   body { font-family: system-ui, sans-serif; background: #0f172a; color: #e2e8f0; margin: 0; padding: 24px; }
   .container { max-width: 960px; margin: 0 auto; }
@@ -104,21 +112,21 @@ function renderDataRoomHtml(summary: DataRoomSummary): string {
 </head>
 <body>
 <div class="container">
-  <h1>${summary.title}</h1>
+  <h1>${h(summary.title)}</h1>
   <span class="badge">Contracts + Spreadsheets + Data Room Review</span>
-  <p class="meta">Generated: ${summary.generatedAt} · ${summary.fileCount} files · ${summary.providerMode === 'mock' ? 'Mock Mode' : 'AI Mode'}</p>
+  <p class="meta">Generated: ${h(summary.generatedAt)} · ${h(summary.fileCount)} files · ${summary.providerMode === 'mock' ? 'Mock Mode' : 'AI Mode'}</p>
   <div class="disclaimer">⚠ ${DISCLAIMER}</div>
 
   <div class="stats">
-    <div class="stat"><div class="stat-val">${summary.fileCount}</div><div class="stat-lbl">Files</div></div>
-    <div class="stat"><div class="stat-val">${summary.crossDocumentFindings.length}</div><div class="stat-lbl">Cross-Doc Findings</div></div>
-    <div class="stat"><div class="stat-val">${summary.paymentScheduleFindings.length}</div><div class="stat-lbl">Payment Items</div></div>
-    <div class="stat"><div class="stat-val">${summary.capTableFindings.length}</div><div class="stat-lbl">Cap Table Rows</div></div>
+    <div class="stat"><div class="stat-val">${h(summary.fileCount)}</div><div class="stat-lbl">Files</div></div>
+    <div class="stat"><div class="stat-val">${h(summary.crossDocumentFindings.length)}</div><div class="stat-lbl">Cross-Doc Findings</div></div>
+    <div class="stat"><div class="stat-val">${h(summary.paymentScheduleFindings.length)}</div><div class="stat-lbl">Payment Items</div></div>
+    <div class="stat"><div class="stat-val">${h(summary.capTableFindings.length)}</div><div class="stat-lbl">Cap Table Rows</div></div>
   </div>
 
   <div class="summary">
     <h2>Executive Summary</h2>
-    <p>${summary.executiveSummary}</p>
+    <p>${h(summary.executiveSummary)}</p>
   </div>
 
   <h2>File Breakdown</h2>
@@ -158,7 +166,7 @@ function renderDataRoomHtml(summary: DataRoomSummary): string {
   ${summary.dataQualityWarnings.length > 0 ? `
   <h2>Data Quality Warnings</h2>
   <div class="warning-list">
-    <ul>${summary.dataQualityWarnings.map((w) => `<li>${w}</li>`).join('')}</ul>
+    <ul>${summary.dataQualityWarnings.map((w) => `<li>${h(w)}</li>`).join('')}</ul>
   </div>` : ''}
 </div>
 </body>
@@ -234,7 +242,7 @@ async function main() {
     process.exit(1);
   }
 
-  const allFiles = fs.readdirSync(INBOX).filter((f) => !f.startsWith('.'));
+  const allFiles = listRegularFiles(INBOX, (f) => !f.startsWith('.'));
   const contractFiles = allFiles.filter((f) => CONTRACT_EXTS.has(path.extname(f).toLowerCase()));
   const spreadsheetFiles = allFiles.filter((f) => SPREADSHEET_EXTS.has(path.extname(f).toLowerCase()));
 
@@ -249,7 +257,7 @@ async function main() {
   const contractDocs: Array<{ filename: string; text: string }> = [];
   for (const filename of contractFiles) {
     const ext = path.extname(filename).toLowerCase();
-    const filepath = path.join(INBOX, filename);
+    const filepath = resolveRegularFileInside(INBOX, filename, 'contract filename');
     try {
       let text = '';
       if (ext === '.txt' || ext === '.md') {
@@ -274,9 +282,9 @@ async function main() {
   const csvDocs: Array<{ filename: string; sheets: ReturnType<typeof parseCsvFile>; profiles: ReturnType<typeof buildTableProfile>[] }> = [];
   for (const filename of spreadsheetFiles) {
     const ext = path.extname(filename).toLowerCase();
-    const filepath = path.join(INBOX, filename);
+    const filepath = resolveRegularFileInside(INBOX, filename, 'spreadsheet filename');
     try {
-      const sheets = ext === '.csv' ? parseCsvFile(filepath) : parseXlsxFile(filepath);
+      const sheets = ext === '.csv' ? parseCsvFile(filepath) : await parseXlsxFile(filepath);
       const profiles = sheets.map((s) => buildTableProfile(s));
       csvDocs.push({ filename, sheets, profiles });
     } catch (err) {
@@ -289,9 +297,9 @@ async function main() {
   fs.mkdirSync(DATAROOM_DIR, { recursive: true });
   const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
 
-  const jsonPath = path.join(DATAROOM_DIR, `dataroom-${ts}.json`);
-  const mdPath = path.join(DATAROOM_DIR, `dataroom-${ts}.md`);
-  const htmlPath = path.join(DATAROOM_DIR, `dataroom-${ts}.html`);
+  const jsonPath = resolveInside(DATAROOM_DIR, `dataroom-${ts}.json`, 'dataroom JSON output');
+  const mdPath = resolveInside(DATAROOM_DIR, `dataroom-${ts}.md`, 'dataroom markdown output');
+  const htmlPath = resolveInside(DATAROOM_DIR, `dataroom-${ts}.html`, 'dataroom HTML output');
 
   fs.writeFileSync(jsonPath, JSON.stringify(summary, null, 2));
   fs.writeFileSync(mdPath, renderDataRoomMarkdown(summary));
@@ -320,7 +328,9 @@ async function main() {
   console.log('\n  Data room analysis complete.\n');
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}
