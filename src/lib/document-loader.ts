@@ -13,24 +13,34 @@ export interface LoadedDocument {
 const INBOX_DIR = path.join(process.cwd(), 'documents', 'inbox');
 const PROCESSED_DIR = path.join(process.cwd(), 'documents', 'processed');
 const SUPPORTED_EXTENSIONS = ['.txt', '.md', '.pdf', '.docx'];
+export const CONTRACT_EXTENSIONS = SUPPORTED_EXTENSIONS;
 export const SPREADSHEET_EXTENSIONS = ['.csv', '.xlsx'];
 export const ALL_SUPPORTED_EXTENSIONS = [...SUPPORTED_EXTENSIONS, ...SPREADSHEET_EXTENSIONS];
 
-async function extractText(filepath: string, ext: string): Promise<string> {
+// pdf-parse v2 exposes a PDFParse class (the v1 default-function API is gone).
+export async function extractPdfText(filepath: string): Promise<string> {
+  const { PDFParse } = await import('pdf-parse');
+  const parser = new PDFParse({ data: fs.readFileSync(filepath) });
+  try {
+    const result = await parser.getText();
+    return result.text;
+  } finally {
+    await parser.destroy().catch(() => undefined);
+  }
+}
+
+export async function extractText(filepath: string, ext: string): Promise<string> {
   if (ext === '.txt' || ext === '.md') {
     return fs.readFileSync(filepath, 'utf-8');
   }
 
   if (ext === '.pdf') {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const pdfParse = require('pdf-parse') as (buf: Buffer) => Promise<{ text: string; numpages: number }>;
-      const buffer = fs.readFileSync(filepath);
-      const result = await pdfParse(buffer);
-      if (!result.text || result.text.trim().length < 20) {
+      const text = await extractPdfText(filepath);
+      if (!text || text.trim().length < 20) {
         throw new Error('PDF appears to be scanned or empty — no extractable text found.');
       }
-      return result.text;
+      return text;
     } catch (err) {
       throw new Error(
         `Failed to parse PDF "${path.basename(filepath)}": ${err instanceof Error ? err.message : String(err)}`
@@ -78,19 +88,38 @@ async function extractText(filepath: string, ext: string): Promise<string> {
   throw new Error(`Unsupported file type: ${ext}`);
 }
 
-export async function loadDocumentsFromInbox(): Promise<LoadedDocument[]> {
+export interface LoadOptions {
+  // Spreadsheets are analyzed by `npm run spreadsheet` / `npm run dataroom`;
+  // contract analysis loads them only when explicitly requested.
+  includeSpreadsheets?: boolean;
+}
+
+export async function loadDocumentsFromInbox(options: LoadOptions = {}): Promise<LoadedDocument[]> {
   if (!fs.existsSync(INBOX_DIR)) {
     throw new Error(`Inbox directory not found: ${INBOX_DIR}`);
   }
 
+  const includeSpreadsheets = options.includeSpreadsheets ?? false;
+
   const files = listRegularFiles(INBOX_DIR, (f) => {
     const ext = path.extname(f).toLowerCase();
-    return (SUPPORTED_EXTENSIONS.includes(ext) || SPREADSHEET_EXTENSIONS.includes(ext)) && !f.startsWith('.');
+    if (f.startsWith('.')) return false;
+    if (SUPPORTED_EXTENSIONS.includes(ext)) return true;
+    return includeSpreadsheets && SPREADSHEET_EXTENSIONS.includes(ext);
   });
+
+  const skippedSpreadsheets = includeSpreadsheets
+    ? []
+    : listRegularFiles(INBOX_DIR, (f) => SPREADSHEET_EXTENSIONS.includes(path.extname(f).toLowerCase()) && !f.startsWith('.'));
+  if (skippedSpreadsheets.length > 0) {
+    console.log(
+      `  ℹ️  Skipping ${skippedSpreadsheets.length} spreadsheet(s) (${skippedSpreadsheets.join(', ')}) — analyze with: npm run spreadsheet / npm run dataroom`
+    );
+  }
 
   if (files.length === 0) {
     throw new Error(
-      `No documents found in ${INBOX_DIR}. Supported formats: ${ALL_SUPPORTED_EXTENSIONS.join(', ')}`
+      `No documents found in ${INBOX_DIR}. Supported formats: ${(includeSpreadsheets ? ALL_SUPPORTED_EXTENSIONS : SUPPORTED_EXTENSIONS).join(', ')}`
     );
   }
 
@@ -121,9 +150,6 @@ export async function loadDocumentsFromInbox(): Promise<LoadedDocument[]> {
 
 export async function loadDocumentByFilename(filename: string): Promise<LoadedDocument> {
   const filepath = resolveRegularFileInside(INBOX_DIR, filename, 'document filename');
-  if (!fs.existsSync(filepath)) {
-    throw new Error(`Document not found: ${filepath}`);
-  }
   const ext = path.extname(filename).toLowerCase();
   const text = await extractText(filepath, ext);
   return {
@@ -133,6 +159,29 @@ export async function loadDocumentByFilename(filename: string): Promise<LoadedDo
     sizeBytes: Buffer.byteLength(text, 'utf-8'),
     extension: ext,
   };
+}
+
+// Tolerant loader used for evidence verification: returns whatever inbox text is
+// available, keyed by filename, without failing the caller when files are missing.
+export async function loadSourceTextsFromInbox(): Promise<Map<string, string>> {
+  const texts = new Map<string, string>();
+  if (!fs.existsSync(INBOX_DIR)) return texts;
+
+  const files = listRegularFiles(INBOX_DIR, (f) => {
+    const ext = path.extname(f).toLowerCase();
+    return ALL_SUPPORTED_EXTENSIONS.includes(ext) && !f.startsWith('.');
+  });
+
+  for (const filename of files) {
+    try {
+      const filepath = resolveRegularFileInside(INBOX_DIR, filename, 'document filename');
+      const ext = path.extname(filename).toLowerCase();
+      texts.set(filename, await extractText(filepath, ext));
+    } catch {
+      // verification simply reports "source not available" for this file
+    }
+  }
+  return texts;
 }
 
 export function markAsProcessed(filename: string): void {

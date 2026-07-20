@@ -23,7 +23,10 @@ export const SPREADSHEET_LIMITS = {
   maxCellChars: readPositiveIntEnv('SYNTH_MAX_SPREADSHEET_CELL_CHARS', DEFAULT_MAX_CELL_CHARS),
 };
 
-const CURRENCY_RE = /^\$?[\d,]+(\.\d{1,2})?$|^\(?\$?[\d,]+(\.\d{1,2})?\)?$/;
+// A value counts as currency only with an explicit signal: a $ prefix, or a
+// classic two-decimal accounting format. Bare integers ("2024", "1,000") are
+// numbers, not amounts — otherwise year and share-count columns type as currency.
+const CURRENCY_RE = /^\(?\$\s?\d[\d,]*(\.\d+)?\)?$|^\(?\d[\d,]*\.\d{2}\)?$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$|^\d{1,2}\/\d{1,2}\/\d{4}$|^[A-Z][a-z]+ \d{1,2},? \d{4}$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -39,12 +42,6 @@ function detectColumnType(samples: string[]): ColumnProfile['type'] {
   const numCount = nonEmpty.filter((s) => !isNaN(Number(s.replace(/[$,]/g, '').trim())) && s.trim().length > 0).length;
   if (numCount / nonEmpty.length > 0.7) return 'number';
   return 'string';
-}
-
-function extractCurrencyValue(val: string): number | null {
-  const cleaned = val.replace(/[$,\s]/g, '').replace(/[()]/g, '');
-  const n = parseFloat(cleaned);
-  return isNaN(n) ? null : n;
 }
 
 function isCurrencyString(val: string): boolean {
@@ -224,7 +221,7 @@ function buildWarnings(rows: string[][], headers: string[], entities: string[]):
   const warnings: string[] = [];
   const totalBlanks = rows.reduce((sum, r) => sum + r.filter((c) => c.trim().length === 0).length, 0);
   const totalCells = rows.length * headers.length;
-  if (totalBlanks / totalCells > 0.3) {
+  if (totalCells > 0 && totalBlanks / totalCells > 0.3) {
     warnings.push(`High blank cell rate: ${((totalBlanks / totalCells) * 100).toFixed(0)}% of cells are empty`);
   }
   const repeated = findRepeatedVendors(entities);

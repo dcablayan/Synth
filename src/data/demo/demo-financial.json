@@ -14,13 +14,13 @@
   "financialRedFlags": [
     {
       "issue": "Non-refundable fees",
-      "explanation": "All fees may be non-refundable regardless of circumstances.",
+      "explanation": "All fees may be non-refundable regardless of circumstances. Review for fee non-refundability provisions.",
       "severity": "High",
       "supportingQuote": "$4,500 per month (the \"Subscription Fee\"), billed annually in advance"
     },
     {
       "issue": "Automatic price increases",
-      "explanation": "Price may increase automatically on renewal.",
+      "explanation": "Price may increase automatically on renewal. Review for price escalation provisions.",
       "severity": "Medium",
       "supportingQuote": "automatically renew for successive one-year periods (each a \"Renewal Term\") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term"
     }
@@ -32,7 +32,7 @@
       "relevance": "Run with an AI provider for document-specific financial extraction."
     }
   ],
-  "generatedAt": "2026-05-18T13:32:00.126Z",
+  "generatedAt": "2026-07-20T04:03:31.234Z",
   "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.",
   "sourceFilename": "sample-saas-agreement.txt",
   "sourceExtension": ".txt",

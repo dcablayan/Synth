@@ -36,9 +36,10 @@ import {
   generateMockSpreadsheetAnalysis,
   generateMockDataRoomSummary,
 } from './mock-spreadsheet-provider';
+import { reconcileRisk } from './risk-scoring';
+import { DISCLAIMER, REVISION_DISCLAIMER } from './brand';
 
-const DISCLAIMER =
-  'Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.';
+
 
 export function isMockMode(): boolean {
   return !process.env.OPENAI_API_KEY;
@@ -85,41 +86,78 @@ function safeParseAndValidate<T>(
   return { data: result.data, fallbackUsed: false };
 }
 
+const OPENAI_TIMEOUT_MS = 120_000;
+
 async function callOpenAI(system: string, prompt: string): Promise<string> {
   const apiKey = process.env.OPENAI_API_KEY;
   const baseUrl = process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1';
   const model = process.env.OPENAI_MODEL || 'gpt-4o';
 
-  const res = await fetch(`${baseUrl}/chat/completions`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model,
-      messages: [
-        { role: 'system', content: system },
-        { role: 'user', content: prompt },
-      ],
-      temperature: 0.1,
-      response_format: { type: 'json_object' },
-    }),
-  });
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), OPENAI_TIMEOUT_MS);
+  let res: Response;
+  try {
+    res = await fetch(`${baseUrl}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user', content: prompt },
+        ],
+        temperature: 0.1,
+        response_format: { type: 'json_object' },
+      }),
+      signal: controller.signal,
+    });
+  } catch (e) {
+    if (controller.signal.aborted) {
+      throw new Error(`OpenAI API timed out after ${OPENAI_TIMEOUT_MS / 1000}s`);
+    }
+    throw e;
+  } finally {
+    clearTimeout(timer);
+  }
 
   if (!res.ok) {
     const err = await res.text();
     throw new Error(`OpenAI API error: ${res.status} ${err}`);
   }
 
-  const data = (await res.json()) as { choices: Array<{ message: { content: string } }> };
-  return data.choices[0].message.content;
+  const data = (await res.json()) as { choices?: Array<{ message?: { content?: unknown } }> };
+  const content = data.choices?.[0]?.message?.content;
+  if (typeof content !== 'string' || content.length === 0) {
+    throw new Error('OpenAI API returned no message content');
+  }
+  return content;
 }
 
 export interface ProviderMeta {
   sourceFilename?: string;
   sourceExtension?: string;
   parsedCharacterCount?: number;
+  // Length of the document BEFORE chunking — lets the provider surface an
+  // explicit truncation warning instead of silently analyzing a prefix.
+  originalCharacterCount?: number;
+}
+
+function truncationWarnings(analyzedChars: number, meta?: ProviderMeta): string[] {
+  const original = meta?.originalCharacterCount;
+  if (original !== undefined && original > analyzedChars) {
+    return [
+      `Document truncated for analysis: ${analyzedChars.toLocaleString()} of ${original.toLocaleString()} characters analyzed. Findings may miss content beyond the analyzed portion.`,
+    ];
+  }
+  return [];
+}
+
+function mergeWarnings(...groups: Array<string[] | undefined>): string[] | undefined {
+  const merged = [...new Set(groups.flatMap((g) => g ?? []))];
+  return merged.length > 0 ? merged : undefined;
 }
 
 export async function runContractReview(documentText: string, documentTitle: string, meta?: ProviderMeta) {
@@ -129,11 +167,19 @@ export async function runContractReview(documentText: string, documentTitle: str
     sourceExtension: meta?.sourceExtension,
     parsedCharacterCount: meta?.parsedCharacterCount ?? charCount,
   };
+  const truncWarn = truncationWarnings(baseMeta.parsedCharacterCount, meta);
 
   if (isMockMode()) {
     console.log('  [mock mode] Using mock provider — set OPENAI_API_KEY to use real AI');
     const result = generateMockReview(documentText, documentTitle);
-    return ReviewSchema.parse({ ...result, ...baseMeta, providerMode: 'mock', fallbackUsed: false, disclaimer: DISCLAIMER });
+    return ReviewSchema.parse({
+      ...result,
+      ...baseMeta,
+      providerMode: 'mock',
+      fallbackUsed: false,
+      warnings: mergeWarnings(truncWarn),
+      disclaimer: DISCLAIMER,
+    });
   }
 
   try {
@@ -149,17 +195,24 @@ export async function runContractReview(documentText: string, documentTitle: str
         ...baseMeta,
         providerMode: 'mock',
         fallbackUsed: true,
-        warnings: [`AI output failed validation, used mock fallback: ${parsed.error}`],
+        warnings: mergeWarnings(truncWarn, [`AI output failed validation, used mock fallback: ${parsed.error}`]),
         disclaimer: DISCLAIMER,
       });
     }
 
+    // The model's self-reported score/level pair is not trusted blindly: the
+    // overall level can never sit below the worst individual risk it reported.
+    const reconciled = reconcileRisk(parsed.data.riskScore, parsed.data.riskLevel, parsed.data.topRisks);
+
     return ReviewSchema.parse({
       ...parsed.data,
       ...baseMeta,
+      riskScore: reconciled.riskScore,
+      riskLevel: reconciled.riskLevel,
       generatedAt: new Date().toISOString(),
       providerMode: 'ai',
       fallbackUsed: false,
+      warnings: mergeWarnings(truncWarn, parsed.data.warnings, reconciled.adjustments),
       disclaimer: DISCLAIMER,
     });
   } catch (e) {
@@ -172,7 +225,7 @@ export async function runContractReview(documentText: string, documentTitle: str
       ...baseMeta,
       providerMode: 'mock',
       fallbackUsed: true,
-      warnings: [`AI API call failed, used mock fallback: ${msg}`],
+      warnings: mergeWarnings(truncWarn, [`AI API call failed, used mock fallback: ${msg}`]),
       disclaimer: DISCLAIMER,
     });
   }
@@ -185,10 +238,17 @@ export async function runFinancialAnalysis(documentText: string, documentTitle: 
     sourceExtension: meta?.sourceExtension,
     parsedCharacterCount: meta?.parsedCharacterCount ?? charCount,
   };
+  const truncWarn = truncationWarnings(baseMeta.parsedCharacterCount, meta);
 
   if (isMockMode()) {
     const result = generateMockFinancial(documentText, documentTitle);
-    return FinancialSchema.parse({ ...result, ...baseMeta, providerMode: 'mock', fallbackUsed: false });
+    return FinancialSchema.parse({
+      ...result,
+      ...baseMeta,
+      providerMode: 'mock',
+      fallbackUsed: false,
+      warnings: mergeWarnings(truncWarn),
+    });
   }
 
   try {
@@ -204,7 +264,7 @@ export async function runFinancialAnalysis(documentText: string, documentTitle: 
         ...baseMeta,
         providerMode: 'mock',
         fallbackUsed: true,
-        warnings: [`AI output failed validation, used mock fallback: ${parsed.error}`],
+        warnings: mergeWarnings(truncWarn, [`AI output failed validation, used mock fallback: ${parsed.error}`]),
       });
     }
 
@@ -214,6 +274,7 @@ export async function runFinancialAnalysis(documentText: string, documentTitle: 
       generatedAt: new Date().toISOString(),
       providerMode: 'ai',
       fallbackUsed: false,
+      warnings: mergeWarnings(truncWarn, parsed.data.warnings),
       disclaimer: DISCLAIMER,
     });
   } catch (e) {
@@ -226,7 +287,7 @@ export async function runFinancialAnalysis(documentText: string, documentTitle: 
       ...baseMeta,
       providerMode: 'mock',
       fallbackUsed: true,
-      warnings: [`AI API call failed, used mock fallback: ${msg}`],
+      warnings: mergeWarnings(truncWarn, [`AI API call failed, used mock fallback: ${msg}`]),
     });
   }
 }
@@ -314,8 +375,7 @@ export async function runRevisionGeneration(
         providerMode: 'mock',
         fallbackUsed: true,
         warnings: [`AI output failed validation, used mock fallback: ${parsed.error}`],
-        revisionDisclaimer:
-          'Suggested revisions are not legal advice. They are suggested replacement language for review by a qualified professional. Consult an attorney before using any suggested language.',
+        revisionDisclaimer: REVISION_DISCLAIMER,
       });
     }
 
@@ -325,8 +385,7 @@ export async function runRevisionGeneration(
       generatedAt: new Date().toISOString(),
       providerMode: 'ai',
       fallbackUsed: false,
-      revisionDisclaimer:
-        'Suggested revisions are not legal advice. They are suggested replacement language for review by a qualified professional. Consult an attorney before using any suggested language.',
+      revisionDisclaimer: REVISION_DISCLAIMER,
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
@@ -339,8 +398,7 @@ export async function runRevisionGeneration(
       providerMode: 'mock',
       fallbackUsed: true,
       warnings: [`AI API call failed, used mock fallback: ${msg}`],
-      revisionDisclaimer:
-        'Suggested revisions are not legal advice. They are suggested replacement language for review by a qualified professional. Consult an attorney before using any suggested language.',
+      revisionDisclaimer: REVISION_DISCLAIMER,
     });
   }
 }
@@ -381,7 +439,9 @@ export async function runSpreadsheetAnalysis(
       documentTitle: overlay.data!.documentTitle ?? base.documentTitle,
       summary: overlay.data!.summary ?? base.summary,
       keyFindings: overlay.data!.keyFindings ?? base.keyFindings,
-      warnings: overlay.data!.warnings ?? base.warnings,
+      // Deterministic parser warnings (overdue rows, blank rates) are never
+      // replaced by model output — the AI can only add to them.
+      warnings: [...new Set([...base.warnings, ...(overlay.data!.warnings ?? [])])],
       generatedAt: new Date().toISOString(),
       providerMode: 'ai',
       fallbackUsed: false,
@@ -447,12 +507,22 @@ export async function runDataRoomReview(
       return ['payment-mismatch', 'party-mismatch', 'date-mismatch', 'amount-mismatch', 'missing-party', 'duplicate-vendor', 'renewal-mismatch', 'cap-table-conflict', 'unverifiable'].includes(f.findingType)
         && ['Low', 'Medium', 'High', 'Critical'].includes(f.severity);
     });
+    const droppedFindings = aiFindings.length - validFindings.length;
+    const mergedWarnings = [
+      ...new Set([
+        ...base.dataQualityWarnings,
+        ...(overlay.data!.dataQualityWarnings ?? []),
+        ...(droppedFindings > 0
+          ? [`${droppedFindings} AI cross-document finding(s) failed validation and were dropped; deterministic findings are shown.`]
+          : []),
+      ]),
+    ];
 
     return DataRoomSummarySchema.parse({
       ...base,
       executiveSummary: overlay.data!.executiveSummary ?? base.executiveSummary,
       crossDocumentFindings: validFindings.length > 0 ? validFindings : base.crossDocumentFindings,
-      dataQualityWarnings: overlay.data!.dataQualityWarnings ?? base.dataQualityWarnings,
+      dataQualityWarnings: mergedWarnings,
       generatedAt: new Date().toISOString(),
       providerMode: 'ai',
       fallbackUsed: false,

@@ -65,7 +65,6 @@ const SRC_FILES = [
   'src/lib/report-writer.ts',
   'src/lib/html-renderer.ts',
   'src/lib/pdf-writer.ts',
-  'src/lib/template-loader.ts',
   'src/lib/revision-engine.ts',
   'src/schemas/review.schema.ts',
   'src/schemas/financial.schema.ts',

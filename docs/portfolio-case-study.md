@@ -61,7 +61,7 @@ Key generated outputs:
 - `/demo`: issue log and evidence ledger visible together.
 - `/artifacts`: artifact cards for issue log, evidence ledger, CSV, XLSX, PDF, and compare report.
 - `/dashboard`: local report dashboard after running the CLI workflow.
-- Terminal: `npm run eval` showing 98/98 checks passed.
+- Terminal: `npm run eval` showing 110/110 checks passed.
 - Finder or editor: `reports/exports/` showing CSV files and `dataroom-summary.xlsx`.
 
 ## Best Portfolio Framing

@@ -1,0 +1,42 @@
+{
+  "documentTitle": "TERM SHEET FOR SERIES A PREFERRED STOCK FINANCING",
+  "totalContractValue": "Not found in the document.",
+  "recurringFees": "Recurring fee structure not identified in parsed text.",
+  "oneTimeFees": "Not found in the document.",
+  "paymentSchedule": "Payment schedule not identified in parsed text. Review document for fee structure.",
+  "lateFees": "Late payment penalty terms not identified in parsed text. Review document for late fee provisions.",
+  "penalties": "Penalty clauses may be present. Review with counsel.",
+  "discounts": "Not found in the document.",
+  "equityTerms": "Not found in the document.",
+  "revenueShare": "Not found in the document.",
+  "refundTerms": "Refund provisions not identified in parsed text. Review document for refund conditions.",
+  "renewalCostChanges": "Price escalation terms not identified in parsed text. Review document for renewal cost provisions.",
+  "financialRedFlags": [
+    {
+      "issue": "Non-refundable fees",
+      "explanation": "All fees may be non-refundable regardless of circumstances. Review for fee non-refundability provisions.",
+      "severity": "High",
+      "supportingQuote": "Not found in the document."
+    },
+    {
+      "issue": "Automatic price increases",
+      "explanation": "Price may increase automatically on renewal. Review for price escalation provisions.",
+      "severity": "Medium",
+      "supportingQuote": "Not found in the document."
+    }
+  ],
+  "citations": [
+    {
+      "section": "Mock Mode Notice",
+      "quote": "Financial analysis generated in mock mode.",
+      "relevance": "Run with an AI provider for document-specific financial extraction."
+    }
+  ],
+  "generatedAt": "2026-07-20T04:03:28.897Z",
+  "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.",
+  "sourceFilename": "sample-term-sheet.txt",
+  "sourceExtension": ".txt",
+  "parsedCharacterCount": 6423,
+  "providerMode": "mock",
+  "fallbackUsed": false
+}

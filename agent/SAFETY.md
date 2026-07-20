@@ -40,7 +40,7 @@ Synth is a document review aid, not a legal service.
 **Synth must always:**
 - Label suggested revision language as "suggested replacement language for review by a qualified professional"
 - Recommend consulting a qualified attorney before acting on any finding
-- Display the disclaimer prominently at the top and bottom of every output
+- Display the disclaimer clearly on every output — exactly one full instance per page or screen report (in the footer), with printable documents and PDFs carrying it in both the cover fine print and the footer. Repeating it more than that dilutes attention; omitting it anywhere is never acceptable.
 
 ---
 

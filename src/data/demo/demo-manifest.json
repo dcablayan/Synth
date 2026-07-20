@@ -1,10 +1,10 @@
 {
   "version": "5",
-  "generatedAt": "2026-05-18T13:32:00.213Z",
+  "generatedAt": "2026-07-20T04:03:31.327Z",
   "sourceDocument": "sample-saas-agreement.txt",
   "description": "Demo fixture data for the Synth /demo route. Generated from sample-saas-agreement.txt in mock mode.",
   "providerMode": "mock",
-  "riskScore": 65,
+  "riskScore": 61,
   "riskLevel": "High",
   "files": {
     "review": "demo-review.json",

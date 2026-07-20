@@ -1,0 +1,14 @@
+{
+  "reportId": "compare-2026-07-20T03-49-07",
+  "generatedAt": "2026-07-20T03:49:07.603Z",
+  "sourceA": "dataroom-2026-07-20T01-20-08.json",
+  "sourceB": "dataroom-2026-07-20T03-49-06.json",
+  "addedIssues": [],
+  "removedIssues": [],
+  "changedIssues": [],
+  "paymentChanges": [],
+  "capTableChanges": [],
+  "newWarnings": [],
+  "resolvedWarnings": [],
+  "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions."
+}

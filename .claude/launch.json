@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "synth-dashboard",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dashboard"],
+      "port": 3000,
+      "autoPort": true
+    }
+  ]
+}

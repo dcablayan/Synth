@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import SiteNav from '@/app/components/SiteNav';
+import SiteFooter from '@/app/components/SiteFooter';
 
 const artifacts = [
   {
@@ -8,7 +10,8 @@ const artifacts = [
     format: 'HTML',
     size: 'Multi-section',
     href: '/demo-artifacts/demo-full-packet.html',
-    icon: '📦',
+    icon: 'PKT',
+    mono: true,
     highlight: true,
     badge: 'Full Packet',
   },
@@ -30,7 +33,8 @@ const artifacts = [
     format: 'HTML',
     size: '5 risks identified',
     href: '/demo-artifacts/demo-review.html',
-    icon: '⚖️',
+    icon: 'REV',
+    mono: true,
   },
   {
     title: 'Revision Packet',
@@ -39,7 +43,8 @@ const artifacts = [
     format: 'HTML',
     size: '5 clause revisions',
     href: '/demo-artifacts/demo-revision.html',
-    icon: '✏️',
+    icon: 'RED',
+    mono: true,
   },
   {
     title: 'Executive Memo',
@@ -48,7 +53,8 @@ const artifacts = [
     format: 'HTML',
     size: 'Single-page memo',
     href: '/demo-artifacts/demo-memo.html',
-    icon: '📋',
+    icon: 'MEMO',
+    mono: true,
   },
   {
     title: 'Issue Log',
@@ -123,7 +129,8 @@ const artifacts = [
     format: 'JSON',
     size: 'v4 · Data Room',
     href: '/demo-artifacts/demo-dataroom.json',
-    icon: '🗂️',
+    icon: 'ROOM',
+    mono: true,
     badge: 'v4',
   },
   {
@@ -133,7 +140,8 @@ const artifacts = [
     format: 'JSON',
     size: 'v4 · Spreadsheet',
     href: '/demo-artifacts/demo-sample-payment-schedule-spreadsheet.json',
-    icon: '💳',
+    icon: 'PAY',
+    mono: true,
     badge: 'v4',
   },
   {
@@ -143,7 +151,8 @@ const artifacts = [
     format: 'JSON',
     size: 'v4 · Cap Table',
     href: '/demo-artifacts/demo-sample-cap-table-spreadsheet.json',
-    icon: '📈',
+    icon: 'CAP',
+    mono: true,
     badge: 'v4',
   },
   {
@@ -153,7 +162,8 @@ const artifacts = [
     format: 'Markdown',
     size: 'Raw output',
     href: '/demo-artifacts/demo-review.md',
-    icon: '📝',
+    icon: 'MD',
+    mono: true,
   },
   {
     title: 'Sample Review (JSON)',
@@ -169,33 +179,18 @@ const artifacts = [
 
 export default function ArtifactsPage() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
-      {/* Nav */}
-      <nav className="border-b border-slate-800 px-6 py-4 sticky top-0 bg-slate-950/90 backdrop-blur z-10">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/" className="text-blue-400 font-mono font-bold text-lg">&#9123; Synth</Link>
-            <span className="text-slate-600">/</span>
-            <span className="text-slate-300 text-sm">Artifacts</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link href="/demo" className="text-slate-400 hover:text-slate-100 text-sm transition-colors">Demo</Link>
-            <Link href="/dashboard" className="text-slate-400 hover:text-slate-100 text-sm transition-colors">Dashboard</Link>
-            <Link href="/case-study" className="text-slate-400 hover:text-slate-100 text-sm transition-colors">Case Study</Link>
-            <a href="https://github.com/dylancablayan/synth" className="bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-1.5 rounded transition-colors">GitHub</a>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-white text-gray-900">
+      <SiteNav current="Artifacts" />
 
       <main className="max-w-6xl mx-auto px-6 py-12">
         {/* Header */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 bg-blue-950 border border-blue-800 text-blue-300 text-xs px-3 py-1.5 rounded-full mb-6">
-            <span className="w-1.5 h-1.5 bg-blue-400 rounded-full" />
+          <div className="inline-flex items-center gap-2 bg-white border border-gray-300 text-gray-700 text-xs px-3 py-1.5 rounded-full mb-6">
+            <span className="w-1.5 h-1.5 bg-gray-500 rounded-full" />
             v5 · Evidence-backed diligence artifacts
           </div>
-          <h1 className="text-3xl font-bold text-white mb-3">Artifact Gallery</h1>
-          <p className="text-slate-400 text-sm max-w-2xl leading-relaxed">
+          <h1 className="text-3xl font-bold text-gray-900 mb-3">Artifact Gallery</h1>
+          <p className="text-gray-600 text-sm max-w-2xl leading-relaxed">
             Stable sample outputs from running Synth in mock mode: contract review, data room analysis, issue log,
             evidence ledger, CSV/XLSX exports, PDF report, and run comparison. Clone the repo to generate outputs from
             your own documents.
@@ -203,19 +198,19 @@ export default function ArtifactsPage() {
         </div>
 
         {/* What is this section */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-8">
-          <h2 className="text-sm font-semibold text-slate-300 mb-3">What these artifacts demonstrate</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-400">
+        <div className="bg-white border border-gray-200 rounded-xl p-6 mb-8">
+          <h2 className="text-sm font-semibold text-gray-700 mb-3">What these artifacts demonstrate</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-gray-600">
             <div>
-              <div className="text-slate-300 font-medium mb-1">Structured outputs</div>
+              <div className="text-gray-700 font-medium mb-1">Structured outputs</div>
               Every report is schema-validated with Zod — not freeform text. The JSON output is the ground truth; HTML and PDF are rendered from it.
             </div>
             <div>
-              <div className="text-slate-300 font-medium mb-1">Mixed-document data room (v4)</div>
+              <div className="text-gray-700 font-medium mb-1">Mixed-document data room (v4)</div>
               Synth analyzes contracts and spreadsheets together — extracting cap table rows, payment schedules, vendor invoices, and cross-document mismatches.
             </div>
             <div>
-              <div className="text-slate-300 font-medium mb-1">Evidence-backed handoff</div>
+              <div className="text-gray-700 font-medium mb-1">Evidence-backed handoff</div>
               The issue log, evidence ledger, CSV exports, XLSX workbook, and compare report are generated from the same structured data.
             </div>
           </div>
@@ -229,78 +224,75 @@ export default function ArtifactsPage() {
               href={artifact.href}
               target="_blank"
               rel="noopener noreferrer"
-              className={`group block bg-slate-900 border rounded-xl p-5 hover:border-slate-500 transition-colors ${
-                artifact.highlight ? 'border-blue-800 hover:border-blue-600' : 'border-slate-800'
+              className={`group block bg-white border rounded-xl p-5 hover:border-gray-400 transition-colors ${
+                artifact.highlight ? 'border-gray-300 hover:border-gray-400' : 'border-gray-200'
               }`}
             >
               <div className="flex items-start justify-between gap-3 mb-3">
-                <div className={`text-2xl ${artifact.mono ? 'font-mono text-blue-400 text-lg' : ''}`}>
+                <div className={`text-2xl ${artifact.mono ? 'font-mono text-gray-800 text-lg' : ''}`}>
                   {artifact.icon}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded font-mono">
+                  <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded font-mono">
                     {artifact.format}
                   </span>
                   {artifact.badge && (
-                    <span className={`text-xs px-2 py-0.5 rounded border ${artifact.badge === 'v4' ? 'text-green-300 bg-green-950 border-green-800' : 'text-blue-400 bg-blue-950 border-blue-800'}`}>
+                    <span className={`text-xs px-2 py-0.5 rounded border ${artifact.badge === 'v4' ? 'text-gray-700 bg-gray-100 border-gray-300' : 'text-gray-800 bg-white border-gray-300'}`}>
                       {artifact.badge}
                     </span>
                   )}
                 </div>
               </div>
-              <h3 className="text-white font-semibold mb-2 text-sm group-hover:text-blue-300 transition-colors">
+              <h3 className="text-gray-900 font-semibold mb-2 text-sm group-hover:text-gray-700 transition-colors">
                 {artifact.title}
               </h3>
-              <p className="text-slate-400 text-xs leading-relaxed mb-3">{artifact.description}</p>
+              <p className="text-gray-600 text-xs leading-relaxed mb-3">{artifact.description}</p>
               <div className="flex items-center justify-between">
-                <span className="text-xs text-slate-600">{artifact.size}</span>
-                <span className="text-blue-500 text-xs group-hover:text-blue-400 transition-colors">Open →</span>
+                <span className="text-xs text-gray-500">{artifact.size}</span>
+                <span className="text-gray-500 text-xs group-hover:text-gray-800 transition-colors">Open →</span>
               </div>
             </a>
           ))}
         </div>
 
         {/* Local workflow CTA */}
-        <div className="mt-10 bg-slate-900 border border-slate-800 rounded-xl p-8">
-          <h2 className="text-lg font-bold text-white mb-3">Run the pipeline locally</h2>
-          <p className="text-slate-400 text-sm mb-6 leading-relaxed">
+        <div className="mt-10 bg-white border border-gray-200 rounded-xl p-8">
+          <h2 className="text-lg font-bold text-gray-900 mb-3">Run the pipeline locally</h2>
+          <p className="text-gray-600 text-sm mb-6 leading-relaxed">
             These are static demo artifacts. To generate local outputs from your own contracts and spreadsheets,
             clone the repo and run the CLI pipeline in mock mode or with an OpenAI-compatible provider.
           </p>
-          <div className="bg-slate-950 border border-slate-800 rounded-lg p-4 font-mono text-sm text-slate-300 mb-6">
-            <div className="text-slate-500 mb-2">$ # Clone and set up</div>
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 font-mono text-sm text-gray-700 mb-6 overflow-x-auto whitespace-nowrap">
+            <div className="text-gray-500 mb-2">$ # Clone and set up</div>
             <div>git clone https://github.com/dylancablayan/synth</div>
             <div>cd synth &amp;&amp; npm install</div>
             <div>npx playwright install chromium</div>
-            <div className="mt-2 text-slate-500"># Contract review pipeline</div>
+            <div className="mt-2 text-gray-500"># Contract review pipeline</div>
             <div>npm run demo</div>
-            <div className="mt-2 text-slate-500"># v4: ingest all file types</div>
+            <div className="mt-2 text-gray-500"># v4: ingest all file types</div>
             <div>npm run ingest</div>
-            <div className="mt-2 text-slate-500"># v4: analyze CSV/XLSX spreadsheets</div>
+            <div className="mt-2 text-gray-500"># v4: analyze CSV/XLSX spreadsheets</div>
             <div>npm run spreadsheet</div>
-            <div className="mt-2 text-slate-500"># v4: full data room analysis</div>
+            <div className="mt-2 text-gray-500"># v4: full data room analysis</div>
             <div>npm run dataroom</div>
-            <div className="mt-2 text-slate-500"># v5: issue log, evidence, exports, and compare</div>
+            <div className="mt-2 text-gray-500"># v5: issue log, evidence, exports, and compare</div>
             <div>npm run triage &amp;&amp; npm run export &amp;&amp; npm run compare</div>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link href="/demo" className="bg-blue-600 hover:bg-blue-500 text-white text-xs px-4 py-2 rounded transition-colors">
+            <Link href="/demo" className="bg-gray-900 hover:bg-gray-700 text-white font-semibold text-xs px-4 py-2 rounded transition-colors">
               Interactive Demo
             </Link>
-            <Link href="/case-study" className="border border-slate-700 hover:border-slate-500 text-slate-300 text-xs px-4 py-2 rounded transition-colors">
+            <Link href="/case-study" className="border border-gray-300 hover:border-gray-400 text-gray-700 text-xs px-4 py-2 rounded transition-colors">
               Read Case Study
             </Link>
-            <a href="https://github.com/dylancablayan/synth" className="border border-slate-700 hover:border-slate-500 text-slate-300 text-xs px-4 py-2 rounded transition-colors">
+            <a href="https://github.com/dylancablayan/synth" className="border border-gray-300 hover:border-gray-400 text-gray-700 text-xs px-4 py-2 rounded transition-colors">
               GitHub
             </a>
           </div>
         </div>
 
-        {/* Disclaimer */}
-        <p className="text-slate-700 text-xs text-center mt-8">
-          ⚠️ Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.
-        </p>
       </main>
+      <SiteFooter />
     </div>
   );
 }

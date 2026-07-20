@@ -1,10 +1,12 @@
 import fs from 'fs';
 import path from 'path';
-import type { Review } from '../schemas/review.schema';
-import type { Financial } from '../schemas/financial.schema';
-import type { Memo } from '../schemas/memo.schema';
-import type { Revision } from '../schemas/revision.schema';
+import type { z } from 'zod';
+import { ReviewSchema, type Review } from '../schemas/review.schema';
+import { FinancialSchema, type Financial } from '../schemas/financial.schema';
+import { MemoSchema, type Memo } from '../schemas/memo.schema';
+import { RevisionSchema, type Revision } from '../schemas/revision.schema';
 import { listRegularFiles, resolveInside, resolveRegularFileInside, safeFileStem } from './path-safety';
+import { DISCLAIMER } from './brand';
 
 const REPORTS_DIR = path.join(process.cwd(), 'reports');
 
@@ -12,14 +14,20 @@ function ensureDir(dir: string): void {
   fs.mkdirSync(dir, { recursive: true });
 }
 
-function slug(title: string): string {
-  return safeFileStem(title).slice(0, 60);
+// Stems are keyed by title AND source filename: two documents whose first line
+// matches would otherwise silently overwrite each other's reports.
+export function reportStem(title: string, sourceFilename?: string): string {
+  const base = safeFileStem(title).slice(0, 60);
+  if (!sourceFilename) return base;
+  const src = safeFileStem(path.basename(sourceFilename));
+  if (!src || src === base) return base;
+  return `${base}--${src}`.slice(0, 100);
 }
 
 export function saveReviewJSON(review: Review): string {
   const dir = path.join(REPORTS_DIR, 'reviews');
   ensureDir(dir);
-  const filename = `${slug(review.documentTitle)}-review.json`;
+  const filename = `${reportStem(review.documentTitle, review.sourceFilename)}-review.json`;
   const filepath = resolveInside(dir, filename, 'review JSON output');
   fs.writeFileSync(filepath, JSON.stringify(review, null, 2));
   return filepath;
@@ -28,7 +36,7 @@ export function saveReviewJSON(review: Review): string {
 export function saveFinancialJSON(financial: Financial): string {
   const dir = path.join(REPORTS_DIR, 'financials');
   ensureDir(dir);
-  const filename = `${slug(financial.documentTitle)}-financial.json`;
+  const filename = `${reportStem(financial.documentTitle, financial.sourceFilename)}-financial.json`;
   const filepath = resolveInside(dir, filename, 'financial JSON output');
   fs.writeFileSync(filepath, JSON.stringify(financial, null, 2));
   return filepath;
@@ -37,7 +45,7 @@ export function saveFinancialJSON(financial: Financial): string {
 export function saveMemoJSON(memo: Memo): string {
   const dir = path.join(REPORTS_DIR, 'memos');
   ensureDir(dir);
-  const filename = `${slug(memo.documentTitle)}-memo.json`;
+  const filename = `${reportStem(memo.documentTitle, memo.sourceFilename)}-memo.json`;
   const filepath = resolveInside(dir, filename, 'memo JSON output');
   fs.writeFileSync(filepath, JSON.stringify(memo, null, 2));
   return filepath;
@@ -46,7 +54,7 @@ export function saveMemoJSON(memo: Memo): string {
 export function saveRevisionJSON(revision: Revision): string {
   const dir = path.join(REPORTS_DIR, 'revisions');
   ensureDir(dir);
-  const filename = `${slug(revision.documentTitle)}-revision.json`;
+  const filename = `${reportStem(revision.documentTitle, revision.sourceFilename)}-revision.json`;
   const filepath = resolveInside(dir, filename, 'revision JSON output');
   fs.writeFileSync(filepath, JSON.stringify(revision, null, 2));
   return filepath;
@@ -55,7 +63,7 @@ export function saveRevisionJSON(revision: Revision): string {
 export function saveReviewMarkdown(review: Review): string {
   const dir = path.join(REPORTS_DIR, 'reviews');
   ensureDir(dir);
-  const filename = `${slug(review.documentTitle)}-review.md`;
+  const filename = `${reportStem(review.documentTitle, review.sourceFilename)}-review.md`;
   const filepath = resolveInside(dir, filename, 'review markdown output');
   const md = buildReviewMarkdown(review);
   fs.writeFileSync(filepath, md);
@@ -65,7 +73,7 @@ export function saveReviewMarkdown(review: Review): string {
 export function saveMemoMarkdown(memo: Memo): string {
   const dir = path.join(REPORTS_DIR, 'memos');
   ensureDir(dir);
-  const filename = `${slug(memo.documentTitle)}-memo.md`;
+  const filename = `${reportStem(memo.documentTitle, memo.sourceFilename)}-memo.md`;
   const filepath = resolveInside(dir, filename, 'memo markdown output');
   const md = buildMemoMarkdown(memo);
   fs.writeFileSync(filepath, md);
@@ -75,7 +83,7 @@ export function saveMemoMarkdown(memo: Memo): string {
 export function saveRevisionMarkdown(revision: Revision): string {
   const dir = path.join(REPORTS_DIR, 'revisions');
   ensureDir(dir);
-  const filename = `${slug(revision.documentTitle)}-revision.md`;
+  const filename = `${reportStem(revision.documentTitle, revision.sourceFilename)}-revision.md`;
   const filepath = resolveInside(dir, filename, 'revision markdown output');
   const md = buildRevisionMarkdown(revision);
   fs.writeFileSync(filepath, md);
@@ -83,10 +91,11 @@ export function saveRevisionMarkdown(revision: Revision): string {
 }
 
 function buildReviewMarkdown(r: Review): string {
+  const warningsBlock = r.warnings && r.warnings.length > 0
+    ? `\n> ⚠️ **Analysis warnings:**\n${r.warnings.map((w) => `> - ${w}`).join('\n')}\n`
+    : '';
   return `# Contract Review: ${r.documentTitle}
-
-> **Disclaimer:** ${r.disclaimer}
-
+${warningsBlock}
 **Document Type:** ${r.documentType}
 **Risk Score:** ${r.riskScore}/100 — **${r.riskLevel}**
 **Generated:** ${r.generatedAt}
@@ -170,8 +179,6 @@ ${r.citations.map((c) => `**${c.section}**\n> "${c.quote}"\n*${c.relevance}*`).j
 function buildMemoMarkdown(m: Memo): string {
   return `# Executive Memo: ${m.documentTitle}
 
-> **Disclaimer:** ${m.disclaimer}
-
 **Date:** ${m.memoDate}
 **Generated:** ${m.generatedAt}
 
@@ -226,8 +233,6 @@ ${m.actionItems.map((a, i) => `${i + 1}. ${a}`).join('\n')}
 function buildRevisionMarkdown(r: Revision): string {
   return `# Revision Packet: ${r.documentTitle}
 
-> **Disclaimer:** ${r.revisionDisclaimer}
-
 **Generated:** ${r.generatedAt}
 
 ---
@@ -245,6 +250,8 @@ ${r.priorityChanges.map((c, i) => `${i + 1}. ${c}`).join('\n')}
 ---
 
 ## Clause Revisions
+
+> ✏️ ${r.revisionDisclaimer}
 
 ${r.clauseRevisions
   .map(
@@ -277,52 +284,105 @@ ${r.lawyerQuestions.map((q, i) => `${i + 1}. ${q}`).join('\n')}
 
 ---
 
-*${r.revisionDisclaimer}*
+*${DISCLAIMER}*
 `;
+}
+
+// Reports are re-read from disk across process runs, so they are revalidated
+// against their schema on load: a hand-edited or corrupted file is skipped with
+// a warning instead of being cast blindly and crashing downstream consumers.
+function readValidated<T>(dir: string, filename: string, schema: z.ZodType<T>, label: string): T | null {
+  try {
+    const raw = JSON.parse(fs.readFileSync(resolveRegularFileInside(dir, filename, label), 'utf-8'));
+    const parsed = schema.safeParse(raw);
+    if (!parsed.success) {
+      console.warn(`  ⚠️  Skipping ${filename}: does not match the ${label} schema`);
+      return null;
+    }
+    return parsed.data;
+  } catch (e) {
+    console.warn(`  ⚠️  Skipping ${filename}: ${e instanceof Error ? e.message : e}`);
+    return null;
+  }
+}
+
+function latestByMtime(dir: string, suffix: string, label: string): string[] {
+  const files = listRegularFiles(dir, (f) => f.endsWith(suffix));
+  files.sort((a, b) => {
+    const sa = fs.statSync(resolveRegularFileInside(dir, a, label)).mtime.getTime();
+    const sb = fs.statSync(resolveRegularFileInside(dir, b, label)).mtime.getTime();
+    return sb - sa;
+  });
+  return files;
 }
 
 export function getLatestReview(): Review | null {
   const dir = path.join(REPORTS_DIR, 'reviews');
   if (!fs.existsSync(dir)) return null;
-  const files = listRegularFiles(dir, (f) => f.endsWith('-review.json'));
-  if (files.length === 0) return null;
-  files.sort((a, b) => {
-    const sa = fs.statSync(resolveRegularFileInside(dir, a, 'review report')).mtime.getTime();
-    const sb = fs.statSync(resolveRegularFileInside(dir, b, 'review report')).mtime.getTime();
-    return sb - sa;
-  });
-  return JSON.parse(fs.readFileSync(resolveRegularFileInside(dir, files[0], 'review report'), 'utf-8')) as Review;
+  for (const f of latestByMtime(dir, '-review.json', 'review report')) {
+    const review = readValidated(dir, f, ReviewSchema, 'review report');
+    if (review) return review;
+  }
+  return null;
 }
 
 export function getAllReviews(): Review[] {
   const dir = path.join(REPORTS_DIR, 'reviews');
   if (!fs.existsSync(dir)) return [];
   const files = listRegularFiles(dir, (f) => f.endsWith('-review.json'));
-  return files.map((f) => JSON.parse(fs.readFileSync(resolveRegularFileInside(dir, f, 'review report'), 'utf-8')) as Review);
+  return files
+    .map((f) => readValidated(dir, f, ReviewSchema, 'review report'))
+    .filter((r): r is Review => r !== null);
 }
 
 export function getLatestRevision(): Revision | null {
   const dir = path.join(REPORTS_DIR, 'revisions');
   if (!fs.existsSync(dir)) return null;
-  const files = listRegularFiles(dir, (f) => f.endsWith('-revision.json'));
-  if (files.length === 0) return null;
-  files.sort((a, b) => {
-    const sa = fs.statSync(resolveRegularFileInside(dir, a, 'revision report')).mtime.getTime();
-    const sb = fs.statSync(resolveRegularFileInside(dir, b, 'revision report')).mtime.getTime();
-    return sb - sa;
-  });
-  return JSON.parse(fs.readFileSync(resolveRegularFileInside(dir, files[0], 'revision report'), 'utf-8')) as Revision;
+  for (const f of latestByMtime(dir, '-revision.json', 'revision report')) {
+    const revision = readValidated(dir, f, RevisionSchema, 'revision report');
+    if (revision) return revision;
+  }
+  return null;
 }
 
 export function getLatestMemo(): Memo | null {
   const dir = path.join(REPORTS_DIR, 'memos');
   if (!fs.existsSync(dir)) return null;
-  const files = listRegularFiles(dir, (f) => f.endsWith('-memo.json'));
-  if (files.length === 0) return null;
-  files.sort((a, b) => {
-    const sa = fs.statSync(resolveRegularFileInside(dir, a, 'memo report')).mtime.getTime();
-    const sb = fs.statSync(resolveRegularFileInside(dir, b, 'memo report')).mtime.getTime();
-    return sb - sa;
-  });
-  return JSON.parse(fs.readFileSync(resolveRegularFileInside(dir, files[0], 'memo report'), 'utf-8')) as Memo;
+  for (const f of latestByMtime(dir, '-memo.json', 'memo report')) {
+    const memo = readValidated(dir, f, MemoSchema, 'memo report');
+    if (memo) return memo;
+  }
+  return null;
+}
+
+export function getLatestFinancial(): Financial | null {
+  const dir = path.join(REPORTS_DIR, 'financials');
+  if (!fs.existsSync(dir)) return null;
+  for (const f of latestByMtime(dir, '-financial.json', 'financial report')) {
+    const financial = readValidated(dir, f, FinancialSchema, 'financial report');
+    if (financial) return financial;
+  }
+  return null;
+}
+
+// "Latest memo / financial / revision" is only meaningful relative to a review:
+// when several documents have been analyzed, the newest artifact of each type can
+// belong to a DIFFERENT document. Packets must never mix documents silently.
+export function matchesReview<T extends { documentTitle: string; sourceFilename?: string }>(
+  review: Review,
+  artifact: T | null,
+  label: string,
+): T | null {
+  if (!artifact) return null;
+  const sameDocument =
+    review.sourceFilename && artifact.sourceFilename
+      ? review.sourceFilename === artifact.sourceFilename
+      : artifact.documentTitle === review.documentTitle;
+  if (!sameDocument) {
+    console.warn(
+      `  ⚠️  Latest ${label} is for "${artifact.documentTitle}", not "${review.documentTitle}" — skipping it. Re-run the pipeline to regenerate it for this document.`
+    );
+    return null;
+  }
+  return artifact;
 }

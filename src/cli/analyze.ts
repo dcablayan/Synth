@@ -29,11 +29,20 @@ async function main() {
 
     const title = extractDocumentTitle(doc.text, doc.filename);
     const text = chunkText(doc.text);
+    const meta = {
+      sourceFilename: doc.filename,
+      sourceExtension: doc.extension,
+      parsedCharacterCount: text.length,
+      originalCharacterCount: doc.text.length,
+    };
+    if (doc.text.length > text.length) {
+      console.log(`  ⚠️  Document exceeds the analysis window — ${text.length.toLocaleString()} of ${doc.text.length.toLocaleString()} characters will be analyzed.`);
+    }
 
     console.log(`  → Running contract review...`);
     let review;
     try {
-      review = await runContractReview(text, title);
+      review = await runContractReview(text, title, meta);
     } catch (e) {
       console.error(`  ❌ Review failed: ${e instanceof Error ? e.message : e}`);
       continue;
@@ -54,7 +63,7 @@ async function main() {
     console.log(`  → Running financial analysis...`);
     let financial;
     try {
-      financial = await runFinancialAnalysis(text, title);
+      financial = await runFinancialAnalysis(text, title, meta);
     } catch (e) {
       console.error(`  ❌ Financial analysis failed: ${e instanceof Error ? e.message : e}`);
       continue;

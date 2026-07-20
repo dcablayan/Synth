@@ -1,5 +1,5 @@
 #!/usr/bin/env tsx
-import { getLatestReview } from '../lib/report-writer';
+import { getLatestReview, reportStem } from '../lib/report-writer';
 import { runMemoGeneration } from '../lib/ai-provider';
 import { saveMemoJSON, saveMemoMarkdown } from '../lib/report-writer';
 import { renderMemoHTML } from '../lib/html-renderer';
@@ -26,7 +26,7 @@ async function main() {
   const memoMdPath = saveMemoMarkdown(memo);
   const memoHtmlPath = saveHTML(
     renderMemoHTML(memo),
-    `${review.documentTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 50)}-memo`
+    `${reportStem(review.documentTitle, review.sourceFilename)}-memo`
   );
 
   console.log(`\n✅ Memo generated:`);

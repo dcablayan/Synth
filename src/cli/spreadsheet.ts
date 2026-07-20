@@ -4,25 +4,28 @@ import path from 'path';
 import { pathToFileURL } from 'url';
 import { escapeHtml } from '../lib/output-safety';
 import { listRegularFiles, resolveInside, resolveRegularFileInside, safeFileStem } from '../lib/path-safety';
+import { BRAND, DISCLAIMER, screenCss, screenHeader, screenFooter } from '../lib/brand';
 
 const CWD = process.cwd();
 const INBOX = path.join(CWD, 'documents', 'inbox');
 const TABLES_DIR = path.join(CWD, 'reports', 'tables');
 const HTML_DIR = path.join(CWD, 'reports', 'html');
 
-const DISCLAIMER = 'Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.';
-
 function h(value: unknown): string {
   return escapeHtml(value);
+}
+
+function typeTag(label: string): string {
+  return `<span class="type-tag">${h(label)}</span>`;
 }
 
 export function renderSpreadsheetHtml(analysis: import('../schemas/spreadsheet.schema').SpreadsheetAnalysis): string {
   const tables = analysis.tables.map((t) => {
     const flags = [
-      t.isPaymentSchedule && '<span class="badge">Payment Schedule</span>',
-      t.isCapTable && '<span class="badge badge-green">Cap Table</span>',
-      t.isInvoice && '<span class="badge badge-blue">Invoice</span>',
-      t.isVendorList && '<span class="badge badge-orange">Vendor List</span>',
+      t.isPaymentSchedule && typeTag('Payment Schedule'),
+      t.isCapTable && typeTag('Cap Table'),
+      t.isInvoice && typeTag('Invoice'),
+      t.isVendorList && typeTag('Vendor List'),
     ].filter(Boolean).join(' ');
 
     const cols = t.columns.map((c) => `
@@ -35,9 +38,9 @@ export function renderSpreadsheetHtml(analysis: import('../schemas/spreadsheet.s
       </tr>`).join('');
 
     return `
-    <div class="sheet-card">
+    <div class="section">
       <div class="sheet-header">
-        <h3>${h(t.sheetName)} ${flags}</h3>
+        <h4>${h(t.sheetName)} ${flags}</h4>
         <span class="meta">${h(t.rowCount)} rows · ${h(t.columnCount)} columns</span>
       </div>
       ${t.detectedEntities.length > 0 ? `<p><strong>Entities:</strong> ${t.detectedEntities.slice(0, 8).map(h).join(', ')}</p>` : ''}
@@ -46,7 +49,7 @@ export function renderSpreadsheetHtml(analysis: import('../schemas/spreadsheet.s
       ${t.totalAmounts.length > 0 ? `<p><strong>Totals:</strong> ${t.totalAmounts.map((a) => `${h(a.label)}: <strong>${h(a.amount)}</strong>`).join(' · ')}</p>` : ''}
       ${t.repeatedVendors.length > 0 ? `<p class="warning">Repeated vendors: ${t.repeatedVendors.map(h).join(', ')}</p>` : ''}
       ${t.warnings.length > 0 ? t.warnings.map((w) => `<p class="warning">⚠ ${h(w)}</p>`).join('') : ''}
-      <table>
+      <table class="main">
         <thead><tr><th>Column</th><th>Type</th><th>Unique</th><th>Blanks</th><th>Samples</th></tr></thead>
         <tbody>${cols}</tbody>
       </table>
@@ -57,51 +60,40 @@ export function renderSpreadsheetHtml(analysis: import('../schemas/spreadsheet.s
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Spreadsheet Analysis: ${h(analysis.documentTitle)}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${h(BRAND.name)} — Spreadsheet Analysis</title>
+${screenCss()}
 <style>
-  body { font-family: system-ui, sans-serif; background: #0f172a; color: #e2e8f0; margin: 0; padding: 24px; }
-  .container { max-width: 900px; margin: 0 auto; }
-  h1 { color: #38bdf8; font-size: 1.4rem; margin-bottom: 4px; }
-  h3 { color: #94a3b8; font-size: 1rem; margin: 0 0 8px 0; }
-  .meta { color: #64748b; font-size: 0.8rem; }
-  .disclaimer { background: #422006; border: 1px solid #92400e; border-radius: 8px; padding: 10px 14px; font-size: 0.78rem; color: #fde68a; margin-bottom: 20px; }
-  .summary { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; margin-bottom: 20px; }
-  .findings { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; margin-bottom: 20px; }
-  .findings ul { margin: 8px 0; padding-left: 18px; }
-  .findings li { color: #94a3b8; font-size: 0.85rem; margin: 4px 0; }
-  .sheet-card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; margin-bottom: 16px; }
-  .sheet-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px; }
-  table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 10px; }
-  th { background: #0f172a; color: #64748b; font-weight: 600; padding: 6px 8px; text-align: left; }
-  td { padding: 5px 8px; border-bottom: 1px solid #1e293b; color: #cbd5e1; }
-  code { background: #0f172a; color: #38bdf8; padding: 1px 4px; border-radius: 3px; font-size: 0.78rem; }
-  em { color: #94a3b8; font-style: normal; }
-  .warning { color: #fbbf24; font-size: 0.82rem; }
-  .badge { background: #7c3aed; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.72rem; }
-  .badge-green { background: #065f46; }
-  .badge-blue { background: #1e40af; }
-  .badge-orange { background: #92400e; }
-  .provider { background: #1e293b; border: 1px solid #334155; padding: 8px 12px; border-radius: 6px; font-size: 0.75rem; color: #64748b; margin-top: 16px; }
+  .sheet-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+  .type-tag { border: 1px solid #d1d5db; color: #374151; padding: 1px 9px; border-radius: 2px; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+  em { color: #6b7280; font-style: normal; }
+  .warning { color: #b45309; font-size: 0.82rem; }
+  p { font-size: 0.85rem; margin: 6px 0; }
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>${h(analysis.documentTitle)}</h1>
-  <p class="meta">${h(analysis.sheetCount)} sheet(s) · ${h(analysis.totalRows)} rows · Generated ${h(analysis.generatedAt)} · ${analysis.providerMode === 'mock' ? 'Mock Mode' : 'AI Mode'}</p>
-  <div class="disclaimer">⚠ ${DISCLAIMER}</div>
-  <div class="summary">
-    <h3>Summary</h3>
+  ${screenHeader(
+    'Spreadsheet Analysis',
+    analysis.documentTitle,
+    `${h(analysis.sheetCount)} sheet(s) · ${h(analysis.totalRows)} rows · <code>${h(analysis.sourceFilename)}</code> · Generated ${h(analysis.generatedAt)} · ${analysis.providerMode === 'mock' ? 'Mock Mode' : 'AI Mode'}`
+  )}
+  <h2>Summary</h2>
+  <div class="section">
     <p>${h(analysis.summary)}</p>
   </div>
   ${analysis.keyFindings.length > 0 ? `
-  <div class="findings">
-    <h3>Key Findings</h3>
-    <ul>${analysis.keyFindings.map((f) => `<li>${h(f)}</li>`).join('')}</ul>
+  <h2>Key Findings</h2>
+  <div class="section">
+    <ul style="margin:4px 0;padding-left:18px">${analysis.keyFindings.map((f) => `<li style="color:#374151;font-size:0.85rem;margin:4px 0">${h(f)}</li>`).join('')}</ul>
   </div>` : ''}
-  ${analysis.warnings.length > 0 ? `<div class="findings"><h3>Data Quality Warnings</h3><ul>${analysis.warnings.map((w) => `<li class="warning">${h(w)}</li>`).join('')}</ul></div>` : ''}
-  <h3 style="margin-top:20px">Sheet Profiles</h3>
+  ${analysis.warnings.length > 0 ? `
+  <h2>Data Quality Warnings</h2>
+  <div class="warning-list"><ul style="margin:0;padding-left:18px">${analysis.warnings.map((w) => `<li>${h(w)}</li>`).join('')}</ul></div>` : ''}
+  <h2>Sheet Profiles</h2>
   ${tables}
-  <div class="provider">sourceFilename: ${h(analysis.sourceFilename)} · extension: ${h(analysis.sourceExtension)} · providerMode: ${h(analysis.providerMode)}</div>
+
+  ${screenFooter(analysis.generatedAt)}
 </div>
 </body>
 </html>`;
@@ -137,7 +129,9 @@ async function main() {
   for (const filename of files) {
     const ext = path.extname(filename).toLowerCase();
     const filepath = resolveRegularFileInside(INBOX, filename, 'spreadsheet filename');
-    const slug = safeFileStem(filename);
+    // Include the extension in the stem: "cap-table.csv" and "cap_table.xlsx"
+    // share a sanitized stem and would otherwise overwrite each other.
+    const slug = `${safeFileStem(filename)}-${ext.slice(1)}`;
 
     console.log(`  📊 Analyzing: ${filename}`);
 
@@ -159,8 +153,6 @@ async function main() {
         `**Total rows:** ${analysis.totalRows}  `,
         `**Generated:** ${analysis.generatedAt}`,
         '',
-        `> ${DISCLAIMER}`,
-        '',
         '## Summary',
         analysis.summary,
         '',
@@ -179,6 +171,9 @@ async function main() {
           t.totalAmounts.length > 0 ? `- Totals: ${t.totalAmounts.map((a) => `${a.label}: ${a.amount}`).join(' | ')}` : '',
           '',
         ].filter((l) => l !== '').join('\n')),
+        '---',
+        '',
+        `*${DISCLAIMER}*`,
       ].join('\n');
       const mdPath = resolveInside(TABLES_DIR, `${slug}-spreadsheet.md`, 'spreadsheet markdown output');
       fs.writeFileSync(mdPath, md);

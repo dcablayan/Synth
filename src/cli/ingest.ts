@@ -40,7 +40,7 @@ async function main() {
   for (const filename of files) {
     const ext = path.extname(filename).toLowerCase();
     const filepath = resolveRegularFileInside(INBOX, filename, 'inbox filename');
-    const slug = safeFileStem(filename);
+    const slug = `${safeFileStem(filename)}-${ext.slice(1)}`;
 
     if (SPREADSHEET_EXTS.includes(ext)) {
       try {
@@ -76,10 +76,8 @@ async function main() {
         if (ext === '.txt' || ext === '.md') {
           text = fs.readFileSync(filepath, 'utf-8');
         } else if (ext === '.pdf') {
-          // eslint-disable-next-line @typescript-eslint/no-require-imports
-          const pdfParse = require('pdf-parse') as (buf: Buffer) => Promise<{ text: string }>;
-          const result = await pdfParse(fs.readFileSync(filepath));
-          text = result.text;
+          const { extractPdfText } = await import('../lib/document-loader');
+          text = await extractPdfText(filepath);
         } else if (ext === '.docx') {
           const mammoth = await import('mammoth');
           const result = await mammoth.extractRawText({ path: filepath });

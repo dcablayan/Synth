@@ -24,16 +24,23 @@ async function processSample(filename: string) {
     return;
   }
 
-  const text = chunkText(fs.readFileSync(filepath, 'utf-8'));
+  const fullText = fs.readFileSync(filepath, 'utf-8');
+  const text = chunkText(fullText);
   const title = extractDocumentTitle(text, filename);
   const slug = safeFileStem(filename);
+  const meta = {
+    sourceFilename: filename,
+    sourceExtension: path.extname(filename),
+    parsedCharacterCount: text.length,
+    originalCharacterCount: fullText.length,
+  };
 
   console.log(`\n  📄 ${filename}`);
   console.log(`     Title: ${title}`);
 
   // Review
   process.stdout.write('     → Review...');
-  const review = await runContractReview(text, title);
+  const review = await runContractReview(text, title, meta);
   saveReviewJSON(review);
   saveReviewMarkdown(review);
   const reviewHtml = renderReviewHTML(review);
@@ -42,7 +49,7 @@ async function processSample(filename: string) {
 
   // Financial
   process.stdout.write('     → Financial...');
-  const financial = await runFinancialAnalysis(text, title);
+  const financial = await runFinancialAnalysis(text, title, meta);
   saveFinancialJSON(financial);
   const financialHtml = renderFinancialHTML(financial);
   saveHTML(financialHtml, `${slug}-financial`);

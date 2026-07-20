@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Synth — Spreadsheet Analysis</title>
+
+    <style>
+      * { box-sizing: border-box; }
+      body { font-family: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif; background: #ffffff; color: #111827; margin: 0; padding: 24px; line-height: 1.6; }
+      .container { max-width: 960px; margin: 0 auto; }
+      .brand-bar { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+      .brand-mark { color: #111827; font-family: Georgia, 'Source Serif 4', 'Times New Roman', serif; font-weight: 700; font-size: 1.15rem; letter-spacing: 0.02em; }
+      .report-kind { color: #6b7280; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.16em; }
+      h1 { font-family: Georgia, 'Source Serif 4', 'Times New Roman', serif; color: #111827; font-size: 1.55rem; margin: 4px 0 6px; letter-spacing: 0.01em; }
+      h2 { color: #4b5563; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.14em; margin: 28px 0 12px; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px; }
+      h4 { color: #111827; font-size: 0.9rem; margin: 6px 0; }
+      .meta { color: #6b7280; font-size: 0.78rem; }
+      .section { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 2px; padding: 16px; margin-bottom: 16px; }
+      .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 20px 0; }
+      .stat { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 2px; padding: 14px; text-align: center; }
+      .stat-val { font-family: Georgia, 'Source Serif 4', 'Times New Roman', serif; font-size: 1.6rem; font-weight: 700; color: #111827; }
+      .stat-lbl { font-size: 0.72rem; color: #6b7280; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.08em; }
+      table.main { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+      table.main th { background: #f9fafb; color: #4b5563; padding: 6px 10px; text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; border-bottom: 2px solid #111827; }
+      table.main td { padding: 6px 10px; border-bottom: 1px solid #e5e7eb; color: #374151; vertical-align: top; }
+      code { background: #f9fafb; border: 1px solid #e5e7eb; color: #111827; padding: 1px 5px; border-radius: 2px; font-size: 0.76rem; font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace; }
+      blockquote { border-left: 2px solid #d1d5db; padding: 4px 12px; font-family: Georgia, 'Source Serif 4', 'Times New Roman', serif; color: #374151; font-style: italic; font-size: 0.84rem; margin: 8px 0; }
+      .chip { display: inline-block; border: 1px solid; font-size: 0.68rem; padding: 2px 9px; border-radius: 2px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; background: transparent; }
+      .warning-list { background: #f9fafb; border: 1px solid #e5e7eb; border-left: 3px solid #b45309; border-radius: 2px; padding: 12px 16px; }
+      .warning-list li { color: #b45309; font-size: 0.82rem; margin: 4px 0; }
+      .recommendation { color: #111827; font-size: 0.82rem; font-weight: 500; }
+      .finding-card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 2px; padding: 14px; margin-bottom: 12px; }
+      .site-footer { margin-top: 36px; padding-top: 14px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 0.72rem; text-align: center; line-height: 1.7; }
+    </style>
+  
+<style>
+  .sheet-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+  .type-tag { border: 1px solid #d1d5db; color: #374151; padding: 1px 9px; border-radius: 2px; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+  em { color: #6b7280; font-style: normal; }
+  .warning { color: #b45309; font-size: 0.82rem; }
+  p { font-size: 0.85rem; margin: 6px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="brand-bar"><span class="brand-mark">§ Synth</span><span class="report-kind">Spreadsheet Analysis</span></div>
+<h1>sample payment schedule</h1>
+<p class="meta">1 sheet(s) · 15 rows · <code>sample-payment-schedule.csv</code> · Generated 2026-07-20T04:03:30.547Z · Mock Mode</p>
+  <h2>Summary</h2>
+  <div class="section">
+    <p>This spreadsheet (sample-payment-schedule.csv) contains 1 sheet(s) with 15 total data rows. It appears to be a payment schedule tracking vendor invoices and due dates. It contains vendor invoice data. All financial figures were extracted directly from the spreadsheet — no AI analysis was performed (mock mode).</p>
+  </div>
+  
+  <h2>Key Findings</h2>
+  <div class="section">
+    <ul style="margin:4px 0;padding-left:18px"><li style="color:#374151;font-size:0.85rem;margin:4px 0">Payment schedule has 1 row(s) marked as overdue</li><li style="color:#374151;font-size:0.85rem;margin:4px 0">Payment totals detected: Acme Corp Total (Invoice Number): $62500.00, DataStream Inc Total (Invoice Number): $26950.00, LegalDocs Ltd Total (Invoice Number): $6400.00, TechVendors LLC Total (Invoice Number): $5500.00</li><li style="color:#374151;font-size:0.85rem;margin:4px 0">Invoice/vendor sheet: 15 rows, 8 entities</li></ul>
+  </div>
+  
+  <h2>Data Quality Warnings</h2>
+  <div class="warning-list"><ul style="margin:0;padding-left:18px"><li>1 row(s) marked as overdue</li></ul></div>
+  <h2>Sheet Profiles</h2>
+  
+    <div class="section">
+      <div class="sheet-header">
+        <h4>Sheet1 <span class="type-tag">Payment Schedule</span> <span class="type-tag">Invoice</span> <span class="type-tag">Vendor List</span></h4>
+        <span class="meta">15 rows · 7 columns</span>
+      </div>
+      <p><strong>Entities:</strong> Acme Corp, DataStream Inc, LegalDocs Ltd, TechVendors LLC, Acme Corp Total, DataStream Inc Total, LegalDocs Ltd Total, TechVendors LLC Total</p>
+      <p><strong>Amounts:</strong> $12500.00, $8750.00, $3200.00, $9100.00, $5500.00, $62500.00</p>
+      <p><strong>Dates:</strong> 2024-02-15, 2024-02-28, 2024-03-15, 2024-03-20, 2024-03-31</p>
+      <p><strong>Totals:</strong> Acme Corp Total (Invoice Number): <strong>$62500.00</strong> · DataStream Inc Total (Invoice Number): <strong>$26950.00</strong> · LegalDocs Ltd Total (Invoice Number): <strong>$6400.00</strong> · TechVendors LLC Total (Invoice Number): <strong>$5500.00</strong></p>
+      
+      <p class="warning">⚠ 1 row(s) marked as overdue</p>
+      <table class="main">
+        <thead><tr><th>Column</th><th>Type</th><th>Unique</th><th>Blanks</th><th>Samples</th></tr></thead>
+        <tbody>
+      <tr>
+        <td>Vendor</td>
+        <td><code>string</code></td>
+        <td>9</td>
+        <td>0</td>
+        <td><em>Acme Corp</em>, <em>DataStream Inc</em>, <em>Acme Corp</em>, <em>LegalDocs Ltd</em>, <em>DataStream Inc</em></td>
+      </tr>
+      <tr>
+        <td>Invoice Number</td>
+        <td><code>string</code></td>
+        <td>14</td>
+        <td>1</td>
+        <td><em>INV-2024-001</em>, <em>INV-2024-002</em>, <em>INV-2024-003</em>, <em>INV-2024-004</em>, <em>INV-2024-005</em></td>
+      </tr>
+      <tr>
+        <td>Amount</td>
+        <td><code>currency</code></td>
+        <td>5</td>
+        <td>5</td>
+        <td><em>$12500.00</em>, <em>$8750.00</em>, <em>$12500.00</em>, <em>$3200.00</em>, <em>$9100.00</em></td>
+      </tr>
+      <tr>
+        <td>Due Date</td>
+        <td><code>date</code></td>
+        <td>10</td>
+        <td>5</td>
+        <td><em>2024-02-15</em>, <em>2024-02-28</em>, <em>2024-03-15</em>, <em>2024-03-20</em>, <em>2024-03-31</em></td>
+      </tr>
+      <tr>
+        <td>Status</td>
+        <td><code>string</code></td>
+        <td>3</td>
+        <td>5</td>
+        <td><em>Paid</em>, <em>Paid</em>, <em>Paid</em>, <em>Paid</em>, <em>Overdue</em></td>
+      </tr>
+      <tr>
+        <td>Contract Reference</td>
+        <td><code>string</code></td>
+        <td>3</td>
+        <td>5</td>
+        <td><em>SaaS-2024-001</em>, <em>SaaS-2024-001</em>, <em>SaaS-2024-001</em>, <em>CONSULTING-2024-02</em>, <em>SaaS-2024-001</em></td>
+      </tr>
+      <tr>
+        <td>Notes</td>
+        <td><code>string</code></td>
+        <td>6</td>
+        <td>5</td>
+        <td><em>Monthly license fee</em>, <em>Overage charges Feb</em>, <em>Monthly license fee</em>, <em>Legal review retainer</em>, <em>Overage charges Mar</em></td>
+      </tr></tbody>
+      </table>
+    </div>
+
+  <div class="site-footer">
+  <p>Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.</p>
+  <p>Generated by Synth · 2026-07-20T04:03:30.547Z</p>
+</div>
+</div>
+</body>
+</html>

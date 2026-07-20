@@ -14,8 +14,10 @@ import {
   buildLawyerQuestions,
   buildRevisionSummary,
 } from './revision-engine';
+import { calculateRiskScore, deriveRiskLevel, reconcileRisk } from './risk-scoring';
+import type { Risk } from '../schemas/review.schema';
+import { DISCLAIMER, REVISION_DISCLAIMER } from './brand';
 
-const DISCLAIMER = 'Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.';
 const NOT_FOUND = 'Not found in the document.';
 
 export function generateMockReview(documentText: string, documentTitle: string) {
@@ -31,8 +33,44 @@ export function generateMockReview(documentText: string, documentTitle: string) 
   const liabilityIssues = extractLiabilityCap(documentText);
   const keyDates = extractKeyDates(documentText);
 
-  const liabilityQuote = liabilityIssues !== NOT_FOUND ? liabilityIssues : 'Liability limitation clause not identified in parsed text. Review document for liability cap provisions.';
-  const renewalQuote = renewalTerms !== NOT_FOUND ? renewalTerms : 'Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions.';
+  // supportingQuote must be real document text or the honest NOT_FOUND sentinel —
+  // never explanatory prose, which downstream consumers would mistake for a quote.
+  const liabilityQuote = liabilityIssues !== NOT_FOUND ? liabilityIssues : NOT_FOUND;
+  const renewalQuote = renewalTerms !== NOT_FOUND ? renewalTerms : NOT_FOUND;
+
+  const topRisks: Risk[] = [
+    {
+      title: 'Unilateral Modification Rights',
+      severity: 'High',
+      explanation: 'Provider may be able to modify terms without customer consent.',
+      whyItMatters: 'Material terms could change after signing without recourse.',
+      suggestedNextStep: 'Request a mutual written amendment requirement.',
+      supportingQuote: renewalQuote,
+      location: 'General Provisions',
+    },
+    {
+      title: 'Limited Liability Cap',
+      severity: 'High',
+      explanation: 'Liability may be capped at a small fraction of potential damages.',
+      whyItMatters: 'Company may have no meaningful recourse for serious failures.',
+      suggestedNextStep: 'Negotiate a higher cap and carve-outs for willful misconduct.',
+      supportingQuote: liabilityQuote,
+      location: 'Liability',
+    },
+    {
+      title: 'Auto-Renewal with Short Notice',
+      severity: 'Medium',
+      explanation: 'Agreement auto-renews unless cancelled within a specific window.',
+      whyItMatters: 'Missing the notice window locks in another full term.',
+      suggestedNextStep: 'Calendar the cancellation deadline immediately.',
+      supportingQuote: renewalQuote,
+      location: 'Term and Renewal',
+    },
+  ];
+  // Same reconciliation as the AI path: level floors at the worst individual
+  // risk, and the score is lifted into that level's band.
+  const rawScore = calculateRiskScore(topRisks);
+  const { riskScore, riskLevel } = reconcileRisk(rawScore, deriveRiskLevel(topRisks, rawScore), topRisks);
 
   return {
     documentTitle,
@@ -56,37 +94,9 @@ export function generateMockReview(documentText: string, documentTitle: string) 
       'Unilateral modification rights may allow changes without consent',
       'Review auto-renewal notice window carefully',
     ],
-    riskScore: 65,
-    riskLevel: 'High' as const,
-    topRisks: [
-      {
-        title: 'Unilateral Modification Rights',
-        severity: 'High' as const,
-        explanation: 'Provider may be able to modify terms without customer consent.',
-        whyItMatters: 'Material terms could change after signing without recourse.',
-        suggestedNextStep: 'Request a mutual written amendment requirement.',
-        supportingQuote: renewalQuote,
-        location: 'General Provisions',
-      },
-      {
-        title: 'Limited Liability Cap',
-        severity: 'High' as const,
-        explanation: 'Liability may be capped at a small fraction of potential damages.',
-        whyItMatters: 'Company may have no meaningful recourse for serious failures.',
-        suggestedNextStep: 'Negotiate a higher cap and carve-outs for willful misconduct.',
-        supportingQuote: liabilityQuote,
-        location: 'Liability',
-      },
-      {
-        title: 'Auto-Renewal with Short Notice',
-        severity: 'Medium' as const,
-        explanation: 'Agreement auto-renews unless cancelled within a specific window.',
-        whyItMatters: 'Missing the notice window locks in another full term.',
-        suggestedNextStep: 'Calendar the cancellation deadline immediately.',
-        supportingQuote: renewalQuote,
-        location: 'Term and Renewal',
-      },
-    ],
+    riskScore,
+    riskLevel,
+    topRisks,
     actionItems: [
       'Review all payment and fee terms with finance team',
       'Calendar all notice and cancellation deadlines',
@@ -127,15 +137,15 @@ export function generateMockFinancial(documentText: string, documentTitle: strin
     financialRedFlags: [
       {
         issue: 'Non-refundable fees',
-        explanation: 'All fees may be non-refundable regardless of circumstances.',
+        explanation: 'All fees may be non-refundable regardless of circumstances. Review for fee non-refundability provisions.',
         severity: 'High' as const,
-        supportingQuote: paymentTerms !== NOT_FOUND ? paymentTerms : 'Payment terms not extracted from document text — review for fee non-refundability provisions.',
+        supportingQuote: paymentTerms,
       },
       {
         issue: 'Automatic price increases',
-        explanation: 'Price may increase automatically on renewal.',
+        explanation: 'Price may increase automatically on renewal. Review for price escalation provisions.',
         severity: 'Medium' as const,
-        supportingQuote: renewalTerms !== NOT_FOUND ? renewalTerms : 'Renewal cost terms not extracted from document text — review for price escalation provisions.',
+        supportingQuote: renewalTerms,
       },
     ],
     citations: [
@@ -204,41 +214,32 @@ export function generateMockRevision(documentText: string, review: {
   return {
     documentTitle: review.documentTitle,
     revisionSummary: buildRevisionSummary(fullReview),
-    priorityChanges: buildPriorityChanges(fullReview).length > 0
-      ? buildPriorityChanges(fullReview)
-      : [
-          'Negotiate mutual written amendment requirement',
-          'Increase liability cap or add carve-outs',
-          'Reduce or eliminate auto-renewal notice window',
-          'Clarify data rights and usage restrictions',
-          'Add force majeure provision',
-        ],
+    priorityChanges: buildPriorityChanges(fullReview),
     clauseRevisions: [
       {
         section: 'Liability Limitation',
-        originalLanguage: liabilityQuote !== NOT_FOUND ? liabilityQuote : 'Liability clause language not extracted from document text.',
+        originalLanguage: liabilityQuote,
         issue: 'Liability cap may be significantly below potential damages',
         suggestedReplacementLanguage:
           '[SUGGESTED FOR PROFESSIONAL REVIEW] Consider negotiating a higher cap, or carve-outs for willful misconduct, gross negligence, and data breach scenarios.',
         whyItMatters: 'Low liability caps leave you with no meaningful recourse for serious failures.',
         severity: 'High' as const,
-        supportingQuote: liabilityQuote !== NOT_FOUND ? liabilityQuote : 'Liability limitation clause not identified in parsed text. Review document for liability cap provisions.',
+        supportingQuote: liabilityQuote,
       },
       {
         section: 'Auto-Renewal',
-        originalLanguage: renewalQuote !== NOT_FOUND ? renewalQuote : 'Renewal clause language not extracted from document text.',
+        originalLanguage: renewalQuote,
         issue: 'Auto-renewal with potentially short cancellation window',
         suggestedReplacementLanguage:
           '[SUGGESTED FOR PROFESSIONAL REVIEW] Negotiate a shorter notice window (e.g., 30 days) and require affirmative renewal consent.',
         whyItMatters: 'Missing the cancellation window locks you into another full-term commitment.',
         severity: 'Medium' as const,
-        supportingQuote: renewalQuote !== NOT_FOUND ? renewalQuote : 'Renewal or term clause not identified in parsed text. Review document for renewal and termination provisions.',
+        supportingQuote: renewalQuote,
       },
     ],
     negotiationNotes: buildNegotiationNotes(),
     lawyerQuestions: buildLawyerQuestions(fullReview),
-    revisionDisclaimer:
-      'Suggested revisions are not legal advice. They are suggested replacement language for review by a qualified professional. Consult an attorney before using any suggested language.',
+    revisionDisclaimer: REVISION_DISCLAIMER,
     generatedAt: now,
   };
 }

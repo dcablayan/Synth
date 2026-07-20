@@ -2,9 +2,8 @@ import type { Review, Risk } from '../schemas/review.schema';
 import type { DataRoomSummary, CrossDocumentFinding, SpreadsheetAnalysis } from '../schemas/spreadsheet.schema';
 import { IssueLogSchema } from '../schemas/issue.schema';
 import type { Issue, EvidenceItem, IssueLog, IssueCategory } from '../schemas/issue.schema';
+import { DISCLAIMER } from './brand';
 
-const DISCLAIMER =
-  'Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.';
 
 const SEV_ORDER: Record<string, number> = { Critical: 4, High: 3, Medium: 2, Low: 1 };
 
@@ -32,8 +31,65 @@ function categoryFromFinding(finding: CrossDocumentFinding): IssueCategory {
   }
 }
 
-function hasRealQuote(q: string | undefined): q is string {
-  return !!q && q.length > 10 && !/^see document/i.test(q.trim());
+// A candidate quote is text the report CLAIMS came from the document. Sentinels
+// and "see document" strings are not quotes.
+function isCandidateQuote(q: string | undefined): q is string {
+  return !!q && q.length > 10 && !/^see document/i.test(q.trim()) && !/^not found/i.test(q.trim());
+}
+
+export function normalizeForMatch(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/[“”„‟]/g, '"')
+    .replace(/[‘’‚‛]/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Verifies claimed quotes against actual source text. Verification is the whole
+// point of the evidence ledger: a quote is "verified" only when it literally
+// appears in the source document (whitespace- and quote-mark-insensitive).
+class QuoteVerifier {
+  private normalized = new Map<string, string>();
+
+  constructor(private sourceTexts: Map<string, string>) {}
+
+  private normalizedSource(key: string | undefined): string | undefined {
+    if (!key) return undefined;
+    if (this.normalized.has(key)) return this.normalized.get(key);
+    // Allow lookup by exact filename or case-insensitive match.
+    let raw = this.sourceTexts.get(key);
+    if (raw === undefined) {
+      for (const [k, v] of this.sourceTexts) {
+        if (k.toLowerCase() === key.toLowerCase()) { raw = v; break; }
+      }
+    }
+    if (raw === undefined) return undefined;
+    const norm = normalizeForMatch(raw);
+    this.normalized.set(key, norm);
+    return norm;
+  }
+
+  verify(quote: string | undefined, sourceKeys: Array<string | undefined>): { isVerified: boolean; note?: string } {
+    if (!isCandidateQuote(quote)) {
+      return { isVerified: false, note: 'Supporting quote not available — verify against source document.' };
+    }
+    const q = normalizeForMatch(quote);
+    let sawSource = false;
+    for (const key of sourceKeys) {
+      const source = this.normalizedSource(key);
+      if (source === undefined) continue;
+      sawSource = true;
+      if (source.includes(q)) return { isVerified: true };
+    }
+    if (!sawSource) {
+      return { isVerified: false, note: 'Source document not available for verification — verify quote manually.' };
+    }
+    return {
+      isVerified: false,
+      note: 'Quote could not be located in the source document — do not rely on it without manual verification.',
+    };
+  }
 }
 
 export function buildIssueLogFromReports(
@@ -41,9 +97,11 @@ export function buildIssueLogFromReports(
   spreadsheets: SpreadsheetAnalysis[],
   datarooms: DataRoomSummary[],
   sourceReportNames: string[],
+  sourceTexts: Map<string, string> = new Map(),
 ): IssueLog {
   const now = new Date().toISOString();
   const ts = now.replace(/[:.]/g, '-').slice(0, 19);
+  const verifier = new QuoteVerifier(sourceTexts);
 
   let issueSeq = 0;
   let evidenceSeq = 0;
@@ -60,10 +118,12 @@ export function buildIssueLogFromReports(
     issues.push({ ...partial, id: issueId, evidenceIds: [evidenceId], createdAt: now, updatedAt: now });
   }
 
-  // Review risks → issues
+  // Review risks → issues; quotes verified against the source document text.
   for (const review of reviews) {
+    const sourceKey = review.sourceFilename;
     for (const risk of review.topRisks) {
-      const realQuote = hasRealQuote(risk.supportingQuote);
+      const candidate = isCandidateQuote(risk.supportingQuote);
+      const verdict = verifier.verify(risk.supportingQuote, [sourceKey, review.documentTitle]);
       addIssue(
         {
           title: risk.title,
@@ -71,25 +131,24 @@ export function buildIssueLogFromReports(
           category: categoryFromRisk(risk),
           status: 'open',
           sourceFiles: [review.sourceFilename ?? review.documentTitle],
-          evidenceQuotes: realQuote ? [risk.supportingQuote] : [],
+          evidenceQuotes: verdict.isVerified ? [risk.supportingQuote] : [],
           affectedRows: [],
           recommendation: risk.suggestedNextStep,
         },
         {
-          documentQuote: realQuote ? risk.supportingQuote : '',
+          documentQuote: candidate ? risk.supportingQuote : '',
           sourceFilename: review.sourceFilename ?? review.documentTitle,
           fieldName: risk.location,
-          isVerified: realQuote,
-          verificationNote: realQuote
-            ? undefined
-            : 'Supporting quote not available — verify against source document.',
+          isVerified: verdict.isVerified,
+          verificationNote: verdict.note,
         },
       );
     }
 
-    // Unusual clauses → low-severity legal issues (cap at 3)
+    // Unusual clauses → low-severity legal issues (cap at 3). Clause text is a
+    // description, not a quote — verified only if it literally appears.
     for (const clause of (review.unusualClauses ?? []).slice(0, 3)) {
-      const hasText = clause.length > 20;
+      const verdict = verifier.verify(clause, [sourceKey, review.documentTitle]);
       addIssue(
         {
           title: `Unusual Clause: ${clause.slice(0, 70)}${clause.length > 70 ? '…' : ''}`,
@@ -97,19 +156,24 @@ export function buildIssueLogFromReports(
           category: 'legal',
           status: 'open',
           sourceFiles: [review.sourceFilename ?? review.documentTitle],
-          evidenceQuotes: hasText ? [clause] : [],
+          evidenceQuotes: verdict.isVerified ? [clause] : [],
           affectedRows: [],
           recommendation: 'Review this clause with legal counsel to assess acceptability.',
         },
         {
-          documentQuote: hasText ? clause : '',
+          documentQuote: isCandidateQuote(clause) ? clause : '',
           sourceFilename: review.sourceFilename ?? review.documentTitle,
-          isVerified: hasText,
-          verificationNote: hasText ? undefined : 'Clause text too short — check source document.',
+          isVerified: verdict.isVerified,
+          verificationNote: verdict.note,
         },
       );
     }
   }
+
+  // Warning-derived issues are deduplicated by the warning text itself — the same
+  // warning reaches us via both the data room summary and per-spreadsheet analyses.
+  const seenWarnings = new Set<string>();
+  const warningKey = (w: string) => normalizeForMatch(w).slice(0, 100);
 
   // Dataroom cross-doc findings → issues
   for (const dataroom of datarooms) {
@@ -131,16 +195,17 @@ export function buildIssueLogFromReports(
         {
           documentQuote: quote,
           sourceFilename: finding.sourceA,
-          isVerified: !!quote,
+          isVerified: false,
           verificationNote: quote
-            ? undefined
-            : 'Values not extractable in mock mode — manual cross-reference required.',
+            ? 'Derived from cross-document comparison — verify the underlying values in both source files.'
+            : 'Values not extractable — manual cross-reference required.',
         },
       );
     }
 
-    // Overdue payments → high-severity payment issues
-    for (const payment of dataroom.paymentScheduleFindings.filter((p) => /overdue/i.test(p.status)).slice(0, 5)) {
+    // Overdue payments → high-severity payment issues. Every overdue row becomes
+    // an issue; the findings list itself is capped upstream with a warning.
+    for (const payment of dataroom.paymentScheduleFindings.filter((p) => /overdue/i.test(p.status))) {
       const rowText = `Vendor: ${payment.vendor} | Amount: ${payment.amount} | Due: ${payment.dueDate}`;
       addIssue(
         {
@@ -158,12 +223,16 @@ export function buildIssueLogFromReports(
           spreadsheetRow: rowText,
           sourceFilename: payment.sourceFile,
           isVerified: true,
+          verificationNote: 'Extracted directly from the spreadsheet row.',
         },
       );
     }
 
     // Data quality warnings → low-severity issues (cap at 5)
     for (const warning of dataroom.dataQualityWarnings.slice(0, 5)) {
+      const key = warningKey(warning);
+      if (seenWarnings.has(key)) continue;
+      seenWarnings.add(key);
       addIssue(
         {
           title: `Data Quality: ${warning.slice(0, 80)}${warning.length > 80 ? '…' : ''}`,
@@ -185,13 +254,12 @@ export function buildIssueLogFromReports(
     }
   }
 
-  // Spreadsheet-only warnings (deduplicated against dataroom issues)
-  const existingTitles = new Set(issues.map((i) => i.title.toLowerCase().slice(0, 50)));
+  // Spreadsheet-only warnings (deduplicated against dataroom warnings above)
   for (const sheet of spreadsheets) {
     for (const warning of sheet.warnings.slice(0, 3)) {
-      const key = warning.toLowerCase().slice(0, 50);
-      if (existingTitles.has(key)) continue;
-      existingTitles.add(key);
+      const key = warningKey(warning);
+      if (seenWarnings.has(key)) continue;
+      seenWarnings.add(key);
       addIssue(
         {
           title: `Spreadsheet Warning: ${warning.slice(0, 70)}${warning.length > 70 ? '…' : ''}`,

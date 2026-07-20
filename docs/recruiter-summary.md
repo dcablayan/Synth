@@ -13,5 +13,5 @@ Synth is a local-first TypeScript diligence system for mixed legal and financial
 1. `/demo` with the issue log and evidence ledger visible.
 2. `/artifacts` showing PDF, issue log, evidence ledger, CSV, XLSX, and compare report cards.
 3. `/dashboard` after running `npm run demo && npm run dataroom && npm run triage && npm run export`.
-4. Terminal output from `npm run eval` showing `98/98 checks passed`.
+4. Terminal output from `npm run eval` showing `110/110 checks passed`.
 5. `reports/exports/` showing `issues.csv`, `evidence.csv`, `payments.csv`, `cap-table.csv`, and `dataroom-summary.xlsx`.

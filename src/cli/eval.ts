@@ -3,11 +3,12 @@ import fs from 'fs';
 import path from 'path';
 import { chunkText, extractDocumentTitle, detectDocumentType } from '../lib/parser';
 import { runContractReview, runFinancialAnalysis, runMemoGeneration, runRevisionGeneration } from '../lib/ai-provider';
-import { parseCsvFile, buildTableProfile } from '../lib/spreadsheet-parser';
+import { parseCsvFile, buildTableProfile, type ParsedSheet } from '../lib/spreadsheet-parser';
 import { generateMockSpreadsheetAnalysis, generateMockDataRoomSummary } from '../lib/mock-spreadsheet-provider';
+import { deriveRiskLevel } from '../lib/risk-scoring';
 import { SpreadsheetAnalysisSchema, DataRoomSummarySchema } from '../schemas/spreadsheet.schema';
 import { IssueLogSchema } from '../schemas/issue.schema';
-import { buildIssueLogFromReports } from '../lib/issue-engine';
+import { buildIssueLogFromReports, normalizeForMatch } from '../lib/issue-engine';
 import { resolveRegularFileInside } from '../lib/path-safety';
 
 const CWD = process.cwd();
@@ -42,8 +43,12 @@ function check(name: string, condition: boolean, pass: string, fail: string): Ch
   return { name, pass: condition, message: condition ? pass : fail };
 }
 
-function hasRealQuote(quote: string): boolean {
-  return !!quote && quote.length > 10 && !GENERIC_SEE_DOC.test(quote.trim());
+// A risk quote is honest when it is either the NOT_FOUND sentinel or text that
+// literally appears in the source document. Anything else is fabricated.
+function quoteIsHonest(quote: string, normalizedSource: string): boolean {
+  if (quote === NOT_FOUND) return true;
+  if (!quote || quote.trim().length === 0) return false;
+  return normalizedSource.includes(normalizeForMatch(quote));
 }
 
 async function evalDocument(filename: string, expectedType: string): Promise<DocResult> {
@@ -123,14 +128,15 @@ async function evalDocument(filename: string, expectedType: string): Promise<Doc
     `Invalid risk score: ${review.riskScore}`
   ));
 
-  // Check 6: topRisks all have real supporting quotes (not generic "See document")
-  const risksWithRealQuotes = review.topRisks.filter((r) => hasRealQuote(r.supportingQuote));
-  const genericQuoteRisks = review.topRisks.filter((r) => !hasRealQuote(r.supportingQuote) && r.supportingQuote);
+  // Check 6: every risk quote is real document text or the honest NOT_FOUND
+  // sentinel — the check that keeps "evidence-backed" true.
+  const normalizedSource = normalizeForMatch(raw);
+  const fabricatedQuoteRisks = review.topRisks.filter((r) => !quoteIsHonest(r.supportingQuote, normalizedSource));
   checks.push(check(
-    'Risk supporting quotes are specific (not "See document")',
-    genericQuoteRisks.length === 0,
-    `All ${review.topRisks.length} risks have specific quotes`,
-    `${genericQuoteRisks.length} risk(s) use generic "See document" quotes: ${genericQuoteRisks.map((r) => r.title).join(', ')}`
+    'Risk quotes are document text or honest NOT_FOUND',
+    fabricatedQuoteRisks.length === 0,
+    `All ${review.topRisks.length} risk quote(s) verified against the source text`,
+    `${fabricatedQuoteRisks.length} risk quote(s) not found in the document: ${fabricatedQuoteRisks.map((r) => r.title).join(', ')}`
   ));
 
   // Check 7: Citations present
@@ -410,7 +416,16 @@ async function evalV5(): Promise<DocResult> {
       parsedCharacterCount: text.length,
     });
 
-    const issueLog = buildIssueLogFromReports([review], [], [mockDataRoom], ['test-review', 'test-dataroom']);
+    const issueLog = buildIssueLogFromReports(
+      [review],
+      [],
+      [mockDataRoom],
+      ['test-review', 'test-dataroom'],
+      new Map([
+        ['sample-saas-agreement.txt', reviewText],
+        [title, reviewText],
+      ]),
+    );
 
     checks.push(check(
       'Issue log generates without crash',
@@ -454,6 +469,32 @@ async function evalV5(): Promise<DocResult> {
       unverifiedWithoutNote.length === 0,
       'All unverified items have notes',
       `${unverifiedWithoutNote.length} unverified item(s) missing verificationNote`,
+    ));
+
+    // Check 5b: "Verified" means it — every verified document quote must appear
+    // verbatim (whitespace-insensitive) in the source document text.
+    const normalizedSource = normalizeForMatch(reviewText);
+    const falselyVerified = issueLog.evidence.filter(
+      (e) => e.isVerified && e.documentQuote.length > 0 && !normalizedSource.includes(normalizeForMatch(e.documentQuote))
+    );
+    checks.push(check(
+      'Verified evidence quotes appear in the source document',
+      falselyVerified.length === 0,
+      'All verified quotes located in source text',
+      `${falselyVerified.length} verified quote(s) NOT found in source: ${falselyVerified.map((e) => e.evidenceId).join(', ')}`,
+    ));
+
+    // Check 5c: warning-derived issues are not duplicated across the dataroom
+    // and per-spreadsheet paths.
+    const warningTitles = issueLog.issues
+      .filter((i) => i.category === 'data-quality')
+      .map((i) => normalizeForMatch(i.title.replace(/^(data quality|spreadsheet warning): /i, '')));
+    const duplicateWarnings = warningTitles.filter((t, i) => warningTitles.indexOf(t) !== i);
+    checks.push(check(
+      'No duplicate warning-derived issues',
+      duplicateWarnings.length === 0,
+      `${warningTitles.length} unique warning issue(s)`,
+      `Duplicated warnings: ${[...new Set(duplicateWarnings)].join(' | ')}`,
     ));
 
     // Check 6: severity ordering (critical/high before low)
@@ -522,6 +563,200 @@ async function evalV5(): Promise<DocResult> {
   };
 }
 
+// Regression checks for defects found in the 2026-07 adversarial review. Each
+// of these failed (or was unreachable) before the corresponding fix.
+async function evalRegression(): Promise<DocResult> {
+  const checks: Check[] = [];
+
+  // PDF ingestion must work with the pdf-parse v2 class API.
+  try {
+    const { extractPdfText } = await import('../lib/document-loader');
+    const pdfPath = path.join(CWD, 'public', 'demo-artifacts', 'demo-review.pdf');
+    if (fs.existsSync(pdfPath)) {
+      const text = await extractPdfText(pdfPath);
+      checks.push(check(
+        'PDF text extraction works (pdf-parse v2 API)',
+        text.trim().length > 100,
+        `Extracted ${text.length.toLocaleString()} characters from demo-review.pdf`,
+        `Only ${text.trim().length} characters extracted`,
+      ));
+    } else {
+      checks.push({ name: 'PDF text extraction works (pdf-parse v2 API)', pass: false, message: 'Fixture public/demo-artifacts/demo-review.pdf missing' });
+    }
+  } catch (e) {
+    checks.push({ name: 'PDF text extraction works (pdf-parse v2 API)', pass: false, message: `Threw: ${e instanceof Error ? e.message : e}` });
+  }
+
+  // Document-type detection must not match "nda" inside ordinary words.
+  const partnershipDoc =
+    'PARTNERSHIP AGREEMENT\nThis Partnership Agreement is made between Alpha LLC and Beta LLC.\n' +
+    'The parties agree to standard accounting practices and revenue sharing agreement terms.';
+  const detectedPartnership = detectDocumentType(partnershipDoc);
+  checks.push(check(
+    'Doc containing "standard" is not misclassified as NDA',
+    detectedPartnership === 'Partnership Agreement',
+    'Detected: Partnership Agreement',
+    `Detected: ${detectedPartnership}`,
+  ));
+  const detectedCalendar = detectDocumentType('please check the calendar for dates');
+  checks.push(check(
+    'Text containing "calendar" is not classified as NDA',
+    detectedCalendar === 'Other',
+    'Detected: Other',
+    `Detected: ${detectedCalendar}`,
+  ));
+
+  // Truncated documents must carry an explicit warning, and mock risk
+  // score/level must be derived from the reported risks.
+  try {
+    const longText = 'PARTNERSHIP AGREEMENT between Alpha LLC and Beta LLC. ' + 'This clause continues. '.repeat(1000);
+    const chunked = chunkText(longText);
+    const truncReview = await runContractReview(chunked, 'Truncation Regression Doc', {
+      parsedCharacterCount: chunked.length,
+      originalCharacterCount: longText.length,
+    });
+    checks.push(check(
+      'Truncated documents carry an explicit warning',
+      (truncReview.warnings ?? []).some((w) => /truncated/i.test(w)),
+      'Truncation warning present in review.warnings',
+      `warnings=${JSON.stringify(truncReview.warnings ?? [])}`,
+    ));
+    checks.push(check(
+      'Risk level consistent with reported risk severities',
+      truncReview.riskLevel === deriveRiskLevel(truncReview.topRisks, truncReview.riskScore),
+      `riskLevel=${truncReview.riskLevel}, riskScore=${truncReview.riskScore}`,
+      `riskLevel=${truncReview.riskLevel} does not match derived level ${deriveRiskLevel(truncReview.topRisks, truncReview.riskScore)}`,
+    ));
+  } catch (e) {
+    checks.push({ name: 'Truncated documents carry an explicit warning', pass: false, message: `Threw: ${e instanceof Error ? e.message : e}` });
+  }
+
+  // Payment findings must cover every row (the old code read only the first 8),
+  // and the overdue cross-doc finding must name the vendor column.
+  try {
+    const rows = Array.from({ length: 20 }, (_, i) => [
+      `Vendor${i + 1}`, `$${i + 1}00.00`, '2026-01-01', i >= 15 ? 'Overdue' : 'Paid',
+    ]);
+    const sheet: ParsedSheet = { sheetName: 'S', headers: ['Vendor', 'Amount', 'Due Date', 'Status'], rows };
+    const dr = generateMockDataRoomSummary(
+      [{ filename: 'contract.txt', text: 'Payment terms: net 30.' }],
+      [{ filename: 'pay.csv', sheets: [sheet], profiles: [buildTableProfile(sheet)] }],
+      [],
+    );
+    const overdueCaptured = dr.paymentScheduleFindings.filter((p) => /overdue/i.test(p.status)).length;
+    checks.push(check(
+      'Payment findings cover all rows (no first-8 cap)',
+      dr.paymentScheduleFindings.length === 20 && overdueCaptured === 5,
+      `20/20 rows captured, ${overdueCaptured}/5 overdue rows present`,
+      `${dr.paymentScheduleFindings.length}/20 rows, ${overdueCaptured}/5 overdue captured`,
+    ));
+
+    const shifted: ParsedSheet = {
+      sheetName: 'S',
+      headers: ['Invoice #', 'Due Date', 'Vendor', 'Amount', 'Status'],
+      rows: [['INV-001', '2026-01-01', 'Acme Corp', '$500.00', 'Overdue']],
+    };
+    const dr2 = generateMockDataRoomSummary(
+      [{ filename: 'contract.txt', text: 'Payment terms: net 30.' }],
+      [{ filename: 'pay.csv', sheets: [shifted], profiles: [buildTableProfile(shifted)] }],
+      [],
+    );
+    const overdueFinding = dr2.crossDocumentFindings.find((f) => f.findingType === 'payment-mismatch');
+    checks.push(check(
+      'Overdue finding names the vendor column, not column 0',
+      !!overdueFinding && overdueFinding.valueB.includes('Acme Corp'),
+      `valueB="${overdueFinding?.valueB}"`,
+      `valueB="${overdueFinding?.valueB ?? '(no finding)'}" — expected the vendor name`,
+    ));
+  } catch (e) {
+    checks.push({ name: 'Payment findings cover all rows (no first-8 cap)', pass: false, message: `Threw: ${e instanceof Error ? e.message : e}` });
+  }
+
+  // Year/integer columns must not type as currency.
+  try {
+    const sheet: ParsedSheet = {
+      sheetName: 'S',
+      headers: ['Investor', 'Year', 'Shares', 'Amount'],
+      rows: [
+        ['Alice', '2021', '1,000', '$100.00'],
+        ['Bob', '2022', '2,000', '$250.50'],
+        ['Carol', '2023', '3,000', '$999.99'],
+      ],
+    };
+    const profile = buildTableProfile(sheet);
+    const yearType = profile.columns[1].type;
+    const sharesType = profile.columns[2].type;
+    const amountType = profile.columns[3].type;
+    const yearsLeaked = profile.detectedAmounts.some((a) => /^20\d{2}$/.test(a));
+    checks.push(check(
+      'Bare integers (years, share counts) are not typed as currency',
+      yearType !== 'currency' && sharesType !== 'currency' && amountType === 'currency' && !yearsLeaked,
+      `Year=${yearType}, Shares=${sharesType}, Amount=${amountType}, amounts=${profile.detectedAmounts.join(', ')}`,
+      `Year=${yearType}, Shares=${sharesType}, Amount=${amountType}, detectedAmounts=${profile.detectedAmounts.join(', ')}`,
+    ));
+  } catch (e) {
+    checks.push({ name: 'Bare integers (years, share counts) are not typed as currency', pass: false, message: `Threw: ${e instanceof Error ? e.message : e}` });
+  }
+
+  // Compare engine must not fabricate changes when duplicate-titled issues exist.
+  try {
+    const { compareIssueLogs } = await import('../lib/compare-engine');
+    const mkIssue = (id: string, severity: 'Low' | 'Medium' | 'High' | 'Critical') => ({
+      id, title: 'Overdue Payment: Acme', severity, category: 'payment' as const, status: 'open' as const,
+      sourceFiles: [], evidenceQuotes: [], affectedRows: [], recommendation: 'r',
+      createdAt: 'c', updatedAt: 'u', evidenceIds: ['e'],
+    });
+    const mkLog = (logId: string, issues: ReturnType<typeof mkIssue>[]) => IssueLogSchema.parse({
+      logId, title: 'Log', generatedAt: 'now', sourceReports: [], issues, evidence: [],
+      totalIssues: issues.length, openCount: issues.length, criticalCount: 0, highCount: 0, disclaimer: 'not legal advice',
+    });
+    const logA = mkLog('a', [mkIssue('1', 'High'), mkIssue('2', 'Critical')]);
+    const logB = mkLog('b', [mkIssue('3', 'High')]);
+    const diff = compareIssueLogs(logA, logB);
+    const ok = diff.changedIssues.length === 0 && diff.removedIssues.length === 1 && diff.removedIssues[0].severity === 'Critical' && diff.addedIssues.length === 0;
+    checks.push(check(
+      'Compare pairs duplicate-titled issues without fabricating changes',
+      ok,
+      'Removed the Critical duplicate; no fabricated severity change',
+      `changed=${JSON.stringify(diff.changedIssues)}, removed=${diff.removedIssues.map((i) => i.severity).join(',')}, added=${diff.addedIssues.length}`,
+    ));
+  } catch (e) {
+    checks.push({ name: 'Compare pairs duplicate-titled issues without fabricating changes', pass: false, message: `Threw: ${e instanceof Error ? e.message : e}` });
+  }
+
+  // Placeholder/fabricated quotes must never surface as verified evidence.
+  try {
+    const review = await runContractReview(
+      'Short agreement with no liability or renewal language at all.',
+      'No-Clause Doc',
+      { sourceFilename: 'no-clause.txt' },
+    );
+    const log = buildIssueLogFromReports(
+      [review], [], [], ['r'],
+      new Map([['no-clause.txt', 'Short agreement with no liability or renewal language at all.']]),
+    );
+    const falselyVerified = log.evidence.filter(
+      (e) => e.isVerified && e.documentQuote.length > 0 &&
+        !normalizeForMatch('Short agreement with no liability or renewal language at all.').includes(normalizeForMatch(e.documentQuote))
+    );
+    checks.push(check(
+      'Missing-clause quotes are never marked verified',
+      falselyVerified.length === 0,
+      'No falsely verified evidence for a document without the clauses',
+      `${falselyVerified.length} falsely verified item(s)`,
+    ));
+  } catch (e) {
+    checks.push({ name: 'Missing-clause quotes are never marked verified', pass: false, message: `Threw: ${e instanceof Error ? e.message : e}` });
+  }
+
+  return {
+    file: '[Regression: adversarial-review fixes]',
+    checks,
+    passed: checks.filter((c) => c.pass).length,
+    failed: checks.filter((c) => !c.pass).length,
+  };
+}
+
 async function main() {
   console.log('\n╔══════════════════════════════════════════════════╗');
   console.log('║           Synth · Eval Harness                   ║');
@@ -575,6 +810,18 @@ async function main() {
   }
   console.log(`     ${v5Result.passed} passed, ${v5Result.failed} failed\n`);
   results.push(v5Result);
+
+  // Regression checks for adversarial-review fixes
+  console.log('  🛡  Evaluating adversarial regression checks...\n');
+  const regressionResult = await evalRegression();
+  console.log(`  🛡  ${regressionResult.file}`);
+  for (const c of regressionResult.checks) {
+    const icon = c.pass ? '  ✅' : '  ❌';
+    console.log(`${icon} ${c.name}`);
+    if (!c.pass) console.log(`       → ${c.message}`);
+  }
+  console.log(`     ${regressionResult.passed} passed, ${regressionResult.failed} failed\n`);
+  results.push(regressionResult);
 
   const totalPassed = results.reduce((s, r) => s + r.passed, 0);
   const totalFailed = results.reduce((s, r) => s + r.failed, 0);

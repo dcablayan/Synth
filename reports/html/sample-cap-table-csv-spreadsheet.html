@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Synth — Spreadsheet Analysis</title>
+
+    <style>
+      * { box-sizing: border-box; }
+      body { font-family: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif; background: #ffffff; color: #111827; margin: 0; padding: 24px; line-height: 1.6; }
+      .container { max-width: 960px; margin: 0 auto; }
+      .brand-bar { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+      .brand-mark { color: #111827; font-family: Georgia, 'Source Serif 4', 'Times New Roman', serif; font-weight: 700; font-size: 1.15rem; letter-spacing: 0.02em; }
+      .report-kind { color: #6b7280; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.16em; }
+      h1 { font-family: Georgia, 'Source Serif 4', 'Times New Roman', serif; color: #111827; font-size: 1.55rem; margin: 4px 0 6px; letter-spacing: 0.01em; }
+      h2 { color: #4b5563; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.14em; margin: 28px 0 12px; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px; }
+      h4 { color: #111827; font-size: 0.9rem; margin: 6px 0; }
+      .meta { color: #6b7280; font-size: 0.78rem; }
+      .section { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 2px; padding: 16px; margin-bottom: 16px; }
+      .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 20px 0; }
+      .stat { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 2px; padding: 14px; text-align: center; }
+      .stat-val { font-family: Georgia, 'Source Serif 4', 'Times New Roman', serif; font-size: 1.6rem; font-weight: 700; color: #111827; }
+      .stat-lbl { font-size: 0.72rem; color: #6b7280; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.08em; }
+      table.main { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+      table.main th { background: #f9fafb; color: #4b5563; padding: 6px 10px; text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; border-bottom: 2px solid #111827; }
+      table.main td { padding: 6px 10px; border-bottom: 1px solid #e5e7eb; color: #374151; vertical-align: top; }
+      code { background: #f9fafb; border: 1px solid #e5e7eb; color: #111827; padding: 1px 5px; border-radius: 2px; font-size: 0.76rem; font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace; }
+      blockquote { border-left: 2px solid #d1d5db; padding: 4px 12px; font-family: Georgia, 'Source Serif 4', 'Times New Roman', serif; color: #374151; font-style: italic; font-size: 0.84rem; margin: 8px 0; }
+      .chip { display: inline-block; border: 1px solid; font-size: 0.68rem; padding: 2px 9px; border-radius: 2px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; background: transparent; }
+      .warning-list { background: #f9fafb; border: 1px solid #e5e7eb; border-left: 3px solid #b45309; border-radius: 2px; padding: 12px 16px; }
+      .warning-list li { color: #b45309; font-size: 0.82rem; margin: 4px 0; }
+      .recommendation { color: #111827; font-size: 0.82rem; font-weight: 500; }
+      .finding-card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 2px; padding: 14px; margin-bottom: 12px; }
+      .site-footer { margin-top: 36px; padding-top: 14px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 0.72rem; text-align: center; line-height: 1.7; }
+    </style>
+  
+<style>
+  .sheet-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+  .type-tag { border: 1px solid #d1d5db; color: #374151; padding: 1px 9px; border-radius: 2px; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+  em { color: #6b7280; font-style: normal; }
+  .warning { color: #b45309; font-size: 0.82rem; }
+  p { font-size: 0.85rem; margin: 6px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="brand-bar"><span class="brand-mark">§ Synth</span><span class="report-kind">Spreadsheet Analysis</span></div>
+<h1>sample cap table</h1>
+<p class="meta">1 sheet(s) · 15 rows · <code>sample-cap-table.csv</code> · Generated 2026-07-20T04:03:30.543Z · Mock Mode</p>
+  <h2>Summary</h2>
+  <div class="section">
+    <p>This spreadsheet (sample-cap-table.csv) contains 1 sheet(s) with 15 total data rows. It appears to be a payment schedule tracking vendor invoices and due dates. It contains cap table / equity ownership data. All financial figures were extracted directly from the spreadsheet — no AI analysis was performed (mock mode).</p>
+  </div>
+  
+  <h2>Key Findings</h2>
+  <div class="section">
+    <ul style="margin:4px 0;padding-left:18px"><li style="color:#374151;font-size:0.85rem;margin:4px 0">Payment totals detected: Total (Shares): $10000000, Total (Ownership %): $17000650.00</li><li style="color:#374151;font-size:0.85rem;margin:4px 0">Cap table detected with 15 investor rows</li><li style="color:#374151;font-size:0.85rem;margin:4px 0">Investors/parties: Founders, Yes, Option Pool, Sequoia Capital, Accel Partners</li><li style="color:#374151;font-size:0.85rem;margin:4px 0">Cap table total: $10000000</li></ul>
+  </div>
+  
+  <h2>Data Quality Warnings</h2>
+  <div class="warning-list"><ul style="margin:0;padding-left:18px"><li>High blank cell rate: 40% of cells are empty</li></ul></div>
+  <h2>Sheet Profiles</h2>
+  
+    <div class="section">
+      <div class="sheet-header">
+        <h4>Sheet1 <span class="type-tag">Payment Schedule</span> <span class="type-tag">Cap Table</span></h4>
+        <span class="meta">15 rows · 9 columns</span>
+      </div>
+      <p><strong>Entities:</strong> Founders, Yes, Option Pool, Sequoia Capital, Accel Partners, Y Combinator, Angel Investors, Conversion Pool</p>
+      <p><strong>Amounts:</strong> $0.0001, $400.00, $150.00, $5.00, $7500000.00, $5000000.00</p>
+      <p><strong>Dates:</strong> 2022-01-15, 2024-01-10, 2023-06-01, 2022-09-01</p>
+      <p><strong>Totals:</strong> Total (Shares): <strong>$10000000</strong> · Total (Ownership %): <strong>$17000650.00</strong></p>
+      
+      <p class="warning">⚠ High blank cell rate: 40% of cells are empty</p>
+      <table class="main">
+        <thead><tr><th>Column</th><th>Type</th><th>Unique</th><th>Blanks</th><th>Samples</th></tr></thead>
+        <tbody>
+      <tr>
+        <td>Investor</td>
+        <td><code>string</code></td>
+        <td>15</td>
+        <td>0</td>
+        <td><em>Founders</em>, <em>Option Pool</em>, <em>Sequoia Capital</em>, <em>Accel Partners</em>, <em>Y Combinator</em></td>
+      </tr>
+      <tr>
+        <td>Share Class</td>
+        <td><code>string</code></td>
+        <td>4</td>
+        <td>7</td>
+        <td><em>Common</em>, <em>Common</em>, <em>Series A Preferred</em>, <em>Series A Preferred</em>, <em>SAFE</em></td>
+      </tr>
+      <tr>
+        <td>Shares</td>
+        <td><code>number</code></td>
+        <td>7</td>
+        <td>6</td>
+        <td><em>4000000</em>, <em>1500000</em>, <em>1500000</em>, <em>1000000</em>, <em>300000</em></td>
+      </tr>
+      <tr>
+        <td>Price Per Share</td>
+        <td><code>currency</code></td>
+        <td>3</td>
+        <td>7</td>
+        <td><em>$0.0001</em>, <em>$0.0001</em>, <em>$5.00</em>, <em>$5.00</em>, <em>$5.00</em></td>
+      </tr>
+      <tr>
+        <td>Investment Amount</td>
+        <td><code>currency</code></td>
+        <td>8</td>
+        <td>7</td>
+        <td><em>$400.00</em>, <em>$150.00</em>, <em>$7500000.00</em>, <em>$5000000.00</em>, <em>$1500000.00</em></td>
+      </tr>
+      <tr>
+        <td>Ownership %</td>
+        <td><code>string</code></td>
+        <td>7</td>
+        <td>6</td>
+        <td><em>40.00%</em>, <em>15.00%</em>, <em>15.00%</em>, <em>10.00%</em>, <em>3.00%</em></td>
+      </tr>
+      <tr>
+        <td>Lead Investor</td>
+        <td><code>string</code></td>
+        <td>3</td>
+        <td>6</td>
+        <td><em>Yes</em>, <em>No</em>, <em>Yes</em>, <em>No</em>, <em>No</em></td>
+      </tr>
+      <tr>
+        <td>Investment Date</td>
+        <td><code>date</code></td>
+        <td>4</td>
+        <td>8</td>
+        <td><em>2022-01-15</em>, <em>2022-01-15</em>, <em>2024-01-10</em>, <em>2024-01-10</em>, <em>2023-06-01</em></td>
+      </tr>
+      <tr>
+        <td>Notes</td>
+        <td><code>string</code></td>
+        <td>8</td>
+        <td>7</td>
+        <td><em>Founders pool</em>, <em>Employee option pool</em>, <em>Lead Series A investor</em>, <em>Series A follow-on</em>, <em>YC SAFE convert</em></td>
+      </tr></tbody>
+      </table>
+    </div>
+
+  <div class="site-footer">
+  <p>Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.</p>
+  <p>Generated by Synth · 2026-07-20T04:03:30.543Z</p>
+</div>
+</div>
+</body>
+</html>

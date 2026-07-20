@@ -1,26 +1,17 @@
 #!/usr/bin/env tsx
-import fs from 'fs';
 import path from 'path';
-import { getLatestReview, getLatestMemo, getLatestRevision } from '../lib/report-writer';
+import {
+  getLatestReview,
+  getLatestMemo,
+  getLatestRevision,
+  getLatestFinancial,
+  matchesReview,
+  reportStem,
+} from '../lib/report-writer';
 import { renderReviewHTML, renderFinancialHTML, renderMemoHTML, renderRevisionHTML } from '../lib/html-renderer';
 import { generatePDFFromHTML, saveHTML } from '../lib/pdf-writer';
-import type { Financial } from '../schemas/financial.schema';
-import { listRegularFiles, resolveRegularFileInside } from '../lib/path-safety';
 
 const REPORTS_DIR = path.join(process.cwd(), 'reports');
-
-function getLatestFinancial(): Financial | null {
-  const dir = path.join(REPORTS_DIR, 'financials');
-  if (!fs.existsSync(dir)) return null;
-  const files = listRegularFiles(dir, (f) => f.endsWith('-financial.json'));
-  if (files.length === 0) return null;
-  files.sort((a, b) => {
-    const sa = fs.statSync(resolveRegularFileInside(dir, a, 'financial report')).mtime.getTime();
-    const sb = fs.statSync(resolveRegularFileInside(dir, b, 'financial report')).mtime.getTime();
-    return sb - sa;
-  });
-  return JSON.parse(fs.readFileSync(resolveRegularFileInside(dir, files[0], 'financial report'), 'utf-8')) as Financial;
-}
 
 async function tryGeneratePDF(
   html: string,
@@ -45,16 +36,17 @@ async function main() {
   console.log('⚠️  Synth is not legal advice or financial advice.\n   It is a document review aid.\n');
 
   const review = getLatestReview();
-  const memo = getLatestMemo();
-  const revision = getLatestRevision();
-  const financial = getLatestFinancial();
-
   if (!review) {
     console.error('❌ No review found. Run: npm run analyze first.');
     process.exit(1);
   }
 
-  const slug = review.documentTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 50);
+  // Only bundle artifacts that belong to the same document as the review.
+  const memo = matchesReview(review, getLatestMemo(), 'memo');
+  const revision = matchesReview(review, getLatestRevision(), 'revision packet');
+  const financial = matchesReview(review, getLatestFinancial(), 'financial analysis');
+
+  const slug = reportStem(review.documentTitle, review.sourceFilename);
 
   // Contract Review PDF
   console.log('📄 Generating Contract Review PDF...');

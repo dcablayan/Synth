@@ -1,32 +1,92 @@
 import type { IssueLog, Issue, IssueChange, PaymentChange, CapTableChange, CompareReport } from '../schemas/issue.schema';
 import type { DataRoomSummary } from '../schemas/spreadsheet.schema';
 import { CompareReportSchema } from '../schemas/issue.schema';
+import { DISCLAIMER } from './brand';
 
-const DISCLAIMER =
-  'Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.';
+
+const SEV_ORDER: Record<string, number> = { Critical: 4, High: 3, Medium: 2, Low: 1 };
 
 function norm(s: string): string {
   return s.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim();
+}
+
+// Group-by that keeps EVERY item — a plain Map keyed by title/vendor silently
+// collapses duplicates (multiple invoices for one vendor, same-titled issues
+// across documents) and then reports changes that never happened.
+function groupBy<T>(items: T[], key: (item: T) => string): Map<string, T[]> {
+  const groups = new Map<string, T[]>();
+  for (const item of items) {
+    const k = key(item);
+    const list = groups.get(k);
+    if (list) list.push(item);
+    else groups.set(k, [item]);
+  }
+  return groups;
+}
+
+function unionKeys<T>(a: Map<string, T>, b: Map<string, T>): Set<string> {
+  return new Set([...a.keys(), ...b.keys()]);
+}
+
+// Two-pass matching within a group: items identical on the compared fields pair
+// off first (no change), then the leftovers pair by rank and report field diffs,
+// and any surplus is added/removed. Pairing greedily by sort order alone would
+// report a change like "Critical → High" even when an exact High↔High match
+// existed in the same group.
+function matchGroup<T>(
+  listA: T[],
+  listB: T[],
+  signature: (item: T) => string,
+  rank: (item: T) => number,
+): { pairs: Array<[T, T]>; extraA: T[]; extraB: T[] } {
+  const bBySig = new Map<string, T[]>();
+  for (const b of listB) {
+    const sig = signature(b);
+    const bucket = bBySig.get(sig);
+    if (bucket) bucket.push(b);
+    else bBySig.set(sig, [b]);
+  }
+
+  const unmatchedA: T[] = [];
+  const pairs: Array<[T, T]> = [];
+  for (const a of listA) {
+    const bucket = bBySig.get(signature(a));
+    if (bucket && bucket.length > 0) {
+      pairs.push([a, bucket.shift()!]);
+    } else {
+      unmatchedA.push(a);
+    }
+  }
+  const unmatchedB = [...bBySig.values()].flat();
+
+  unmatchedA.sort((x, y) => rank(y) - rank(x));
+  unmatchedB.sort((x, y) => rank(y) - rank(x));
+  const paired = Math.min(unmatchedA.length, unmatchedB.length);
+  for (let i = 0; i < paired; i++) pairs.push([unmatchedA[i], unmatchedB[i]]);
+
+  return { pairs, extraA: unmatchedA.slice(paired), extraB: unmatchedB.slice(paired) };
 }
 
 export function compareIssueLogs(
   logA: IssueLog,
   logB: IssueLog,
 ): Pick<CompareReport, 'addedIssues' | 'removedIssues' | 'changedIssues'> {
-  const mapA = new Map<string, Issue>();
-  const mapB = new Map<string, Issue>();
-  for (const i of logA.issues) mapA.set(norm(i.title), i);
-  for (const i of logB.issues) mapB.set(norm(i.title), i);
+  const groupsA = groupBy(logA.issues, (i) => norm(i.title));
+  const groupsB = groupBy(logB.issues, (i) => norm(i.title));
 
   const addedIssues: Issue[] = [];
   const removedIssues: Issue[] = [];
   const changedIssues: IssueChange[] = [];
 
-  for (const [key, iB] of mapB) {
-    if (!mapA.has(key)) {
-      addedIssues.push(iB);
-    } else {
-      const iA = mapA.get(key)!;
+  for (const key of unionKeys(groupsA, groupsB)) {
+    const { pairs, extraA, extraB } = matchGroup(
+      groupsA.get(key) ?? [],
+      groupsB.get(key) ?? [],
+      (i) => `${i.severity}|${i.status}|${i.category}`,
+      (i) => SEV_ORDER[i.severity] ?? 0,
+    );
+
+    for (const [iA, iB] of pairs) {
       if (iA.severity !== iB.severity) {
         changedIssues.push({ issueId: iB.id, title: iB.title, field: 'severity', from: iA.severity, to: iB.severity });
       }
@@ -37,10 +97,8 @@ export function compareIssueLogs(
         changedIssues.push({ issueId: iB.id, title: iB.title, field: 'category', from: iA.category, to: iB.category });
       }
     }
-  }
-
-  for (const [key, iA] of mapA) {
-    if (!mapB.has(key)) removedIssues.push(iA);
+    addedIssues.push(...extraB);
+    removedIssues.push(...extraA);
   }
 
   return { addedIssues, removedIssues, changedIssues };
@@ -53,31 +111,50 @@ export function compareDataRooms(
   const paymentChanges: PaymentChange[] = [];
   const capTableChanges: CapTableChange[] = [];
 
-  const payMapA = new Map(roomA.paymentScheduleFindings.map((p) => [p.vendor.toLowerCase(), p]));
-  const payMapB = new Map(roomB.paymentScheduleFindings.map((p) => [p.vendor.toLowerCase(), p]));
+  // Key payments by vendor + due date so multi-invoice vendors keep one entry
+  // per invoice instead of collapsing to whichever row parsed last.
+  const payKey = (p: DataRoomSummary['paymentScheduleFindings'][0]) =>
+    `${p.vendor.toLowerCase()}|${p.dueDate.toLowerCase()}`;
+  const payGroupsA = groupBy(roomA.paymentScheduleFindings, payKey);
+  const payGroupsB = groupBy(roomB.paymentScheduleFindings, payKey);
 
-  for (const [key, pB] of payMapB) {
-    const pA = payMapA.get(key);
-    if (!pA) {
-      paymentChanges.push({ vendor: pB.vendor, amountA: '—', amountB: pB.amount, statusA: '—', statusB: pB.status, change: 'added' });
-    } else if (pA.amount !== pB.amount || pA.status !== pB.status) {
-      paymentChanges.push({ vendor: pB.vendor, amountA: pA.amount, amountB: pB.amount, statusA: pA.status, statusB: pB.status, change: 'changed' });
+  for (const key of unionKeys(payGroupsA, payGroupsB)) {
+    const { pairs, extraA, extraB } = matchGroup(
+      payGroupsA.get(key) ?? [],
+      payGroupsB.get(key) ?? [],
+      (p) => `${p.amount}|${p.status}`,
+      () => 0,
+    );
+
+    for (const [pA, pB] of pairs) {
+      if (pA.amount !== pB.amount || pA.status !== pB.status) {
+        paymentChanges.push({ vendor: pB.vendor, amountA: pA.amount, amountB: pB.amount, statusA: pA.status, statusB: pB.status, change: 'changed' });
+      }
     }
-  }
-  for (const [key, pA] of payMapA) {
-    if (!payMapB.has(key)) {
+    for (const pB of extraB) {
+      paymentChanges.push({ vendor: pB.vendor, amountA: '—', amountB: pB.amount, statusA: '—', statusB: pB.status, change: 'added' });
+    }
+    for (const pA of extraA) {
       paymentChanges.push({ vendor: pA.vendor, amountA: pA.amount, amountB: '—', statusA: pA.status, statusB: '—', change: 'removed' });
     }
   }
 
-  const capMapA = new Map(roomA.capTableFindings.map((c) => [c.investor.toLowerCase(), c]));
-  const capMapB = new Map(roomB.capTableFindings.map((c) => [c.investor.toLowerCase(), c]));
+  // Key cap table rows by investor + share class: one investor can legitimately
+  // hold multiple classes (Common + Preferred).
+  const capKey = (c: DataRoomSummary['capTableFindings'][0]) =>
+    `${c.investor.toLowerCase()}|${c.shareClass.toLowerCase()}`;
+  const capGroupsA = groupBy(roomA.capTableFindings, capKey);
+  const capGroupsB = groupBy(roomB.capTableFindings, capKey);
 
-  for (const [key, cB] of capMapB) {
-    if (!capMapA.has(key)) {
-      capTableChanges.push({ investor: cB.investor, changeType: 'added', detail: `Added: ${cB.shares} shares (${cB.ownershipPct})` });
-    } else {
-      const cA = capMapA.get(key)!;
+  for (const key of unionKeys(capGroupsA, capGroupsB)) {
+    const { pairs, extraA, extraB } = matchGroup(
+      capGroupsA.get(key) ?? [],
+      capGroupsB.get(key) ?? [],
+      (c) => `${c.shares}|${c.ownershipPct}`,
+      () => 0,
+    );
+
+    for (const [cA, cB] of pairs) {
       if (cA.ownershipPct !== cB.ownershipPct || cA.shares !== cB.shares) {
         capTableChanges.push({
           investor: cB.investor,
@@ -86,9 +163,10 @@ export function compareDataRooms(
         });
       }
     }
-  }
-  for (const [key, cA] of capMapA) {
-    if (!capMapB.has(key)) {
+    for (const cB of extraB) {
+      capTableChanges.push({ investor: cB.investor, changeType: 'added', detail: `Added: ${cB.shares} shares (${cB.ownershipPct})` });
+    }
+    for (const cA of extraA) {
       capTableChanges.push({ investor: cA.investor, changeType: 'removed', detail: `Removed: was ${cA.shares} shares (${cA.ownershipPct})` });
     }
   }

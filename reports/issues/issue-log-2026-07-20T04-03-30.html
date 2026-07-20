@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Synth — Issue Log</title>
+
+    <style>
+      * { box-sizing: border-box; }
+      body { font-family: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif; background: #ffffff; color: #111827; margin: 0; padding: 24px; line-height: 1.6; }
+      .container { max-width: 960px; margin: 0 auto; }
+      .brand-bar { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+      .brand-mark { color: #111827; font-family: Georgia, 'Source Serif 4', 'Times New Roman', serif; font-weight: 700; font-size: 1.15rem; letter-spacing: 0.02em; }
+      .report-kind { color: #6b7280; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.16em; }
+      h1 { font-family: Georgia, 'Source Serif 4', 'Times New Roman', serif; color: #111827; font-size: 1.55rem; margin: 4px 0 6px; letter-spacing: 0.01em; }
+      h2 { color: #4b5563; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.14em; margin: 28px 0 12px; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px; }
+      h4 { color: #111827; font-size: 0.9rem; margin: 6px 0; }
+      .meta { color: #6b7280; font-size: 0.78rem; }
+      .section { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 2px; padding: 16px; margin-bottom: 16px; }
+      .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 20px 0; }
+      .stat { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 2px; padding: 14px; text-align: center; }
+      .stat-val { font-family: Georgia, 'Source Serif 4', 'Times New Roman', serif; font-size: 1.6rem; font-weight: 700; color: #111827; }
+      .stat-lbl { font-size: 0.72rem; color: #6b7280; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.08em; }
+      table.main { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+      table.main th { background: #f9fafb; color: #4b5563; padding: 6px 10px; text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; border-bottom: 2px solid #111827; }
+      table.main td { padding: 6px 10px; border-bottom: 1px solid #e5e7eb; color: #374151; vertical-align: top; }
+      code { background: #f9fafb; border: 1px solid #e5e7eb; color: #111827; padding: 1px 5px; border-radius: 2px; font-size: 0.76rem; font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace; }
+      blockquote { border-left: 2px solid #d1d5db; padding: 4px 12px; font-family: Georgia, 'Source Serif 4', 'Times New Roman', serif; color: #374151; font-style: italic; font-size: 0.84rem; margin: 8px 0; }
+      .chip { display: inline-block; border: 1px solid; font-size: 0.68rem; padding: 2px 9px; border-radius: 2px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; background: transparent; }
+      .warning-list { background: #f9fafb; border: 1px solid #e5e7eb; border-left: 3px solid #b45309; border-radius: 2px; padding: 12px 16px; }
+      .warning-list li { color: #b45309; font-size: 0.82rem; margin: 4px 0; }
+      .recommendation { color: #111827; font-size: 0.82rem; font-weight: 500; }
+      .finding-card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 2px; padding: 14px; margin-bottom: 12px; }
+      .site-footer { margin-top: 36px; padding-top: 14px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 0.72rem; text-align: center; line-height: 1.7; }
+    </style>
+  
+</head>
+<body>
+<div class="container">
+  <div class="brand-bar"><span class="brand-mark">§ Synth</span><span class="report-kind">Issue Log</span></div>
+<h1>Issue Log</h1>
+<p class="meta">Generated: 2026-07-20T04:03:30.727Z · Log ID: issuelog-2026-07-20T04-03-30</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-val">21</div><div class="stat-lbl">Total Issues</div></div>
+    <div class="stat"><div class="stat-val" style="color:#b91c1c">0</div><div class="stat-lbl">Critical</div></div>
+    <div class="stat"><div class="stat-val" style="color:#c2410c">10</div><div class="stat-lbl">High</div></div>
+    <div class="stat"><div class="stat-val">21</div><div class="stat-lbl">Open</div></div>
+  </div>
+  <h2>Top 10 Issues to Resolve</h2>
+  
+    <div class="finding-card">
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+        <span style="background:#f3f4f6;color:#6b7280;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:bold">1</span>
+        <strong style="color:#111827;font-size:0.88rem;flex:1">Unilateral Modification Rights</strong>
+        <span class="chip" style="color:#c2410c;border-color:#c2410c">High</span>
+        <span style="color:#c2410c;font-size:0.72rem;background:#f3f4f6;padding:2px 7px;border-radius:2px">open</span>
+      </div>
+      <div style="font-size:0.78rem;color:#6b7280;margin-bottom:8px">Category: <strong style="color:#374151">other</strong> · Sources: <code>sample-contractor-agreement.txt</code></div>
+      <p style="color:#6b7280;font-size:0.78rem;font-style:italic">No direct quote — see evidence ledger.</p>
+      <p class="recommendation" style="margin-top:8px">→ Request a mutual written amendment requirement.</p>
+    </div>
+    <div class="finding-card">
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+        <span style="background:#f3f4f6;color:#6b7280;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:bold">2</span>
+        <strong style="color:#111827;font-size:0.88rem;flex:1">Limited Liability Cap</strong>
+        <span class="chip" style="color:#c2410c;border-color:#c2410c">High</span>
+        <span style="color:#c2410c;font-size:0.72rem;background:#f3f4f6;padding:2px 7px;border-radius:2px">open</span>
+      </div>
+      <div style="font-size:0.78rem;color:#6b7280;margin-bottom:8px">Category: <strong style="color:#374151">legal</strong> · Sources: <code>sample-contractor-agreement.txt</code></div>
+      <blockquote>"IN NO EVENT SHALL COMPANY BE LIABLE TO CONTRACTOR FOR ANY INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF OR RELATED TO THIS AGREEMENT"</blockquote>
+      <p class="recommendation" style="margin-top:8px">→ Negotiate a higher cap and carve-outs for willful misconduct.</p>
+    </div>
+    <div class="finding-card">
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+        <span style="background:#f3f4f6;color:#6b7280;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:bold">3</span>
+        <strong style="color:#111827;font-size:0.88rem;flex:1">Unilateral Modification Rights</strong>
+        <span class="chip" style="color:#c2410c;border-color:#c2410c">High</span>
+        <span style="color:#c2410c;font-size:0.72rem;background:#f3f4f6;padding:2px 7px;border-radius:2px">open</span>
+      </div>
+      <div style="font-size:0.78rem;color:#6b7280;margin-bottom:8px">Category: <strong style="color:#374151">other</strong> · Sources: <code>sample-saas-agreement.txt</code></div>
+      <blockquote>"automatically renew for successive one-year periods (each a &quot;Renewal Term&quot;) unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term"</blockquote>
+      <p class="recommendation" style="margin-top:8px">→ Request a mutual written amendment requirement.</p>
+    </div>
+    <div class="finding-card">
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+        <span style="background:#f3f4f6;color:#6b7280;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:bold">4</span>
+        <strong style="color:#111827;font-size:0.88rem;flex:1">Limited Liability Cap</strong>
+        <span class="chip" style="color:#c2410c;border-color:#c2410c">High</span>
+        <span style="color:#c2410c;font-size:0.72rem;background:#f3f4f6;padding:2px 7px;border-radius:2px">open</span>
+      </div>
+      <div style="font-size:0.78rem;color:#6b7280;margin-bottom:8px">Category: <strong style="color:#374151">legal</strong> · Sources: <code>sample-saas-agreement.txt</code></div>
+      <blockquote>"IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITIES, EVEN IF PROVIDER HAS BEEN ADVISED OF THE POS"</blockquote>
+      <p class="recommendation" style="margin-top:8px">→ Negotiate a higher cap and carve-outs for willful misconduct.</p>
+    </div>
+    <div class="finding-card">
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+        <span style="background:#f3f4f6;color:#6b7280;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:bold">5</span>
+        <strong style="color:#111827;font-size:0.88rem;flex:1">Unilateral Modification Rights</strong>
+        <span class="chip" style="color:#c2410c;border-color:#c2410c">High</span>
+        <span style="color:#c2410c;font-size:0.72rem;background:#f3f4f6;padding:2px 7px;border-radius:2px">open</span>
+      </div>
+      <div style="font-size:0.78rem;color:#6b7280;margin-bottom:8px">Category: <strong style="color:#374151">other</strong> · Sources: <code>sample-term-sheet.txt</code></div>
+      <p style="color:#6b7280;font-size:0.78rem;font-style:italic">No direct quote — see evidence ledger.</p>
+      <p class="recommendation" style="margin-top:8px">→ Request a mutual written amendment requirement.</p>
+    </div>
+    <div class="finding-card">
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+        <span style="background:#f3f4f6;color:#6b7280;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:bold">6</span>
+        <strong style="color:#111827;font-size:0.88rem;flex:1">Limited Liability Cap</strong>
+        <span class="chip" style="color:#c2410c;border-color:#c2410c">High</span>
+        <span style="color:#c2410c;font-size:0.72rem;background:#f3f4f6;padding:2px 7px;border-radius:2px">open</span>
+      </div>
+      <div style="font-size:0.78rem;color:#6b7280;margin-bottom:8px">Category: <strong style="color:#374151">legal</strong> · Sources: <code>sample-term-sheet.txt</code></div>
+      <p style="color:#6b7280;font-size:0.78rem;font-style:italic">No direct quote — see evidence ledger.</p>
+      <p class="recommendation" style="margin-top:8px">→ Negotiate a higher cap and carve-outs for willful misconduct.</p>
+    </div>
+    <div class="finding-card">
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+        <span style="background:#f3f4f6;color:#6b7280;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:bold">7</span>
+        <strong style="color:#111827;font-size:0.88rem;flex:1">Overdue Payments Detected (sample-payment-schedule.csv)</strong>
+        <span class="chip" style="color:#c2410c;border-color:#c2410c">High</span>
+        <span style="color:#c2410c;font-size:0.72rem;background:#f3f4f6;padding:2px 7px;border-radius:2px">open</span>
+      </div>
+      <div style="font-size:0.78rem;color:#6b7280;margin-bottom:8px">Category: <strong style="color:#374151">payment</strong> · Sources: <code>sample-contractor-agreement.txt, sample-payment-schedule.csv</code></div>
+      <blockquote>"Contract payment terms (see contract) vs. Overdue: DataStream Inc"</blockquote>
+      <p class="recommendation" style="margin-top:8px">→ Review overdue invoices against contract payment terms and resolve outstanding amounts.</p>
+    </div>
+    <div class="finding-card">
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+        <span style="background:#f3f4f6;color:#6b7280;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:bold">8</span>
+        <strong style="color:#111827;font-size:0.88rem;flex:1">Overdue Payments Detected (sample-vendor-invoices.csv)</strong>
+        <span class="chip" style="color:#c2410c;border-color:#c2410c">High</span>
+        <span style="color:#c2410c;font-size:0.72rem;background:#f3f4f6;padding:2px 7px;border-radius:2px">open</span>
+      </div>
+      <div style="font-size:0.78rem;color:#6b7280;margin-bottom:8px">Category: <strong style="color:#374151">payment</strong> · Sources: <code>sample-contractor-agreement.txt, sample-vendor-invoices.csv</code></div>
+      <blockquote>"Contract payment terms (see contract) vs. Overdue: DataDog Inc"</blockquote>
+      <p class="recommendation" style="margin-top:8px">→ Review overdue invoices against contract payment terms and resolve outstanding amounts.</p>
+    </div>
+    <div class="finding-card">
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+        <span style="background:#f3f4f6;color:#6b7280;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:bold">9</span>
+        <strong style="color:#111827;font-size:0.88rem;flex:1">Overdue Payment: DataStream Inc ($9100.00)</strong>
+        <span class="chip" style="color:#c2410c;border-color:#c2410c">High</span>
+        <span style="color:#c2410c;font-size:0.72rem;background:#f3f4f6;padding:2px 7px;border-radius:2px">open</span>
+      </div>
+      <div style="font-size:0.78rem;color:#6b7280;margin-bottom:8px">Category: <strong style="color:#374151">payment</strong> · Sources: <code>sample-payment-schedule.csv</code></div>
+      <p style="color:#6b7280;font-size:0.78rem;font-style:italic">No direct quote — see evidence ledger.</p>
+      <p class="recommendation" style="margin-top:8px">→ Resolve overdue payment of $9100.00 to DataStream Inc. Due: 2024-03-31.</p>
+    </div>
+    <div class="finding-card">
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+        <span style="background:#f3f4f6;color:#6b7280;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:bold">10</span>
+        <strong style="color:#111827;font-size:0.88rem;flex:1">Overdue Payment: DataDog Inc ($6500.00)</strong>
+        <span class="chip" style="color:#c2410c;border-color:#c2410c">High</span>
+        <span style="color:#c2410c;font-size:0.72rem;background:#f3f4f6;padding:2px 7px;border-radius:2px">open</span>
+      </div>
+      <div style="font-size:0.78rem;color:#6b7280;margin-bottom:8px">Category: <strong style="color:#374151">payment</strong> · Sources: <code>sample-vendor-invoices.csv</code></div>
+      <p style="color:#6b7280;font-size:0.78rem;font-style:italic">No direct quote — see evidence ledger.</p>
+      <p class="recommendation" style="margin-top:8px">→ Resolve overdue payment of $6500.00 to DataDog Inc. Due: 2024-03-05.</p>
+    </div>
+  <h2>All Issues</h2>
+  <div class="section">
+    <table class="main">
+      <thead><tr><th>#</th><th>Title</th><th>Severity</th><th>Category</th><th>Status</th><th>Sources</th></tr></thead>
+      <tbody>
+    <tr>
+      <td style="color:#6b7280">1</td>
+      <td style="color:#111827">Unilateral Modification Rights</td>
+      <td><span class="chip" style="color:#c2410c;border-color:#c2410c">High</span></td>
+      <td style="color:#374151">other</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-contractor-agreement.txt</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">2</td>
+      <td style="color:#111827">Limited Liability Cap</td>
+      <td><span class="chip" style="color:#c2410c;border-color:#c2410c">High</span></td>
+      <td style="color:#374151">legal</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-contractor-agreement.txt</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">3</td>
+      <td style="color:#111827">Unilateral Modification Rights</td>
+      <td><span class="chip" style="color:#c2410c;border-color:#c2410c">High</span></td>
+      <td style="color:#374151">other</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-saas-agreement.txt</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">4</td>
+      <td style="color:#111827">Limited Liability Cap</td>
+      <td><span class="chip" style="color:#c2410c;border-color:#c2410c">High</span></td>
+      <td style="color:#374151">legal</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-saas-agreement.txt</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">5</td>
+      <td style="color:#111827">Unilateral Modification Rights</td>
+      <td><span class="chip" style="color:#c2410c;border-color:#c2410c">High</span></td>
+      <td style="color:#374151">other</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-term-sheet.txt</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">6</td>
+      <td style="color:#111827">Limited Liability Cap</td>
+      <td><span class="chip" style="color:#c2410c;border-color:#c2410c">High</span></td>
+      <td style="color:#374151">legal</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-term-sheet.txt</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">7</td>
+      <td style="color:#111827">Overdue Payments Detected (sample-payment-schedule.csv)</td>
+      <td><span class="chip" style="color:#c2410c;border-color:#c2410c">High</span></td>
+      <td style="color:#374151">payment</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-contractor-agreement.txt; sample-payment-schedule.csv</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">8</td>
+      <td style="color:#111827">Overdue Payments Detected (sample-vendor-invoices.csv)</td>
+      <td><span class="chip" style="color:#c2410c;border-color:#c2410c">High</span></td>
+      <td style="color:#374151">payment</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-contractor-agreement.txt; sample-vendor-invoices.csv</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">9</td>
+      <td style="color:#111827">Overdue Payment: DataStream Inc ($9100.00)</td>
+      <td><span class="chip" style="color:#c2410c;border-color:#c2410c">High</span></td>
+      <td style="color:#374151">payment</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-payment-schedule.csv</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">10</td>
+      <td style="color:#111827">Overdue Payment: DataDog Inc ($6500.00)</td>
+      <td><span class="chip" style="color:#c2410c;border-color:#c2410c">High</span></td>
+      <td style="color:#374151">payment</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-vendor-invoices.csv</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">11</td>
+      <td style="color:#111827">Auto-Renewal with Short Notice</td>
+      <td><span class="chip" style="color:#b45309;border-color:#b45309">Medium</span></td>
+      <td style="color:#374151">renewal</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-contractor-agreement.txt</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">12</td>
+      <td style="color:#111827">Auto-Renewal with Short Notice</td>
+      <td><span class="chip" style="color:#b45309;border-color:#b45309">Medium</span></td>
+      <td style="color:#374151">renewal</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-saas-agreement.txt</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">13</td>
+      <td style="color:#111827">Auto-Renewal with Short Notice</td>
+      <td><span class="chip" style="color:#b45309;border-color:#b45309">Medium</span></td>
+      <td style="color:#374151">renewal</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-term-sheet.txt</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">14</td>
+      <td style="color:#111827">Unusual Clause: Unilateral modification rights may allow changes without consent</td>
+      <td><span class="chip" style="color:#15803d;border-color:#15803d">Low</span></td>
+      <td style="color:#374151">legal</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-contractor-agreement.txt</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">15</td>
+      <td style="color:#111827">Unusual Clause: Review auto-renewal notice window carefully</td>
+      <td><span class="chip" style="color:#15803d;border-color:#15803d">Low</span></td>
+      <td style="color:#374151">legal</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-contractor-agreement.txt</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">16</td>
+      <td style="color:#111827">Unusual Clause: Unilateral modification rights may allow changes without consent</td>
+      <td><span class="chip" style="color:#15803d;border-color:#15803d">Low</span></td>
+      <td style="color:#374151">legal</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-saas-agreement.txt</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">17</td>
+      <td style="color:#111827">Unusual Clause: Review auto-renewal notice window carefully</td>
+      <td><span class="chip" style="color:#15803d;border-color:#15803d">Low</span></td>
+      <td style="color:#374151">legal</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-saas-agreement.txt</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">18</td>
+      <td style="color:#111827">Unusual Clause: Unilateral modification rights may allow changes without consent</td>
+      <td><span class="chip" style="color:#15803d;border-color:#15803d">Low</span></td>
+      <td style="color:#374151">legal</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-term-sheet.txt</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">19</td>
+      <td style="color:#111827">Unusual Clause: Review auto-renewal notice window carefully</td>
+      <td><span class="chip" style="color:#15803d;border-color:#15803d">Low</span></td>
+      <td style="color:#374151">legal</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-term-sheet.txt</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">20</td>
+      <td style="color:#111827">Data Quality: High blank cell rate: 40% of cells are empty</td>
+      <td><span class="chip" style="color:#15803d;border-color:#15803d">Low</span></td>
+      <td style="color:#374151">data-quality</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-contractor-agreement.txt; sample-saas-agreement.txt; sample-term-sheet.txt</code></td>
+    </tr>
+    <tr>
+      <td style="color:#6b7280">21</td>
+      <td style="color:#111827">Data Quality: 1 row(s) marked as overdue</td>
+      <td><span class="chip" style="color:#15803d;border-color:#15803d">Low</span></td>
+      <td style="color:#374151">data-quality</td>
+      <td style="color:#c2410c">open</td>
+      <td><code>sample-contractor-agreement.txt; sample-saas-agreement.txt; sample-term-sheet.txt</code></td>
+    </tr></tbody>
+    </table>
+  </div>
+  <h2>Evidence Ledger</h2>
+  <div class="section">
+    <table class="main">
+      <thead><tr><th>Evidence ID</th><th>Issue ID</th><th>Source</th><th>Verified</th><th>Quote / Row</th></tr></thead>
+      <tbody>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-001</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-001</code></td>
+      <td style="color:#374151"><code>sample-contractor-agreement.txt</code></td>
+      <td style="color:#c2410c;font-size:0.78rem">Unverified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic">—</td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-002</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-002</code></td>
+      <td style="color:#374151"><code>sample-contractor-agreement.txt</code></td>
+      <td style="color:#15803d;font-size:0.78rem">✓ Verified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic">"IN NO EVENT SHALL COMPANY BE LIABLE TO CONTRACTOR FOR ANY INDIRECT, INCIDENTAL, …"</td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-003</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-003</code></td>
+      <td style="color:#374151"><code>sample-contractor-agreement.txt</code></td>
+      <td style="color:#c2410c;font-size:0.78rem">Unverified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic">—</td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-004</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-004</code></td>
+      <td style="color:#374151"><code>sample-contractor-agreement.txt</code></td>
+      <td style="color:#c2410c;font-size:0.78rem">Unverified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic">"Unilateral modification rights may allow changes without consent"</td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-005</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-005</code></td>
+      <td style="color:#374151"><code>sample-contractor-agreement.txt</code></td>
+      <td style="color:#c2410c;font-size:0.78rem">Unverified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic">"Review auto-renewal notice window carefully"</td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-006</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-006</code></td>
+      <td style="color:#374151"><code>sample-saas-agreement.txt</code></td>
+      <td style="color:#15803d;font-size:0.78rem">✓ Verified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic">"automatically renew for successive one-year periods (each a &quot;Renewal Term&quot;) unle…"</td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-007</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-007</code></td>
+      <td style="color:#374151"><code>sample-saas-agreement.txt</code></td>
+      <td style="color:#15803d;font-size:0.78rem">✓ Verified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic">"IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEM…"</td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-008</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-008</code></td>
+      <td style="color:#374151"><code>sample-saas-agreement.txt</code></td>
+      <td style="color:#15803d;font-size:0.78rem">✓ Verified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic">"automatically renew for successive one-year periods (each a &quot;Renewal Term&quot;) unle…"</td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-009</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-009</code></td>
+      <td style="color:#374151"><code>sample-saas-agreement.txt</code></td>
+      <td style="color:#c2410c;font-size:0.78rem">Unverified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic">"Unilateral modification rights may allow changes without consent"</td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-010</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-010</code></td>
+      <td style="color:#374151"><code>sample-saas-agreement.txt</code></td>
+      <td style="color:#c2410c;font-size:0.78rem">Unverified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic">"Review auto-renewal notice window carefully"</td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-011</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-011</code></td>
+      <td style="color:#374151"><code>sample-term-sheet.txt</code></td>
+      <td style="color:#c2410c;font-size:0.78rem">Unverified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic">—</td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-012</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-012</code></td>
+      <td style="color:#374151"><code>sample-term-sheet.txt</code></td>
+      <td style="color:#c2410c;font-size:0.78rem">Unverified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic">—</td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-013</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-013</code></td>
+      <td style="color:#374151"><code>sample-term-sheet.txt</code></td>
+      <td style="color:#c2410c;font-size:0.78rem">Unverified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic">—</td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-014</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-014</code></td>
+      <td style="color:#374151"><code>sample-term-sheet.txt</code></td>
+      <td style="color:#c2410c;font-size:0.78rem">Unverified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic">"Unilateral modification rights may allow changes without consent"</td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-015</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-015</code></td>
+      <td style="color:#374151"><code>sample-term-sheet.txt</code></td>
+      <td style="color:#c2410c;font-size:0.78rem">Unverified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic">"Review auto-renewal notice window carefully"</td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-016</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-016</code></td>
+      <td style="color:#374151"><code>sample-contractor-agreement.txt</code></td>
+      <td style="color:#c2410c;font-size:0.78rem">Unverified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic">"Contract payment terms (see contract) vs. Overdue: DataStream Inc"</td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-017</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-017</code></td>
+      <td style="color:#374151"><code>sample-contractor-agreement.txt</code></td>
+      <td style="color:#c2410c;font-size:0.78rem">Unverified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic">"Contract payment terms (see contract) vs. Overdue: DataDog Inc"</td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-018</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-018</code></td>
+      <td style="color:#374151"><code>sample-payment-schedule.csv</code></td>
+      <td style="color:#15803d;font-size:0.78rem">✓ Verified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic"><code style="font-style:normal">Vendor: DataStream Inc | Amount: $9100.00 | Due: 2024-03-31</code></td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-019</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-019</code></td>
+      <td style="color:#374151"><code>sample-vendor-invoices.csv</code></td>
+      <td style="color:#15803d;font-size:0.78rem">✓ Verified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic"><code style="font-style:normal">Vendor: DataDog Inc | Amount: $6500.00 | Due: 2024-03-05</code></td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-020</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-020</code></td>
+      <td style="color:#374151"><code>sample-contractor-agreement.txt</code></td>
+      <td style="color:#c2410c;font-size:0.78rem">Unverified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic">—</td>
+    </tr>
+    <tr>
+      <td><code>ev-2026-07-20T04-03-30-021</code></td>
+      <td><code style="color:#374151">iss-2026-07-20T04-03-30-021</code></td>
+      <td style="color:#374151"><code>sample-contractor-agreement.txt</code></td>
+      <td style="color:#c2410c;font-size:0.78rem">Unverified</td>
+      <td style="color:#374151;font-size:0.78rem;font-style:italic">—</td>
+    </tr></tbody>
+    </table>
+  </div>
+
+  <div class="site-footer">
+  <p>Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.</p>
+  <p>Generated by Synth · 2026-07-20T04:03:30.727Z</p>
+</div>
+</div>
+</body>
+</html>

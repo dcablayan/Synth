@@ -1,14 +1,14 @@
 {
-  "logId": "issuelog-2026-05-18T13-32-00",
+  "logId": "issuelog-2026-07-20T04-03-31",
   "title": "Issue Log",
-  "generatedAt": "2026-05-18T13:32:00.147Z",
+  "generatedAt": "2026-07-20T04:03:31.288Z",
   "sourceReports": [
     "reviews/demo-review.json",
     "dataroom/demo-dataroom.json"
   ],
   "issues": [
     {
-      "id": "iss-2026-05-18T13-32-00-001",
+      "id": "iss-2026-07-20T04-03-31-001",
       "title": "Unilateral Modification Rights",
       "severity": "High",
       "category": "other",
@@ -21,14 +21,14 @@
       ],
       "affectedRows": [],
       "recommendation": "Request a mutual written amendment requirement.",
-      "createdAt": "2026-05-18T13:32:00.147Z",
-      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "createdAt": "2026-07-20T04:03:31.288Z",
+      "updatedAt": "2026-07-20T04:03:31.288Z",
       "evidenceIds": [
-        "ev-2026-05-18T13-32-00-001"
+        "ev-2026-07-20T04-03-31-001"
       ]
     },
     {
-      "id": "iss-2026-05-18T13-32-00-002",
+      "id": "iss-2026-07-20T04-03-31-002",
       "title": "Limited Liability Cap",
       "severity": "High",
       "category": "legal",
@@ -41,15 +41,15 @@
       ],
       "affectedRows": [],
       "recommendation": "Negotiate a higher cap and carve-outs for willful misconduct.",
-      "createdAt": "2026-05-18T13:32:00.147Z",
-      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "createdAt": "2026-07-20T04:03:31.288Z",
+      "updatedAt": "2026-07-20T04:03:31.288Z",
       "evidenceIds": [
-        "ev-2026-05-18T13-32-00-002"
+        "ev-2026-07-20T04-03-31-002"
       ]
     },
     {
-      "id": "iss-2026-05-18T13-32-00-006",
-      "title": "Overdue Payments Detected",
+      "id": "iss-2026-07-20T04-03-31-006",
+      "title": "Overdue Payments Detected (sample-payment-schedule.csv)",
       "severity": "High",
       "category": "payment",
       "status": "open",
@@ -62,15 +62,15 @@
       ],
       "affectedRows": [],
       "recommendation": "Review overdue invoices against contract payment terms and resolve outstanding amounts.",
-      "createdAt": "2026-05-18T13:32:00.147Z",
-      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "createdAt": "2026-07-20T04:03:31.288Z",
+      "updatedAt": "2026-07-20T04:03:31.288Z",
       "evidenceIds": [
-        "ev-2026-05-18T13-32-00-006"
+        "ev-2026-07-20T04-03-31-006"
       ]
     },
     {
-      "id": "iss-2026-05-18T13-32-00-007",
-      "title": "Overdue Payments Detected",
+      "id": "iss-2026-07-20T04-03-31-007",
+      "title": "Overdue Payments Detected (sample-vendor-invoices.csv)",
       "severity": "High",
       "category": "payment",
       "status": "open",
@@ -79,18 +79,18 @@
         "sample-vendor-invoices.csv"
       ],
       "evidenceQuotes": [
-        "Contract payment terms (see contract) vs. Overdue: 2024-03-05"
+        "Contract payment terms (see contract) vs. Overdue: DataDog Inc"
       ],
       "affectedRows": [],
       "recommendation": "Review overdue invoices against contract payment terms and resolve outstanding amounts.",
-      "createdAt": "2026-05-18T13:32:00.147Z",
-      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "createdAt": "2026-07-20T04:03:31.288Z",
+      "updatedAt": "2026-07-20T04:03:31.288Z",
       "evidenceIds": [
-        "ev-2026-05-18T13-32-00-007"
+        "ev-2026-07-20T04-03-31-007"
       ]
     },
     {
-      "id": "iss-2026-05-18T13-32-00-008",
+      "id": "iss-2026-07-20T04-03-31-008",
       "title": "Overdue Payment: DataStream Inc ($9100.00)",
       "severity": "High",
       "category": "payment",
@@ -103,14 +103,34 @@
         "Vendor: DataStream Inc | Amount: $9100.00 | Due: 2024-03-31"
       ],
       "recommendation": "Resolve overdue payment of $9100.00 to DataStream Inc. Due: 2024-03-31.",
-      "createdAt": "2026-05-18T13:32:00.147Z",
-      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "createdAt": "2026-07-20T04:03:31.288Z",
+      "updatedAt": "2026-07-20T04:03:31.288Z",
       "evidenceIds": [
-        "ev-2026-05-18T13-32-00-008"
+        "ev-2026-07-20T04-03-31-008"
       ]
     },
     {
-      "id": "iss-2026-05-18T13-32-00-003",
+      "id": "iss-2026-07-20T04-03-31-009",
+      "title": "Overdue Payment: DataDog Inc ($6500.00)",
+      "severity": "High",
+      "category": "payment",
+      "status": "open",
+      "sourceFiles": [
+        "sample-vendor-invoices.csv"
+      ],
+      "evidenceQuotes": [],
+      "affectedRows": [
+        "Vendor: DataDog Inc | Amount: $6500.00 | Due: 2024-03-05"
+      ],
+      "recommendation": "Resolve overdue payment of $6500.00 to DataDog Inc. Due: 2024-03-05.",
+      "createdAt": "2026-07-20T04:03:31.288Z",
+      "updatedAt": "2026-07-20T04:03:31.288Z",
+      "evidenceIds": [
+        "ev-2026-07-20T04-03-31-009"
+      ]
+    },
+    {
+      "id": "iss-2026-07-20T04-03-31-003",
       "title": "Auto-Renewal with Short Notice",
       "severity": "Medium",
       "category": "renewal",
@@ -123,14 +143,14 @@
       ],
       "affectedRows": [],
       "recommendation": "Calendar the cancellation deadline immediately.",
-      "createdAt": "2026-05-18T13:32:00.147Z",
-      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "createdAt": "2026-07-20T04:03:31.288Z",
+      "updatedAt": "2026-07-20T04:03:31.288Z",
       "evidenceIds": [
-        "ev-2026-05-18T13-32-00-003"
+        "ev-2026-07-20T04-03-31-003"
       ]
     },
     {
-      "id": "iss-2026-05-18T13-32-00-004",
+      "id": "iss-2026-07-20T04-03-31-004",
       "title": "Unusual Clause: Unilateral modification rights may allow changes without consent",
       "severity": "Low",
       "category": "legal",
@@ -138,19 +158,17 @@
       "sourceFiles": [
         "sample-saas-agreement.txt"
       ],
-      "evidenceQuotes": [
-        "Unilateral modification rights may allow changes without consent"
-      ],
+      "evidenceQuotes": [],
       "affectedRows": [],
       "recommendation": "Review this clause with legal counsel to assess acceptability.",
-      "createdAt": "2026-05-18T13:32:00.147Z",
-      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "createdAt": "2026-07-20T04:03:31.288Z",
+      "updatedAt": "2026-07-20T04:03:31.288Z",
       "evidenceIds": [
-        "ev-2026-05-18T13-32-00-004"
+        "ev-2026-07-20T04-03-31-004"
       ]
     },
     {
-      "id": "iss-2026-05-18T13-32-00-005",
+      "id": "iss-2026-07-20T04-03-31-005",
       "title": "Unusual Clause: Review auto-renewal notice window carefully",
       "severity": "Low",
       "category": "legal",
@@ -158,19 +176,17 @@
       "sourceFiles": [
         "sample-saas-agreement.txt"
       ],
-      "evidenceQuotes": [
-        "Review auto-renewal notice window carefully"
-      ],
+      "evidenceQuotes": [],
       "affectedRows": [],
       "recommendation": "Review this clause with legal counsel to assess acceptability.",
-      "createdAt": "2026-05-18T13:32:00.147Z",
-      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "createdAt": "2026-07-20T04:03:31.288Z",
+      "updatedAt": "2026-07-20T04:03:31.288Z",
       "evidenceIds": [
-        "ev-2026-05-18T13-32-00-005"
+        "ev-2026-07-20T04-03-31-005"
       ]
     },
     {
-      "id": "iss-2026-05-18T13-32-00-009",
+      "id": "iss-2026-07-20T04-03-31-010",
       "title": "Data Quality: High blank cell rate: 40% of cells are empty",
       "severity": "Low",
       "category": "data-quality",
@@ -185,14 +201,14 @@
         "High blank cell rate: 40% of cells are empty"
       ],
       "recommendation": "Review spreadsheet data for completeness and accuracy.",
-      "createdAt": "2026-05-18T13:32:00.147Z",
-      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "createdAt": "2026-07-20T04:03:31.288Z",
+      "updatedAt": "2026-07-20T04:03:31.288Z",
       "evidenceIds": [
-        "ev-2026-05-18T13-32-00-009"
+        "ev-2026-07-20T04-03-31-010"
       ]
     },
     {
-      "id": "iss-2026-05-18T13-32-00-010",
+      "id": "iss-2026-07-20T04-03-31-011",
       "title": "Data Quality: 1 row(s) marked as overdue",
       "severity": "Low",
       "category": "data-quality",
@@ -207,150 +223,108 @@
         "1 row(s) marked as overdue"
       ],
       "recommendation": "Review spreadsheet data for completeness and accuracy.",
-      "createdAt": "2026-05-18T13:32:00.147Z",
-      "updatedAt": "2026-05-18T13:32:00.147Z",
+      "createdAt": "2026-07-20T04:03:31.288Z",
+      "updatedAt": "2026-07-20T04:03:31.288Z",
       "evidenceIds": [
-        "ev-2026-05-18T13-32-00-010"
-      ]
-    },
-    {
-      "id": "iss-2026-05-18T13-32-00-011",
-      "title": "Spreadsheet Warning: High blank cell rate: 40% of cells are empty",
-      "severity": "Low",
-      "category": "data-quality",
-      "status": "open",
-      "sourceFiles": [
-        "sample-cap-table.csv"
-      ],
-      "evidenceQuotes": [],
-      "affectedRows": [
-        "High blank cell rate: 40% of cells are empty"
-      ],
-      "recommendation": "Review spreadsheet for completeness.",
-      "createdAt": "2026-05-18T13:32:00.147Z",
-      "updatedAt": "2026-05-18T13:32:00.147Z",
-      "evidenceIds": [
-        "ev-2026-05-18T13-32-00-011"
-      ]
-    },
-    {
-      "id": "iss-2026-05-18T13-32-00-012",
-      "title": "Spreadsheet Warning: 1 row(s) marked as overdue",
-      "severity": "Low",
-      "category": "data-quality",
-      "status": "open",
-      "sourceFiles": [
-        "sample-payment-schedule.csv"
-      ],
-      "evidenceQuotes": [],
-      "affectedRows": [
-        "1 row(s) marked as overdue"
-      ],
-      "recommendation": "Review spreadsheet for completeness.",
-      "createdAt": "2026-05-18T13:32:00.147Z",
-      "updatedAt": "2026-05-18T13:32:00.147Z",
-      "evidenceIds": [
-        "ev-2026-05-18T13-32-00-012"
+        "ev-2026-07-20T04-03-31-011"
       ]
     }
   ],
   "evidence": [
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-001",
-      "issueId": "iss-2026-05-18T13-32-00-001",
+      "evidenceId": "ev-2026-07-20T04-03-31-001",
+      "issueId": "iss-2026-07-20T04-03-31-001",
       "documentQuote": "automatically renew for successive one-year periods (each a \"Renewal Term\") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",
       "sourceFilename": "sample-saas-agreement.txt",
       "fieldName": "General Provisions",
       "isVerified": true
     },
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-002",
-      "issueId": "iss-2026-05-18T13-32-00-002",
+      "evidenceId": "ev-2026-07-20T04-03-31-002",
+      "issueId": "iss-2026-07-20T04-03-31-002",
       "documentQuote": "IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITIES, EVEN IF PROVIDER HAS BEEN ADVISED OF THE POS",
       "sourceFilename": "sample-saas-agreement.txt",
       "fieldName": "Liability",
       "isVerified": true
     },
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-003",
-      "issueId": "iss-2026-05-18T13-32-00-003",
+      "evidenceId": "ev-2026-07-20T04-03-31-003",
+      "issueId": "iss-2026-07-20T04-03-31-003",
       "documentQuote": "automatically renew for successive one-year periods (each a \"Renewal Term\") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",
       "sourceFilename": "sample-saas-agreement.txt",
       "fieldName": "Term and Renewal",
       "isVerified": true
     },
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-004",
-      "issueId": "iss-2026-05-18T13-32-00-004",
+      "evidenceId": "ev-2026-07-20T04-03-31-004",
+      "issueId": "iss-2026-07-20T04-03-31-004",
       "documentQuote": "Unilateral modification rights may allow changes without consent",
       "sourceFilename": "sample-saas-agreement.txt",
-      "isVerified": true
+      "isVerified": false,
+      "verificationNote": "Quote could not be located in the source document — do not rely on it without manual verification."
     },
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-005",
-      "issueId": "iss-2026-05-18T13-32-00-005",
+      "evidenceId": "ev-2026-07-20T04-03-31-005",
+      "issueId": "iss-2026-07-20T04-03-31-005",
       "documentQuote": "Review auto-renewal notice window carefully",
       "sourceFilename": "sample-saas-agreement.txt",
-      "isVerified": true
+      "isVerified": false,
+      "verificationNote": "Quote could not be located in the source document — do not rely on it without manual verification."
     },
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-006",
-      "issueId": "iss-2026-05-18T13-32-00-006",
+      "evidenceId": "ev-2026-07-20T04-03-31-006",
+      "issueId": "iss-2026-07-20T04-03-31-006",
       "documentQuote": "Contract payment terms (see contract) vs. Overdue: DataStream Inc",
       "sourceFilename": "sample-saas-agreement.txt",
-      "isVerified": true
+      "isVerified": false,
+      "verificationNote": "Derived from cross-document comparison — verify the underlying values in both source files."
     },
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-007",
-      "issueId": "iss-2026-05-18T13-32-00-007",
-      "documentQuote": "Contract payment terms (see contract) vs. Overdue: 2024-03-05",
+      "evidenceId": "ev-2026-07-20T04-03-31-007",
+      "issueId": "iss-2026-07-20T04-03-31-007",
+      "documentQuote": "Contract payment terms (see contract) vs. Overdue: DataDog Inc",
       "sourceFilename": "sample-saas-agreement.txt",
-      "isVerified": true
+      "isVerified": false,
+      "verificationNote": "Derived from cross-document comparison — verify the underlying values in both source files."
     },
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-008",
-      "issueId": "iss-2026-05-18T13-32-00-008",
+      "evidenceId": "ev-2026-07-20T04-03-31-008",
+      "issueId": "iss-2026-07-20T04-03-31-008",
       "documentQuote": "",
       "spreadsheetRow": "Vendor: DataStream Inc | Amount: $9100.00 | Due: 2024-03-31",
       "sourceFilename": "sample-payment-schedule.csv",
-      "isVerified": true
+      "isVerified": true,
+      "verificationNote": "Extracted directly from the spreadsheet row."
     },
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-009",
-      "issueId": "iss-2026-05-18T13-32-00-009",
+      "evidenceId": "ev-2026-07-20T04-03-31-009",
+      "issueId": "iss-2026-07-20T04-03-31-009",
+      "documentQuote": "",
+      "spreadsheetRow": "Vendor: DataDog Inc | Amount: $6500.00 | Due: 2024-03-05",
+      "sourceFilename": "sample-vendor-invoices.csv",
+      "isVerified": true,
+      "verificationNote": "Extracted directly from the spreadsheet row."
+    },
+    {
+      "evidenceId": "ev-2026-07-20T04-03-31-010",
+      "issueId": "iss-2026-07-20T04-03-31-010",
       "documentQuote": "",
       "sourceFilename": "sample-saas-agreement.txt",
       "isVerified": false,
       "verificationNote": "Auto-detected from spreadsheet structure analysis."
     },
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-010",
-      "issueId": "iss-2026-05-18T13-32-00-010",
+      "evidenceId": "ev-2026-07-20T04-03-31-011",
+      "issueId": "iss-2026-07-20T04-03-31-011",
       "documentQuote": "",
       "sourceFilename": "sample-saas-agreement.txt",
-      "isVerified": false,
-      "verificationNote": "Auto-detected from spreadsheet structure analysis."
-    },
-    {
-      "evidenceId": "ev-2026-05-18T13-32-00-011",
-      "issueId": "iss-2026-05-18T13-32-00-011",
-      "documentQuote": "",
-      "sourceFilename": "sample-cap-table.csv",
-      "isVerified": false,
-      "verificationNote": "Auto-detected from spreadsheet structure analysis."
-    },
-    {
-      "evidenceId": "ev-2026-05-18T13-32-00-012",
-      "issueId": "iss-2026-05-18T13-32-00-012",
-      "documentQuote": "",
-      "sourceFilename": "sample-payment-schedule.csv",
       "isVerified": false,
       "verificationNote": "Auto-detected from spreadsheet structure analysis."
     }
   ],
-  "totalIssues": 12,
-  "openCount": 12,
+  "totalIssues": 11,
+  "openCount": 11,
   "criticalCount": 0,
-  "highCount": 5,
+  "highCount": 6,
   "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions."
 }

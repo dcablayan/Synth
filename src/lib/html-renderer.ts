@@ -4,11 +4,16 @@ import type { Memo } from '../schemas/memo.schema';
 import type { Revision } from '../schemas/revision.schema';
 
 export type { Review, Financial, Memo, Revision };
-import { getRiskBadgeColor } from './risk-scoring';
 import { escapeHtml, safeCssToken } from './output-safety';
+import {
+  documentCss,
+  documentBadge,
+  documentEyebrow,
+  documentCoverFinePrint,
+  documentFooter,
+  BRAND,
+} from './brand';
 
-const DISCLAIMER =
-  'Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.';
 const RISK_LEVELS = ['Low', 'Medium', 'High', 'Critical'] as const;
 
 function h(value: unknown): string {
@@ -27,68 +32,39 @@ function quoteHtml(value: unknown): string {
   return `<blockquote>"${h(value)}"</blockquote>`;
 }
 
-function baseStyles(): string {
-  return `
-    <style>
-      * { box-sizing: border-box; margin: 0; padding: 0; }
-      body { font-family: Georgia, 'Times New Roman', serif; color: #1a1a2e; background: #fff; font-size: 14px; line-height: 1.6; }
-      .page { max-width: 800px; margin: 0 auto; padding: 40px; }
-      h1 { font-size: 24px; color: #0f172a; margin-bottom: 8px; }
-      h2 { font-size: 18px; color: #1e3a5f; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; margin: 32px 0 16px; }
-      h3 { font-size: 15px; color: #1e3a5f; margin: 20px 0 8px; }
-      p { margin-bottom: 12px; }
-      table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-      th { background: #1e3a5f; color: #fff; padding: 8px 12px; text-align: left; font-size: 13px; }
-      td { padding: 8px 12px; border-bottom: 1px solid #e2e8f0; font-size: 13px; vertical-align: top; }
-      tr:nth-child(even) td { background: #f8fafc; }
-      blockquote { border-left: 4px solid #3b82f6; padding: 8px 16px; margin: 12px 0; background: #eff6ff; color: #1e40af; font-style: italic; }
-      .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: bold; color: #fff; letter-spacing: 0.5px; }
-      .cover { text-align: center; padding: 60px 40px; border-bottom: 3px solid #1e3a5f; margin-bottom: 40px; }
-      .cover h1 { font-size: 28px; margin-bottom: 16px; }
-      .cover .meta { color: #64748b; font-size: 13px; margin-top: 8px; }
-      .cover .risk-score { font-size: 48px; font-weight: bold; color: #1e3a5f; margin: 16px 0 4px; }
-      .disclaimer { background: #fef9c3; border: 1px solid #fde047; padding: 12px 16px; border-radius: 6px; font-size: 12px; color: #713f12; margin: 24px 0; }
-      .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-size: 11px; color: #94a3b8; text-align: center; }
-      ul { padding-left: 20px; }
-      li { margin-bottom: 6px; }
-      .risk-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 12px 0; }
-      .risk-card.Critical { border-left: 4px solid #dc2626; }
-      .risk-card.High { border-left: 4px solid #ea580c; }
-      .risk-card.Medium { border-left: 4px solid #d97706; }
-      .risk-card.Low { border-left: 4px solid #16a34a; }
-    </style>
-  `;
+function warningsHtml(warnings: string[] | undefined): string {
+  if (!warnings || warnings.length === 0) return '';
+  return `<div class="notice">⚠️ <strong>Analysis warnings:</strong><ul style="margin-top:6px">${warnings
+    .map((w) => `<li>${h(w)}</li>`)
+    .join('')}</ul></div>`;
 }
 
-function badgeHtml(level: string): string {
-  const safeLevel = riskLevel(level);
-  const color = getRiskBadgeColor(safeLevel);
-  return `<span class="badge" style="background:${color}">${h(safeLevel)}</span>`;
+function head(kind: string, title: string): string {
+  return `<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${h(BRAND.name)} — ${h(kind)}: ${h(title)}</title>
+${documentCss()}`;
 }
 
 export function renderReviewHTML(review: Review): string {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Contract Review — ${h(review.documentTitle)}</title>
-${baseStyles()}
+${head('Contract Review', review.documentTitle)}
 </head>
 <body>
 <div class="page">
 
 <div class="cover">
-  <div style="color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:2px;margin-bottom:16px">Synth · Contract Review</div>
+  ${documentEyebrow('Contract Review')}
   <h1>${h(review.documentTitle)}</h1>
   <div class="meta">${h(review.documentType)} · Parties: ${review.parties.map(h).join(', ')}</div>
   <div class="risk-score">${review.riskScore}</div>
-  <div>${badgeHtml(review.riskLevel)} Risk Score</div>
-  <div class="meta" style="margin-top:16px">Generated ${new Date(review.generatedAt).toLocaleDateString()}</div>
+  <div>${documentBadge(review.riskLevel)} <span class="meta">Risk Score</span></div>
+  <div class="meta" style="margin-top:14px">Generated ${new Date(review.generatedAt).toLocaleDateString()}</div>
+  ${documentCoverFinePrint()}
 </div>
-
-<div class="disclaimer">⚠️ ${DISCLAIMER}</div>
-
+${warningsHtml(review.warnings)}
 <h2>Executive Summary</h2>
 <p>${h(review.executiveSummary)}</p>
 
@@ -115,7 +91,7 @@ ${review.topRisks
   .map(
     (r) => `
 <div class="risk-card ${riskLevel(r.severity)}">
-  <div style="margin-bottom:8px">${badgeHtml(r.severity)} <strong>${h(r.title)}</strong></div>
+  <div style="margin-bottom:8px">${documentBadge(r.severity)} <strong>${h(r.title)}</strong></div>
   <p><strong>Why it matters:</strong> ${h(r.whyItMatters)}</p>
   <p>${h(r.explanation)}</p>
   ${quoteHtml(r.supportingQuote)}
@@ -145,10 +121,7 @@ ${review.citations
   )
   .join('')}
 
-<div class="footer">
-  <p>${DISCLAIMER}</p>
-  <p>Generated by Synth · ${new Date(review.generatedAt).toLocaleString()} · Page 1</p>
-</div>
+${documentFooter(new Date(review.generatedAt).toLocaleString())}
 
 </div>
 </body>
@@ -159,21 +132,18 @@ export function renderFinancialHTML(financial: Financial): string {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Financial Analysis — ${h(financial.documentTitle)}</title>
-${baseStyles()}
+${head('Financial Analysis', financial.documentTitle)}
 </head>
 <body>
 <div class="page">
 
 <div class="cover">
-  <div style="color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:2px;margin-bottom:16px">Synth · Financial Analysis</div>
+  ${documentEyebrow('Financial Analysis')}
   <h1>${h(financial.documentTitle)}</h1>
   <div class="meta">Generated ${new Date(financial.generatedAt).toLocaleDateString()}</div>
+  ${documentCoverFinePrint()}
 </div>
-
-<div class="disclaimer">⚠️ ${DISCLAIMER}</div>
-
+${warningsHtml(financial.warnings)}
 <h2>Financial Summary</h2>
 <table>
   <tr><th>Field</th><th>Value</th></tr>
@@ -195,7 +165,7 @@ ${financial.financialRedFlags
   .map(
     (f) => `
 <div class="risk-card ${riskLevel(f.severity)}">
-  <div style="margin-bottom:8px">${badgeHtml(f.severity)} <strong>${h(f.issue)}</strong></div>
+  <div style="margin-bottom:8px">${documentBadge(f.severity)} <strong>${h(f.issue)}</strong></div>
   <p>${h(f.explanation)}</p>
   ${quoteHtml(f.supportingQuote)}
 </div>`
@@ -205,10 +175,7 @@ ${financial.financialRedFlags
 <h2>Citations</h2>
 ${financial.citations.map((c) => `<div style="margin:12px 0"><strong>${h(c.section)}</strong><br>${quoteHtml(c.quote)}<em>${h(c.relevance)}</em></div>`).join('')}
 
-<div class="footer">
-  <p>${DISCLAIMER}</p>
-  <p>Generated by Synth · ${new Date(financial.generatedAt).toLocaleString()}</p>
-</div>
+${documentFooter(new Date(financial.generatedAt).toLocaleString())}
 
 </div>
 </body>
@@ -219,26 +186,23 @@ export function renderMemoHTML(memo: Memo): string {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Executive Memo — ${h(memo.documentTitle)}</title>
-${baseStyles()}
+${head('Executive Memo', memo.documentTitle)}
 </head>
 <body>
 <div class="page">
 
 <div class="cover">
-  <div style="color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:2px;margin-bottom:16px">Synth · Executive Memo</div>
+  ${documentEyebrow('Executive Memo')}
   <h1>${h(memo.documentTitle)}</h1>
   <div class="meta">Memo Date: ${h(memo.memoDate)}</div>
+  ${documentCoverFinePrint()}
 </div>
-
-<div class="disclaimer">⚠️ ${DISCLAIMER}</div>
 
 <h2>Executive Summary</h2>
 <p>${h(memo.executiveSummary)}</p>
 
 <h2>Biggest Risks</h2>
-${memo.biggestRisks.map((r) => `<div class="risk-card ${riskLevel(r.severity)}" style="margin:12px 0">${badgeHtml(r.severity)} <strong>${h(r.risk)}</strong><p style="margin-top:8px">${h(r.explanation)}</p></div>`).join('')}
+${memo.biggestRisks.map((r) => `<div class="risk-card ${riskLevel(r.severity)}" style="margin:12px 0">${documentBadge(r.severity)} <strong>${h(r.risk)}</strong><p style="margin-top:8px">${h(r.explanation)}</p></div>`).join('')}
 
 <h2>Financial Obligations</h2>
 <ul>${listItems(memo.financialObligations)}</ul>
@@ -255,10 +219,7 @@ ${memo.biggestRisks.map((r) => `<div class="risk-card ${riskLevel(r.severity)}" 
 <h2>Action Items</h2>
 <ol>${listItems(memo.actionItems)}</ol>
 
-<div class="footer">
-  <p>${DISCLAIMER}</p>
-  <p>Generated by Synth · ${new Date(memo.generatedAt).toLocaleString()}</p>
-</div>
+${documentFooter(new Date(memo.generatedAt).toLocaleString())}
 
 </div>
 </body>
@@ -269,20 +230,17 @@ export function renderRevisionHTML(revision: Revision): string {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Revision Packet — ${h(revision.documentTitle)}</title>
-${baseStyles()}
+${head('Revision Packet', revision.documentTitle)}
 </head>
 <body>
 <div class="page">
 
 <div class="cover">
-  <div style="color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:2px;margin-bottom:16px">Synth · Revision Packet</div>
+  ${documentEyebrow('Revision Packet')}
   <h1>${h(revision.documentTitle)}</h1>
   <div class="meta">Generated ${new Date(revision.generatedAt).toLocaleDateString()}</div>
+  ${documentCoverFinePrint()}
 </div>
-
-<div class="disclaimer">⚠️ ${h(revision.revisionDisclaimer)}</div>
 
 <h2>Revision Summary</h2>
 <p>${h(revision.revisionSummary)}</p>
@@ -291,16 +249,17 @@ ${baseStyles()}
 <ol>${listItems(revision.priorityChanges)}</ol>
 
 <h2>Clause Revisions</h2>
+<div class="notice">✏️ ${h(revision.revisionDisclaimer)}</div>
 ${revision.clauseRevisions
   .map(
     (c) => `
 <div class="risk-card ${riskLevel(c.severity)}" style="margin:20px 0">
-  <div style="margin-bottom:12px">${badgeHtml(c.severity)} <strong>${h(c.section)}</strong></div>
+  <div style="margin-bottom:12px">${documentBadge(c.severity)} <strong>${h(c.section)}</strong></div>
   <p><strong>Issue:</strong> ${h(c.issue)}</p>
   <h3>Original Language</h3>
   ${quoteHtml(c.originalLanguage)}
   <h3>Suggested Replacement Language (For Professional Review)</h3>
-  <blockquote style="border-color:#16a34a;background:#f0fdf4;color:#14532d">${h(c.suggestedReplacementLanguage)}</blockquote>
+  <blockquote style="border-color:#15803d;background:#f0fdf4;color:#14532d">${h(c.suggestedReplacementLanguage)}</blockquote>
   <p><strong>Why it matters:</strong> ${h(c.whyItMatters)}</p>
 </div>`
   )
@@ -312,10 +271,7 @@ ${revision.clauseRevisions
 <h2>Questions for Your Lawyer</h2>
 <ol>${listItems(revision.lawyerQuestions)}</ol>
 
-<div class="footer">
-  <p>${h(revision.revisionDisclaimer)}</p>
-  <p>Generated by Synth · ${new Date(revision.generatedAt).toLocaleString()}</p>
-</div>
+${documentFooter(new Date(revision.generatedAt).toLocaleString())}
 
 </div>
 </body>
@@ -328,9 +284,6 @@ export function renderFullPacketHTML(
   memo: Memo | null,
   revision: Revision | null
 ): string {
-  const DISCLAIMER_TEXT =
-    'Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.';
-
   function innerReview(): string {
     return `
 <h2>Executive Summary</h2>
@@ -350,7 +303,7 @@ export function renderFullPacketHTML(
 <h2>Risk Matrix</h2>
 ${review.topRisks.map((r) => `
 <div class="risk-card ${riskLevel(r.severity)}">
-  <div style="margin-bottom:6px">${badgeHtml(r.severity)} <strong>${h(r.title)}</strong></div>
+  <div style="margin-bottom:6px">${documentBadge(r.severity)} <strong>${h(r.title)}</strong></div>
   <p>${h(r.explanation)}</p>
   ${quoteHtml(r.supportingQuote)}
   <p><strong>Next step:</strong> ${h(r.suggestedNextStep)}</p>
@@ -378,7 +331,7 @@ ${review.topRisks.map((r) => `
 <h2>Financial Red Flags</h2>
 ${financial.financialRedFlags.map((f) => `
 <div class="risk-card ${riskLevel(f.severity)}">
-  ${badgeHtml(f.severity)} <strong>${h(f.issue)}</strong>
+  ${documentBadge(f.severity)} <strong>${h(f.issue)}</strong>
   <p style="margin-top:6px">${h(f.explanation)}</p>
   ${quoteHtml(f.supportingQuote)}
 </div>`).join('')}`;
@@ -393,7 +346,7 @@ ${financial.financialRedFlags.map((f) => `
 <h2>Biggest Risks</h2>
 ${memo.biggestRisks.map((r) => `
 <div class="risk-card ${riskLevel(r.severity)}" style="margin:10px 0">
-  ${badgeHtml(r.severity)} <strong>${h(r.risk)}</strong>
+  ${documentBadge(r.severity)} <strong>${h(r.risk)}</strong>
   <p style="margin-top:6px">${h(r.explanation)}</p>
 </div>`).join('')}
 
@@ -410,10 +363,6 @@ ${memo.biggestRisks.map((r) => `
   function innerRevision(): string {
     if (!revision) return '<p>No revision packet available.</p>';
     return `
-<div class="disclaimer" style="background:#fef2f2;border-color:#fca5a5;color:#991b1b">
-  &#9888; ${h(revision.revisionDisclaimer)}
-</div>
-
 <h2>Revision Summary</h2>
 <p>${h(revision.revisionSummary)}</p>
 
@@ -421,14 +370,15 @@ ${memo.biggestRisks.map((r) => `
 <ol>${listItems(revision.priorityChanges)}</ol>
 
 <h2>Clause Revisions</h2>
+<div class="notice">✏️ ${h(revision.revisionDisclaimer)}</div>
 ${revision.clauseRevisions.map((c) => `
 <div class="risk-card ${riskLevel(c.severity)}" style="margin:16px 0">
-  ${badgeHtml(c.severity)} <strong>${h(c.section)}</strong>
+  ${documentBadge(c.severity)} <strong>${h(c.section)}</strong>
   <p style="margin-top:8px"><strong>Issue:</strong> ${h(c.issue)}</p>
   <p><strong>Original:</strong></p>
   ${quoteHtml(c.originalLanguage)}
   <p><strong>Suggested (for professional review):</strong></p>
-  <blockquote style="border-color:#16a34a;background:#f0fdf4;color:#14532d">${h(c.suggestedReplacementLanguage)}</blockquote>
+  <blockquote style="border-color:#15803d;background:#f0fdf4;color:#14532d">${h(c.suggestedReplacementLanguage)}</blockquote>
 </div>`).join('')}
 
 <h2>Negotiation Notes</h2>
@@ -443,50 +393,40 @@ ${revision.clauseRevisions.map((c) => `
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Full Review Packet &#8212; ${h(review.documentTitle)}</title>
-${baseStyles()}
-<style>
-  .section-break { page-break-before: always; padding-top: 32px; }
-  .section-header { background: #1e3a5f; color: #fff; padding: 10px 16px; border-radius: 4px; margin: 24px 0 16px; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
-</style>
+${head('Full Review Packet', review.documentTitle)}
 </head>
 <body>
 <div class="page">
 
 <div class="cover">
-  <div style="color:#64748b;font-size:11px;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px">Synth &#183; Full Review Packet</div>
+  ${documentEyebrow('Full Review Packet')}
   <h1>${h(review.documentTitle)}</h1>
-  <div class="meta">${h(review.documentType)} &#183; Parties: ${review.parties.map(h).join(', ')}</div>
+  <div class="meta">${h(review.documentType)} · Parties: ${review.parties.map(h).join(', ')}</div>
   <div class="risk-score">${review.riskScore}</div>
-  <div>${badgeHtml(review.riskLevel)} Risk Score</div>
-  <div class="meta" style="margin-top:12px">Generated ${generatedAt}</div>
+  <div>${documentBadge(review.riskLevel)} <span class="meta">Risk Score</span></div>
+  <div class="meta" style="margin-top:12px">Generated ${h(generatedAt)}</div>
+  ${documentCoverFinePrint()}
 </div>
-
-<div class="disclaimer">&#9888; ${DISCLAIMER_TEXT}</div>
-
-<div class="section-header">Part 1 &#8212; Contract Review</div>
+${warningsHtml(review.warnings)}
+<div class="section-header">Part 1 — Contract Review</div>
 ${innerReview()}
 
 <div class="section-break">
-  <div class="section-header">Part 2 &#8212; Financial Analysis</div>
+  <div class="section-header">Part 2 — Financial Analysis</div>
   ${innerFinancial()}
 </div>
 
 <div class="section-break">
-  <div class="section-header">Part 3 &#8212; Executive Memo</div>
+  <div class="section-header">Part 3 — Executive Memo</div>
   ${innerMemo()}
 </div>
 
 <div class="section-break">
-  <div class="section-header">Part 4 &#8212; Revision Packet</div>
+  <div class="section-header">Part 4 — Revision Packet</div>
   ${innerRevision()}
 </div>
 
-<div class="footer">
-  <p>${DISCLAIMER_TEXT}</p>
-  <p>Generated by Synth &#183; ${generatedAt} &#183; Full Review Packet</p>
-</div>
+${documentFooter(`${generatedAt} · Full Review Packet`)}
 
 </div>
 </body>

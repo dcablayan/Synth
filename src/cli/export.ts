@@ -1,23 +1,29 @@
 #!/usr/bin/env tsx
 import fs from 'fs';
 import path from 'path';
-import type { IssueLog } from '../schemas/issue.schema';
-import type { DataRoomSummary } from '../schemas/spreadsheet.schema';
+import type { z } from 'zod';
+import { IssueLogSchema, type IssueLog } from '../schemas/issue.schema';
+import { DataRoomSummarySchema, type DataRoomSummary } from '../schemas/spreadsheet.schema';
 import { writeIssuesCSV, writeEvidenceCSV, writePaymentsCSV, writeCapTableCSV, writeDataRoomXLSX } from '../lib/export-engine';
 import { listRegularFiles, resolveRegularFileInside } from '../lib/path-safety';
 
 const CWD = process.cwd();
 const EXPORTS_DIR = path.join(CWD, 'reports', 'exports');
 
-function loadLatest<T>(dir: string, suffix: string): T | null {
+function loadLatest<T>(dir: string, suffix: string, schema: z.ZodType<T>): T | null {
   if (!fs.existsSync(dir)) return null;
   const files = listRegularFiles(dir, (f) => f.endsWith(suffix));
-  if (files.length === 0) return null;
-  try {
-    const filepath = resolveRegularFileInside(dir, files[files.length - 1], 'report file');
-    return JSON.parse(fs.readFileSync(filepath, 'utf-8')) as T;
+  // Walk newest-first so one corrupted file doesn't blank the export.
+  for (let i = files.length - 1; i >= 0; i--) {
+    try {
+      const filepath = resolveRegularFileInside(dir, files[i], 'report file');
+      const parsed = schema.safeParse(JSON.parse(fs.readFileSync(filepath, 'utf-8')));
+      if (parsed.success) return parsed.data;
+      console.warn(`  ⚠️  Skipping ${files[i]}: does not match the expected schema`);
+    }
+    catch { /* try the next-newest file */ }
   }
-  catch { return null; }
+  return null;
 }
 
 async function main() {
@@ -26,13 +32,13 @@ async function main() {
   console.log('╚══════════════════════════════════════════════════╝\n');
   console.log('⚠️  Synth is not legal advice or financial advice.\n');
 
-  const issueLog = loadLatest<IssueLog>(path.join(CWD, 'reports', 'issues'), '.json');
+  const issueLog = loadLatest<IssueLog>(path.join(CWD, 'reports', 'issues'), '.json', IssueLogSchema);
   if (!issueLog) {
     console.error('  ❌ No issue log found. Run: npm run triage');
     process.exit(1);
   }
 
-  const dataroom = loadLatest<DataRoomSummary>(path.join(CWD, 'reports', 'dataroom'), '.json');
+  const dataroom = loadLatest<DataRoomSummary>(path.join(CWD, 'reports', 'dataroom'), '.json', DataRoomSummarySchema);
 
   fs.mkdirSync(EXPORTS_DIR, { recursive: true });
 

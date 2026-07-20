@@ -3,30 +3,19 @@ import fs from 'fs';
 import path from 'path';
 import { pathToFileURL } from 'url';
 import type { DataRoomSummary } from '../schemas/spreadsheet.schema';
-import { escapeHtml, safeCssToken } from '../lib/output-safety';
+import { escapeHtml } from '../lib/output-safety';
 import { listRegularFiles, resolveInside, resolveRegularFileInside } from '../lib/path-safety';
+import { BRAND, DISCLAIMER, screenCss, screenHeader, screenFooter, screenChip } from '../lib/brand';
 
 const CWD = process.cwd();
 const INBOX = path.join(CWD, 'documents', 'inbox');
 const DATAROOM_DIR = path.join(CWD, 'reports', 'dataroom');
-const DISCLAIMER = 'Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.';
 
 const CONTRACT_EXTS = new Set(['.txt', '.md', '.pdf', '.docx']);
 const SPREADSHEET_EXTS = new Set(['.csv', '.xlsx']);
-const SEVERITIES = ['Low', 'Medium', 'High', 'Critical'] as const;
 
 function h(value: unknown): string {
   return escapeHtml(value);
-}
-
-function getSeverityColor(s: string): string {
-  switch (safeCssToken(s, SEVERITIES, 'Low')) {
-    case 'Critical': return '#ef4444';
-    case 'High': return '#f97316';
-    case 'Medium': return '#eab308';
-    case 'Low': return '#22c55e';
-    default: return '#94a3b8';
-  }
 }
 
 export function renderDataRoomHtml(summary: DataRoomSummary): string {
@@ -42,7 +31,7 @@ export function renderDataRoomHtml(summary: DataRoomSummary): string {
     <div class="finding-card">
       <div class="finding-header">
         <span class="finding-type">${h(f.findingType.replace(/-/g, ' '))}</span>
-        <span class="severity" style="color:${getSeverityColor(f.severity)}">${h(safeCssToken(f.severity, SEVERITIES, 'Low'))}</span>
+        ${screenChip(f.severity)}
       </div>
       <h4>${h(f.title)}</h4>
       <p>${h(f.description)}</p>
@@ -77,45 +66,25 @@ export function renderDataRoomHtml(summary: DataRoomSummary): string {
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Data Room Review — ${h(summary.title)}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${h(BRAND.name)} — Data Room Review</title>
+${screenCss()}
 <style>
-  body { font-family: system-ui, sans-serif; background: #0f172a; color: #e2e8f0; margin: 0; padding: 24px; }
-  .container { max-width: 960px; margin: 0 auto; }
-  h1 { color: #38bdf8; font-size: 1.5rem; }
-  h2 { color: #94a3b8; font-size: 1rem; text-transform: uppercase; letter-spacing: .05em; margin-top: 28px; margin-bottom: 12px; }
-  h4 { color: #e2e8f0; font-size: 0.9rem; margin: 6px 0; }
-  .disclaimer { background: #422006; border: 1px solid #92400e; border-radius: 8px; padding: 10px 14px; font-size: 0.78rem; color: #fde68a; margin-bottom: 20px; }
-  .badge { display: inline-block; background: #1d4ed8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.72rem; margin-bottom: 12px; }
-  .summary { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; margin-bottom: 20px; }
-  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
-  .stat { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 14px; text-align: center; }
-  .stat-val { font-size: 1.6rem; font-weight: bold; color: white; }
-  .stat-lbl { font-size: 0.72rem; color: #64748b; margin-top: 4px; }
-  .finding-card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 14px; margin-bottom: 12px; }
-  .finding-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
-  .finding-type { color: #64748b; font-size: 0.75rem; text-transform: uppercase; }
-  .severity { font-size: 0.78rem; font-weight: bold; }
+  .finding-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .finding-type { color: #6b7280; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; }
   .diff-table { width: 100%; font-size: 0.78rem; border-collapse: collapse; margin: 8px 0; }
-  .diff-table th { background: #0f172a; color: #64748b; padding: 4px 8px; text-align: left; }
-  .diff-table td { padding: 4px 8px; color: #94a3b8; border-bottom: 1px solid #1e293b; }
-  .recommendation { color: #38bdf8; font-size: 0.82rem; }
-  .overdue { color: #ef4444; font-weight: bold; }
-  .warning-list { background: #1e293b; border: 1px solid #d97706; border-radius: 8px; padding: 12px 16px; }
-  .warning-list li { color: #fbbf24; font-size: 0.82rem; margin: 4px 0; }
-  table.main { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-  table.main th { background: #0f172a; color: #64748b; padding: 6px 10px; text-align: left; }
-  table.main td { padding: 6px 10px; border-bottom: 1px solid #1e293b; color: #cbd5e1; }
-  code { background: #0f172a; color: #38bdf8; padding: 1px 4px; border-radius: 3px; }
-  .section { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; margin-bottom: 16px; }
-  .meta { color: #64748b; font-size: 0.78rem; }
+  .diff-table th { background: #f9fafb; color: #4b5563; padding: 4px 8px; text-align: left; }
+  .diff-table td { padding: 4px 8px; color: #374151; border-bottom: 1px solid #e5e7eb; }
+  .overdue { color: #b91c1c; font-weight: 600; }
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>${h(summary.title)}</h1>
-  <span class="badge">Contracts + Spreadsheets + Data Room Review</span>
-  <p class="meta">Generated: ${h(summary.generatedAt)} · ${h(summary.fileCount)} files · ${summary.providerMode === 'mock' ? 'Mock Mode' : 'AI Mode'}</p>
-  <div class="disclaimer">⚠ ${DISCLAIMER}</div>
+  ${screenHeader(
+    'Data Room Review',
+    summary.title,
+    `Generated: ${h(summary.generatedAt)} · ${h(summary.fileCount)} files · ${summary.providerMode === 'mock' ? 'Mock Mode' : 'AI Mode'}`
+  )}
 
   <div class="stats">
     <div class="stat"><div class="stat-val">${h(summary.fileCount)}</div><div class="stat-lbl">Files</div></div>
@@ -124,8 +93,8 @@ export function renderDataRoomHtml(summary: DataRoomSummary): string {
     <div class="stat"><div class="stat-val">${h(summary.capTableFindings.length)}</div><div class="stat-lbl">Cap Table Rows</div></div>
   </div>
 
-  <div class="summary">
-    <h2>Executive Summary</h2>
+  <h2>Executive Summary</h2>
+  <div class="section">
     <p>${h(summary.executiveSummary)}</p>
   </div>
 
@@ -152,6 +121,7 @@ export function renderDataRoomHtml(summary: DataRoomSummary): string {
       <thead><tr><th>Vendor</th><th>Amount</th><th>Due Date</th><th>Status</th><th>Source</th></tr></thead>
       <tbody>${paymentRows}</tbody>
     </table>
+    ${summary.paymentScheduleFindings.length > 10 ? `<p class="meta">Showing first 10 of ${summary.paymentScheduleFindings.length} payment rows — see the JSON report or exports for the full list.</p>` : ''}
   </div>` : ''}
 
   ${summary.capTableFindings.length > 0 ? `
@@ -161,6 +131,7 @@ export function renderDataRoomHtml(summary: DataRoomSummary): string {
       <thead><tr><th>Investor</th><th>Share Class</th><th>Shares</th><th>Ownership %</th><th>Source</th></tr></thead>
       <tbody>${capTableRows}</tbody>
     </table>
+    ${summary.capTableFindings.length > 12 ? `<p class="meta">Showing first 12 of ${summary.capTableFindings.length} cap table rows — see the JSON report or exports for the full list.</p>` : ''}
   </div>` : ''}
 
   ${summary.dataQualityWarnings.length > 0 ? `
@@ -168,6 +139,8 @@ export function renderDataRoomHtml(summary: DataRoomSummary): string {
   <div class="warning-list">
     <ul>${summary.dataQualityWarnings.map((w) => `<li>${h(w)}</li>`).join('')}</ul>
   </div>` : ''}
+
+  ${screenFooter(summary.generatedAt)}
 </div>
 </body>
 </html>`;
@@ -176,8 +149,6 @@ export function renderDataRoomHtml(summary: DataRoomSummary): string {
 function renderDataRoomMarkdown(summary: DataRoomSummary): string {
   const lines: string[] = [
     `# ${summary.title}`,
-    '',
-    `> ${DISCLAIMER}`,
     '',
     `**Generated:** ${summary.generatedAt}  `,
     `**Files:** ${summary.fileCount}  `,
@@ -210,6 +181,9 @@ function renderDataRoomMarkdown(summary: DataRoomSummary): string {
           ...summary.paymentScheduleFindings.slice(0, 10).map((p) =>
             `| ${p.vendor} | ${p.amount} | ${p.dueDate} | ${p.status} | ${p.sourceFile} |`
           ),
+          ...(summary.paymentScheduleFindings.length > 10
+            ? [`_Showing first 10 of ${summary.paymentScheduleFindings.length} payment rows — see the JSON report or exports for the full list._`]
+            : []),
           '',
         ]
       : []),
@@ -221,12 +195,18 @@ function renderDataRoomMarkdown(summary: DataRoomSummary): string {
           ...summary.capTableFindings.slice(0, 12).map((c) =>
             `| ${c.investor} | ${c.shareClass} | ${c.shares} | ${c.ownershipPct} | ${c.sourceFile} |`
           ),
+          ...(summary.capTableFindings.length > 12
+            ? [`_Showing first 12 of ${summary.capTableFindings.length} cap table rows — see the JSON report or exports for the full list._`]
+            : []),
           '',
         ]
       : []),
     ...(summary.dataQualityWarnings.length > 0
       ? ['## Data Quality Warnings', ...summary.dataQualityWarnings.map((w) => `- ⚠ ${w}`), '']
       : []),
+    '---',
+    '',
+    `*${DISCLAIMER}*`,
   ];
   return lines.join('\n');
 }
@@ -263,10 +243,8 @@ async function main() {
       if (ext === '.txt' || ext === '.md') {
         text = fs.readFileSync(filepath, 'utf-8');
       } else if (ext === '.pdf') {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const pdfParse = require('pdf-parse') as (buf: Buffer) => Promise<{ text: string }>;
-        const result = await pdfParse(fs.readFileSync(filepath));
-        text = result.text;
+        const { extractPdfText } = await import('../lib/document-loader');
+        text = await extractPdfText(filepath);
       } else if (ext === '.docx') {
         const mammoth = await import('mammoth');
         const result = await mammoth.extractRawText({ path: filepath });

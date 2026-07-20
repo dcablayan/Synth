@@ -1,7 +1,6 @@
 #!/usr/bin/env tsx
 import fs from 'fs';
 import path from 'path';
-import { execSync } from 'child_process';
 
 const ROOT = process.cwd();
 
@@ -104,14 +103,10 @@ check('Reports directory is writable', () => {
 // Playwright / Chromium
 check('Playwright / Chromium installed', () => {
   try {
-    execSync('npx playwright --version', { stdio: 'ignore' });
-    try {
-      const chromiumPath = execSync('npx playwright chromium-path 2>/dev/null || echo ""', { encoding: 'utf-8' }).trim();
-      if (chromiumPath && fs.existsSync(chromiumPath)) return 'pass';
-      return 'warn';
-    } catch {
-      return 'warn';
-    }
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { chromium } = require('playwright') as typeof import('playwright');
+    const chromiumPath = chromium.executablePath();
+    return chromiumPath && fs.existsSync(chromiumPath) ? 'pass' : 'warn';
   } catch {
     return 'warn';
   }
@@ -148,7 +143,7 @@ if (failed > 0) {
   console.log('\n  ❌ Some checks failed. Run npm install and check the setup.');
   process.exit(1);
 } else if (warned > 0) {
-  console.log('\n  ⚠️  Ready with warnings. PDF generation requires: npx playwright install chromium');
+  console.log('\n  ⚠️  Ready with warnings — see the ⚠️ items above.');
 } else {
   console.log('\n  ✅ Synth is ready. Run: npm run demo');
 }

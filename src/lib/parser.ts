@@ -35,7 +35,8 @@ const TYPE_SIGNALS: Array<{ type: DocumentType; patterns: RegExp[] }> = [
   },
   {
     type: 'NDA',
-    patterns: [/non.disclosure|confidentiality agreement|nda/i, /proprietary information agreement/i],
+    // \b guards matter: without them "nda" matches inside "standard", "calendar", etc.
+    patterns: [/\bnon.?disclosure\b|\bconfidentiality agreement\b|\bnda\b/i, /\bproprietary information agreement\b/i],
   },
   {
     type: 'Partnership Agreement',

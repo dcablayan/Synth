@@ -1,97 +1,95 @@
 {
-  "logId": "issuelog-2026-05-18T13-32-00",
-  "generatedAt": "2026-05-18T13:32:00.147Z",
+  "logId": "issuelog-2026-07-20T04-03-31",
+  "generatedAt": "2026-07-20T04:03:31.288Z",
   "disclaimer": "Synth is not legal advice or financial advice. It is a document review aid. Consult a qualified professional before making decisions.",
   "evidence": [
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-001",
-      "issueId": "iss-2026-05-18T13-32-00-001",
+      "evidenceId": "ev-2026-07-20T04-03-31-001",
+      "issueId": "iss-2026-07-20T04-03-31-001",
       "documentQuote": "automatically renew for successive one-year periods (each a \"Renewal Term\") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",
       "sourceFilename": "sample-saas-agreement.txt",
       "fieldName": "General Provisions",
       "isVerified": true
     },
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-002",
-      "issueId": "iss-2026-05-18T13-32-00-002",
+      "evidenceId": "ev-2026-07-20T04-03-31-002",
+      "issueId": "iss-2026-07-20T04-03-31-002",
       "documentQuote": "IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITIES, EVEN IF PROVIDER HAS BEEN ADVISED OF THE POS",
       "sourceFilename": "sample-saas-agreement.txt",
       "fieldName": "Liability",
       "isVerified": true
     },
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-003",
-      "issueId": "iss-2026-05-18T13-32-00-003",
+      "evidenceId": "ev-2026-07-20T04-03-31-003",
+      "issueId": "iss-2026-07-20T04-03-31-003",
       "documentQuote": "automatically renew for successive one-year periods (each a \"Renewal Term\") unless Customer provides written notice of cancellation at least ninety (90) days prior to the end of the then-current term",
       "sourceFilename": "sample-saas-agreement.txt",
       "fieldName": "Term and Renewal",
       "isVerified": true
     },
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-004",
-      "issueId": "iss-2026-05-18T13-32-00-004",
+      "evidenceId": "ev-2026-07-20T04-03-31-004",
+      "issueId": "iss-2026-07-20T04-03-31-004",
       "documentQuote": "Unilateral modification rights may allow changes without consent",
       "sourceFilename": "sample-saas-agreement.txt",
-      "isVerified": true
+      "isVerified": false,
+      "verificationNote": "Quote could not be located in the source document — do not rely on it without manual verification."
     },
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-005",
-      "issueId": "iss-2026-05-18T13-32-00-005",
+      "evidenceId": "ev-2026-07-20T04-03-31-005",
+      "issueId": "iss-2026-07-20T04-03-31-005",
       "documentQuote": "Review auto-renewal notice window carefully",
       "sourceFilename": "sample-saas-agreement.txt",
-      "isVerified": true
+      "isVerified": false,
+      "verificationNote": "Quote could not be located in the source document — do not rely on it without manual verification."
     },
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-006",
-      "issueId": "iss-2026-05-18T13-32-00-006",
+      "evidenceId": "ev-2026-07-20T04-03-31-006",
+      "issueId": "iss-2026-07-20T04-03-31-006",
       "documentQuote": "Contract payment terms (see contract) vs. Overdue: DataStream Inc",
       "sourceFilename": "sample-saas-agreement.txt",
-      "isVerified": true
+      "isVerified": false,
+      "verificationNote": "Derived from cross-document comparison — verify the underlying values in both source files."
     },
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-007",
-      "issueId": "iss-2026-05-18T13-32-00-007",
-      "documentQuote": "Contract payment terms (see contract) vs. Overdue: 2024-03-05",
+      "evidenceId": "ev-2026-07-20T04-03-31-007",
+      "issueId": "iss-2026-07-20T04-03-31-007",
+      "documentQuote": "Contract payment terms (see contract) vs. Overdue: DataDog Inc",
       "sourceFilename": "sample-saas-agreement.txt",
-      "isVerified": true
+      "isVerified": false,
+      "verificationNote": "Derived from cross-document comparison — verify the underlying values in both source files."
     },
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-008",
-      "issueId": "iss-2026-05-18T13-32-00-008",
+      "evidenceId": "ev-2026-07-20T04-03-31-008",
+      "issueId": "iss-2026-07-20T04-03-31-008",
       "documentQuote": "",
       "spreadsheetRow": "Vendor: DataStream Inc | Amount: $9100.00 | Due: 2024-03-31",
       "sourceFilename": "sample-payment-schedule.csv",
-      "isVerified": true
+      "isVerified": true,
+      "verificationNote": "Extracted directly from the spreadsheet row."
     },
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-009",
-      "issueId": "iss-2026-05-18T13-32-00-009",
+      "evidenceId": "ev-2026-07-20T04-03-31-009",
+      "issueId": "iss-2026-07-20T04-03-31-009",
+      "documentQuote": "",
+      "spreadsheetRow": "Vendor: DataDog Inc | Amount: $6500.00 | Due: 2024-03-05",
+      "sourceFilename": "sample-vendor-invoices.csv",
+      "isVerified": true,
+      "verificationNote": "Extracted directly from the spreadsheet row."
+    },
+    {
+      "evidenceId": "ev-2026-07-20T04-03-31-010",
+      "issueId": "iss-2026-07-20T04-03-31-010",
       "documentQuote": "",
       "sourceFilename": "sample-saas-agreement.txt",
       "isVerified": false,
       "verificationNote": "Auto-detected from spreadsheet structure analysis."
     },
     {
-      "evidenceId": "ev-2026-05-18T13-32-00-010",
-      "issueId": "iss-2026-05-18T13-32-00-010",
+      "evidenceId": "ev-2026-07-20T04-03-31-011",
+      "issueId": "iss-2026-07-20T04-03-31-011",
       "documentQuote": "",
       "sourceFilename": "sample-saas-agreement.txt",
-      "isVerified": false,
-      "verificationNote": "Auto-detected from spreadsheet structure analysis."
-    },
-    {
-      "evidenceId": "ev-2026-05-18T13-32-00-011",
-      "issueId": "iss-2026-05-18T13-32-00-011",
-      "documentQuote": "",
-      "sourceFilename": "sample-cap-table.csv",
-      "isVerified": false,
-      "verificationNote": "Auto-detected from spreadsheet structure analysis."
-    },
-    {
-      "evidenceId": "ev-2026-05-18T13-32-00-012",
-      "issueId": "iss-2026-05-18T13-32-00-012",
-      "documentQuote": "",
-      "sourceFilename": "sample-payment-schedule.csv",
       "isVerified": false,
       "verificationNote": "Auto-detected from spreadsheet structure analysis."
     }

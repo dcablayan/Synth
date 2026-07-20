@@ -119,7 +119,8 @@ const htmlPath = saveHTML(html, name)        // → /reports/html/name.html
 // 2. Launch Playwright
 const browser = await chromium.launch({ headless: true })
 const page = await browser.newPage()
-await page.setContent(html, { waitUntil: 'networkidle' })
+// External http(s)/file requests are blocked during rendering
+await page.setContent(html, { waitUntil: 'domcontentloaded' })
 await page.pdf({ path: outputPath, format: 'A4', printBackground: true })
 await browser.close()
 // → /reports/pdfs/name.pdf
