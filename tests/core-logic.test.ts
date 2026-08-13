@@ -210,6 +210,85 @@ test('truncation: chunked documents surface an explicit warning', async () => {
   assert.ok((review.warnings ?? []).some((w) => /truncated/i.test(w)), `warnings=${JSON.stringify(review.warnings)}`);
 });
 
+test('repeated vendors are detected from raw occurrences, not a deduplicated list', () => {
+  const sheet: ParsedSheet = {
+    sheetName: 'S',
+    headers: ['Vendor', 'Amount', 'Due Date', 'Status'],
+    rows: [
+      ['Acme Corp', '$100.00', '2026-01-01', 'Paid'],
+      ['Beta LLC', '$200.00', '2026-01-02', 'Paid'],
+      ['Acme Corp', '$300.00', '2026-02-01', 'Pending'],
+    ],
+  };
+  const profile = buildTableProfile(sheet);
+  assert.deepEqual(profile.repeatedVendors, ['Acme Corp']);
+  assert.ok(
+    profile.warnings.some((w) => /repeated vendors/i.test(w) && w.includes('Acme Corp')),
+    `expected a repeated-vendor warning, got: ${JSON.stringify(profile.warnings)}`,
+  );
+
+  const dr = generateMockDataRoomSummary(
+    [{ filename: 'contract.txt', text: 'Payment terms: net 30.' }],
+    [{ filename: 'pay.csv', sheets: [sheet], profiles: [profile] }],
+    [],
+  );
+  const dup = dr.crossDocumentFindings.find((f) => f.findingType === 'duplicate-vendor');
+  assert.ok(dup, 'expected a duplicate-vendor cross-document finding');
+  assert.ok(dup.valueA.includes('Acme Corp'));
+});
+
+test('same name across two name columns in one row is not a duplicate; email columns are not entities', () => {
+  const sheet: ParsedSheet = {
+    sheetName: 'S',
+    headers: ['Vendor Name', 'Company', 'Vendor Email', 'Amount'],
+    rows: [
+      ['Acme Corp', 'Acme Corp', 'billing@acme.com', '$100.00'],
+      ['Beta LLC', 'Beta LLC', 'ap@beta.com', '$200.00'],
+    ],
+  };
+  const profile = buildTableProfile(sheet);
+  assert.deepEqual(profile.repeatedVendors, [], 'cross-column repetition within a row is not a duplicate');
+  assert.ok(!profile.detectedEntities.some((e) => e.includes('@')), `emails leaked into entities: ${JSON.stringify(profile.detectedEntities)}`);
+  assert.ok(profile.detectedEmails.includes('billing@acme.com'));
+});
+
+test('cap table findings skip footer/metadata rows with no holding data', () => {
+  const sheet: ParsedSheet = {
+    sheetName: 'Cap Table',
+    headers: ['Investor', 'Share Class', 'Shares', 'Ownership %'],
+    rows: [
+      ['Founders', 'Common', '4000000', '40.00%'],
+      ['Sequoia Capital', 'Series A Preferred', '1500000', '15.00%'],
+      ['Post-money valuation: $50000000.00', '', '', ''],
+      ['Liquidation preference: 1x non-participating', '', '', ''],
+    ],
+  };
+  const dr = generateMockDataRoomSummary(
+    [],
+    [{ filename: 'cap.csv', sheets: [sheet], profiles: [buildTableProfile(sheet)] }],
+    [],
+  );
+  assert.deepEqual(
+    dr.capTableFindings.map((c) => c.investor),
+    ['Founders', 'Sequoia Capital'],
+    'metadata rows must not appear as investors',
+  );
+});
+
+test('payment findings prefer an explicit due-date column over an invoice-date column', () => {
+  const sheet: ParsedSheet = {
+    sheetName: 'S',
+    headers: ['Invoice Date', 'Vendor', 'Amount', 'Due Date', 'Status'],
+    rows: [['2026-01-05', 'Acme Corp', '$500.00', '2026-02-04', 'Pending']],
+  };
+  const dr = generateMockDataRoomSummary(
+    [],
+    [{ filename: 'pay.csv', sheets: [sheet], profiles: [buildTableProfile(sheet)] }],
+    [],
+  );
+  assert.equal(dr.paymentScheduleFindings[0].dueDate, '2026-02-04');
+});
+
 test('report stems disambiguate by source file', () => {
   assert.equal(reportStem('Service Agreement', 'acme-msa.txt'), 'service-agreement--acme-msa');
   assert.notEqual(reportStem('Service Agreement', 'acme-msa.txt'), reportStem('Service Agreement', 'globex-msa.txt'));

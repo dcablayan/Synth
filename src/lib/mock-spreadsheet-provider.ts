@@ -92,7 +92,10 @@ function buildPaymentFindings(
 
       const vendorCol = findVendorColumn(sheet.headers);
       const amountCol = sheet.headers.findIndex((h) => /amount|total|fee/i.test(h));
-      const dateCol = sheet.headers.findIndex((h) => /date|due/i.test(h));
+      // Prefer an explicit due-date column; an "Invoice Date" column is only a
+      // fallback, otherwise it silently masquerades as the due date.
+      const dueCol = sheet.headers.findIndex((h) => /due/i.test(h));
+      const dateCol = dueCol >= 0 ? dueCol : sheet.headers.findIndex((h) => /date/i.test(h));
       const statusCol = sheet.headers.findIndex((h) => /status/i.test(h));
 
       for (const row of sheet.rows) {
@@ -141,6 +144,10 @@ function buildCapTableFindings(
         const shares = sharesCol >= 0 ? row[sharesCol]?.trim() : '';
         const ownershipPct = pctCol >= 0 ? row[pctCol]?.trim() : '';
         if (!investor || /^total/i.test(investor) || /^notes/i.test(investor)) continue;
+        // Footer/metadata rows ("Post-money valuation: …") carry text in the
+        // investor column but nothing in the holding columns — they are not
+        // investors and must not inflate the cap table.
+        if (!shareClass && !shares && !ownershipPct) continue;
         if (findings.length >= MAX_CAP_TABLE_FINDINGS) {
           truncated = true;
           break;

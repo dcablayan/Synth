@@ -120,22 +120,41 @@ function detectVendorList(headers: string[]): boolean {
   return h.includes('vendor') || (h.includes('supplier') && h.includes('contact'));
 }
 
-function extractEntities(rows: string[][], headers: string[]): string[] {
-  const entities: string[] = [];
-  const nameColIndices = headers
-    .map((h, i) => ({ h: h.toLowerCase(), i }))
-    .filter(({ h }) => h.includes('vendor') || h.includes('investor') || h.includes('party') || h.includes('name') || h.includes('company'))
-    .map(({ i }) => i);
+function isEntityValue(val: string | undefined): val is string {
+  return !!val && val.length > 2 && val.length < 80 && !/^total/i.test(val) && !/^\$/.test(val);
+}
 
-  for (const row of rows.slice(0, 50)) {
-    for (const idx of nameColIndices) {
+// Email columns ("Vendor Email") match the vendor/company keywords but hold
+// addresses, not party names — they belong in detectedEmails, not entities.
+function nameColumnIndices(headers: string[]): number[] {
+  return headers
+    .map((h, i) => ({ h: h.toLowerCase(), i }))
+    .filter(
+      ({ h }) =>
+        (h.includes('vendor') || h.includes('investor') || h.includes('party') || h.includes('name') || h.includes('company')) &&
+        !h.includes('email')
+    )
+    .map(({ i }) => i);
+}
+
+// Raw per-column occurrences across ALL rows. Kept non-deduplicated on purpose:
+// repeat detection needs the counts, and deduplicating first (as an earlier
+// version did) made "repeated vendors" mathematically impossible to detect.
+function collectEntityOccurrences(rows: string[][], headers: string[]): Map<number, string[]> {
+  const byColumn = new Map<number, string[]>();
+  for (const idx of nameColumnIndices(headers)) byColumn.set(idx, []);
+  for (const row of rows) {
+    for (const [idx, list] of byColumn) {
       const val = row[idx]?.trim();
-      if (val && val.length > 2 && val.length < 80 && !/^total/i.test(val) && !/^\$/.test(val)) {
-        entities.push(val);
-      }
+      if (isEntityValue(val)) list.push(val);
     }
   }
-  return [...new Set(entities)].slice(0, 20);
+  return byColumn;
+}
+
+function extractEntities(occurrences: Map<number, string[]>): string[] {
+  const all = [...occurrences.values()].flat();
+  return [...new Set(all)].slice(0, 20);
 }
 
 function extractAmounts(rows: string[][], headers: string[]): string[] {
@@ -174,12 +193,17 @@ function extractEmails(rows: string[][], headers: string[]): string[] {
   return [...new Set(emails)].slice(0, 10);
 }
 
-function findRepeatedVendors(entities: string[]): string[] {
-  const counts = new Map<string, number>();
-  for (const e of entities) {
-    counts.set(e, (counts.get(e) ?? 0) + 1);
+// A vendor is "repeated" only when the same value appears more than once within
+// the SAME column — one name showing up across two different name-like columns
+// of a single row is normal, not a duplicate-billing signal.
+function findRepeatedVendors(occurrences: Map<number, string[]>): string[] {
+  const repeated = new Set<string>();
+  for (const list of occurrences.values()) {
+    const counts = new Map<string, number>();
+    for (const v of list) counts.set(v, (counts.get(v) ?? 0) + 1);
+    for (const [v, c] of counts) if (c > 1) repeated.add(v);
   }
-  return [...counts.entries()].filter(([, c]) => c > 1).map(([e]) => e);
+  return [...repeated].slice(0, 20);
 }
 
 function computeTotals(rows: string[][], headers: string[]): Array<{ label: string; amount: string }> {
@@ -217,16 +241,15 @@ function buildColumnProfiles(rows: string[][], headers: string[]): ColumnProfile
   });
 }
 
-function buildWarnings(rows: string[][], headers: string[], entities: string[]): string[] {
+function buildWarnings(rows: string[][], headers: string[], repeatedVendors: string[]): string[] {
   const warnings: string[] = [];
   const totalBlanks = rows.reduce((sum, r) => sum + r.filter((c) => c.trim().length === 0).length, 0);
   const totalCells = rows.length * headers.length;
   if (totalCells > 0 && totalBlanks / totalCells > 0.3) {
     warnings.push(`High blank cell rate: ${((totalBlanks / totalCells) * 100).toFixed(0)}% of cells are empty`);
   }
-  const repeated = findRepeatedVendors(entities);
-  if (repeated.length > 0) {
-    warnings.push(`Repeated vendors/parties detected: ${repeated.join(', ')}`);
+  if (repeatedVendors.length > 0) {
+    warnings.push(`Repeated vendors/parties detected: ${repeatedVendors.join(', ')}`);
   }
   const overdue = rows.filter((r) => r.some((c) => /overdue/i.test(c)));
   if (overdue.length > 0) {
@@ -272,24 +295,25 @@ export async function parseXlsxFile(filepath: string): Promise<ParsedSheet[]> {
 
 export function buildTableProfile(sheet: ParsedSheet): TableProfile {
   const { sheetName, headers, rows } = sheet;
-  const entities = extractEntities(rows, headers);
+  const occurrences = collectEntityOccurrences(rows, headers);
+  const repeatedVendors = findRepeatedVendors(occurrences);
 
   return {
     sheetName,
     rowCount: rows.length,
     columnCount: headers.length,
     columns: buildColumnProfiles(rows, headers),
-    detectedEntities: entities,
+    detectedEntities: extractEntities(occurrences),
     detectedAmounts: extractAmounts(rows, headers),
     detectedDates: extractDates(rows, headers),
     detectedEmails: extractEmails(rows, headers),
-    repeatedVendors: findRepeatedVendors(entities),
+    repeatedVendors,
     totalAmounts: computeTotals(rows, headers),
     isPaymentSchedule: detectPaymentSchedule(headers),
     isCapTable: detectCapTable(headers),
     isInvoice: detectInvoice(headers),
     isVendorList: detectVendorList(headers),
-    warnings: buildWarnings(rows, headers, entities),
+    warnings: buildWarnings(rows, headers, repeatedVendors),
   };
 }
 

@@ -341,7 +341,7 @@ export default function CaseStudyPage() {
               <Link href="/artifacts" className="border border-gray-300 hover:border-gray-400 text-gray-700 text-xs px-4 py-2 rounded transition-colors">
                 Download Artifacts
               </Link>
-              <a href="https://github.com/dylancablayan/synth" className="border border-gray-300 hover:border-gray-400 text-gray-700 text-xs px-4 py-2 rounded transition-colors">
+              <a href="https://github.com/dcablayan/Synth" className="border border-gray-300 hover:border-gray-400 text-gray-700 text-xs px-4 py-2 rounded transition-colors">
                 GitHub
               </a>
             </div>

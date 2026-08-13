@@ -33,7 +33,7 @@ export default function SiteNav({ current, children }: { current?: string; child
             </Link>
           ))}
           <a
-            href="https://github.com/dylancablayan/synth"
+            href="https://github.com/dcablayan/Synth"
             className="bg-gray-900 hover:bg-gray-700 text-white font-semibold text-xs px-3 py-1.5 rounded transition-colors whitespace-nowrap"
           >
             GitHub

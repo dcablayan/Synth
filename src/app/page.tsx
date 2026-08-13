@@ -85,7 +85,7 @@ export default function HomePage() {
             <span className="text-gray-500 text-xs ml-2 font-mono">terminal</span>
           </div>
           <pre className="p-6 text-sm font-mono text-gray-200 overflow-x-auto leading-7">
-{`$ git clone https://github.com/dylancablayan/synth
+{`$ git clone https://github.com/dcablayan/Synth
 $ npm install && npx playwright install chromium
 $ npm run doctor
 
@@ -170,7 +170,7 @@ $ npm run dashboard`}</pre>
           <h2 className="text-xl font-bold text-gray-900 mb-6">Quickstart</h2>
           <div className="space-y-3">
             {[
-              ['Clone & install', 'git clone https://github.com/dylancablayan/synth && npm install'],
+              ['Clone & install', 'git clone https://github.com/dcablayan/Synth && npm install'],
               ['Install PDF engine', 'npx playwright install chromium'],
               ['Check setup', 'npm run doctor'],
               ['Run demo', 'npm run demo'],

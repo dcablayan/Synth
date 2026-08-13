@@ -2,7 +2,7 @@
 
 **Evidence-backed AI diligence for mixed legal and financial document packets.**
 
-[![CI](https://github.com/dylancablayan/synth/actions/workflows/ci.yml/badge.svg)](https://github.com/dylancablayan/synth/actions/workflows/ci.yml)
+[![CI](https://github.com/dcablayan/Synth/actions/workflows/ci.yml/badge.svg)](https://github.com/dcablayan/Synth/actions/workflows/ci.yml)
 
 > Warning: Synth is not legal advice or financial advice. It is a document review aid built as a portfolio project. Consult a qualified professional before making decisions based on this software.
 
@@ -19,7 +19,7 @@ AI mode is enabled only when `OPENAI_API_KEY` is set in `.env.local`. The provid
 ## Quickstart
 
 ```bash
-git clone https://github.com/dylancablayan/synth
+git clone https://github.com/dcablayan/Synth
 cd synth
 npm install
 npx playwright install chromium  # optional, required only for local PDF generation

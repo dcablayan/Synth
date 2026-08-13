@@ -16,7 +16,7 @@ export default function SiteFooter() {
           <Link href="/dashboard" className="hover:text-gray-700 transition-colors">Dashboard</Link>
           <Link href="/artifacts" className="hover:text-gray-700 transition-colors">Artifacts</Link>
           <Link href="/case-study" className="hover:text-gray-700 transition-colors">Case Study</Link>
-          <a href="https://github.com/dylancablayan/synth" className="hover:text-gray-700 transition-colors">GitHub</a>
+          <a href="https://github.com/dcablayan/Synth" className="hover:text-gray-700 transition-colors">GitHub</a>
         </div>
         <p className="text-gray-500 text-xs max-w-lg mx-auto mb-3">
           A solo-built portfolio prototype demonstrating a repo-first, CLI-driven approach to AI document operations —
